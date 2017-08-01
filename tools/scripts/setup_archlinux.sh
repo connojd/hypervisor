@@ -26,9 +26,7 @@ source $(dirname $0)/setup_common.sh
 # Checks
 # ------------------------------------------------------------------------------
 
-check_distro arch
 check_folder
-check_hardware
 
 # ------------------------------------------------------------------------------
 # Parse Arguments
@@ -40,30 +38,15 @@ parse_arguments $@
 # Functions
 # ------------------------------------------------------------------------------
 
-install_pacman_tools() {
-    sudo pacman -Syu
-    sudo pacman -S --needed --noconfirm ca-certificates
-}
-
 install_common_packages() {
     sudo pacman -Syu
+    sudo pacman -S --needed --noconfirm ca-certificates
     sudo pacman -S --needed --noconfirm base-devel
     sudo pacman -S --needed --noconfirm linux-headers
-    sudo pacman -S --needed --noconfirm gmp
-    sudo pacman -S --needed --noconfirm libmpc
-    sudo pacman -S --needed --noconfirm mpfr
-    sudo pacman -S --needed --noconfirm flex
-    sudo pacman -S --needed --noconfirm bison
     sudo pacman -S --needed --noconfirm nasm
     sudo pacman -S --needed --noconfirm clang
     sudo pacman -S --needed --noconfirm texinfo
     sudo pacman -S --needed --noconfirm cmake
-    sudo pacman -S --needed --noconfirm docker
-}
-
-prepare_docker() {
-    sudo usermod -a -G docker $USER
-    sudo systemctl restart docker
 }
 
 # ------------------------------------------------------------------------------
@@ -71,10 +54,8 @@ prepare_docker() {
 # ------------------------------------------------------------------------------
 
 case $( grep ^ID_LIKE= /etc/os-release | cut -d'=' -f 2 ) in
-archlinux)
-    install_pacman_tools
+archlinux|"\"arch\"")
     install_common_packages
-    prepare_docker
     ;;
 
 *)
@@ -82,7 +63,6 @@ archlinux)
     exit 1
 
 esac
-
 
 # ------------------------------------------------------------------------------
 # Setup Build Environment
