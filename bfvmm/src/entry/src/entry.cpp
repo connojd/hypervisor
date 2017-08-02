@@ -42,11 +42,13 @@ start_vmm(uint64_t arg) noexcept
 {
     return guard_exceptions(ENTRY_ERROR_VMM_START_FAILED, [&]()
     {
+//        bfdebug << "calling create_vcpu\n";
         g_vcm->create_vcpu(arg, pre_create_vcpu(arg));
 
         auto ___ = gsl::on_failure([&]
         { g_vcm->delete_vcpu(arg); });
 
+//        bfdebug << "calling run_vcpu\n";
         g_vcm->run_vcpu(arg, pre_run_vcpu(arg));
 
         bfdebug << "success: host os is " << bfcolor_green "now " << bfcolor_end
@@ -69,7 +71,10 @@ stop_vmm(uint64_t arg) noexcept
 {
     return guard_exceptions(ENTRY_ERROR_VMM_STOP_FAILED, [&]()
     {
+        bfdebug << "executing stop_vmm in vmm" << bfendl;
+        bfdebug << "    calling hlt_vcpu" << bfendl;
         g_vcm->hlt_vcpu(arg, pre_hlt_vcpu(arg));
+        bfdebug << "    calling delete_vcpu" << bfendl;
         g_vcm->delete_vcpu(arg, pre_delete_vcpu(arg));
 
         bfdebug << "success: host os is " << bfcolor_red "not " << bfcolor_end
