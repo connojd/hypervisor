@@ -65,10 +65,12 @@ NATIVE_OUTDIR+=%BUILD_REL%/../bin
 ################################################################################
 
 SOURCES+=vmxon_intel_x64.cpp
+SOURCES+=%HYPER_ABS%/bfdrivers/src/arch/linux/vmcall.asm
 
 INCLUDE_PATHS+=./
 INCLUDE_PATHS+=%HYPER_ABS%/include/
 INCLUDE_PATHS+=%HYPER_ABS%/bfvmm/include/
+INCLUDE_PATHS+=%HYPER_ABS%/bfdrivers/include/
 
 LIBS+=
 

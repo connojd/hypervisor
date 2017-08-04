@@ -94,8 +94,6 @@ exit_handler_intel_x64::halt() noexcept
     bferror << bfendl;
     bferror << bfendl;
 
-    g_unimplemented_handler_mutex.unlock();
-
     pm::stop();
 }
 
@@ -430,8 +428,6 @@ exit_handler_intel_x64::unimplemented_handler() noexcept
         { vmcs::debug::dump(); });
     }
 
-    g_unimplemented_handler_mutex.unlock();
-
     this->halt();
 }
 
@@ -466,18 +462,23 @@ exit_handler_intel_x64::handle_vmcall_versions(vmcall_registers_t &regs)
 void
 exit_handler_intel_x64::handle_vmcall_registers(vmcall_registers_t &regs)
 {
-    bfdebug << "vmcall registers:" << bfendl;
-    bfdebug << "r02: " << view_as_pointer(regs.r02) << bfendl;
-    bfdebug << "r03: " << view_as_pointer(regs.r03) << bfendl;
-    bfdebug << "r04: " << view_as_pointer(regs.r04) << bfendl;
-    bfdebug << "r05: " << view_as_pointer(regs.r05) << bfendl;
-    bfdebug << "r06: " << view_as_pointer(regs.r06) << bfendl;
-    bfdebug << "r07: " << view_as_pointer(regs.r07) << bfendl;
-    bfdebug << "r08: " << view_as_pointer(regs.r08) << bfendl;
-    bfdebug << "r09: " << view_as_pointer(regs.r09) << bfendl;
-    bfdebug << "r10: " << view_as_pointer(regs.r10) << bfendl;
-    bfdebug << "r11: " << view_as_pointer(regs.r11) << bfendl;
-    bfdebug << "r12: " << view_as_pointer(regs.r12) << bfendl;
+    if (regs.r02 == 0xcafebabe) {
+        bfdebug << "handling 0xcafebabe...running vmxoff\n";
+        vmx::off();
+    }
+
+//    bfdebug << "vmcall registers:" << bfendl;
+//    bfdebug << "r02: " << view_as_pointer(regs.r02) << bfendl;
+//    bfdebug << "r03: " << view_as_pointer(regs.r03) << bfendl;
+//    bfdebug << "r04: " << view_as_pointer(regs.r04) << bfendl;
+//    bfdebug << "r05: " << view_as_pointer(regs.r05) << bfendl;
+//    bfdebug << "r06: " << view_as_pointer(regs.r06) << bfendl;
+//    bfdebug << "r07: " << view_as_pointer(regs.r07) << bfendl;
+//    bfdebug << "r08: " << view_as_pointer(regs.r08) << bfendl;
+//    bfdebug << "r09: " << view_as_pointer(regs.r09) << bfendl;
+//    bfdebug << "r10: " << view_as_pointer(regs.r10) << bfendl;
+//    bfdebug << "r11: " << view_as_pointer(regs.r11) << bfendl;
+//    bfdebug << "r12: " << view_as_pointer(regs.r12) << bfendl;
 }
 
 void

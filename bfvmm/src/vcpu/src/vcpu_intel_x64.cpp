@@ -152,12 +152,12 @@ vcpu_intel_x64::hlt(user_data *data)
             intel_x64::msrs::ia32_efer::dump();
             x64::rflags::dump();
             bfdebug << "cs register: " << view_as_pointer(x64::segment_register::cs::get()) << '\n';
-            bfdebug << "ss access rights: " << view_as_pointer(intel_x64::vmcs::guest_ss_access_rights::dpl::get()) << '\n';
-            intel_x64::vmcs::debug::dump_primary_processor_based_vm_execution_controls();
-            intel_x64::vmcs::debug::dump_secondary_processor_based_vm_execution_controls();
-            intel_x64::vmcs::debug::dump_vm_entry_control_fields();
-            intel_x64::vmcs::debug::dump_vm_exit_control_fields();
-            intel_x64::vmcs::debug::dump_pin_based_vm_execution_controls();
+            //bfdebug << "ss access rights: " << view_as_pointer(intel_x64::vmcs::guest_ss_access_rights::dpl::get()) << '\n';
+            //intel_x64::vmcs::debug::dump_primary_processor_based_vm_execution_controls();
+            //intel_x64::vmcs::debug::dump_secondary_processor_based_vm_execution_controls();
+            //intel_x64::vmcs::debug::dump_vm_entry_control_fields();
+            //intel_x64::vmcs::debug::dump_vm_exit_control_fields();
+            //intel_x64::vmcs::debug::dump_pin_based_vm_execution_controls();
             bfdebug << "calling vmxon_intel_x64::stop\n";
             m_vmxon->stop();
         }
