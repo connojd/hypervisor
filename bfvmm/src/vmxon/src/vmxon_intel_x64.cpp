@@ -191,13 +191,13 @@ vmxon_intel_x64::execute_vmxoff()
         return;
     }
 
-    //vmx::off();
-    bfdebug << "calling cafebabe for vmxoff service\n";
+    vmx::off();
+    //bfdebug << "calling cafebabe for vmxoff service\n";
 
-    struct vmcall_registers_t regs;
-    regs.r00 = VMCALL_REGISTERS;
-    regs.r01 = VMCALL_MAGIC_NUMBER;
-    regs.r02 = 0xcafebabe;
+    //struct vmcall_registers_t regs;
+    //regs.r00 = VMCALL_REGISTERS;
+    //regs.r01 = VMCALL_MAGIC_NUMBER;
+    //regs.r02 = 0xcafebabe;
 
-    platform_vmcall(&regs);
+    //platform_vmcall(&regs);
 }

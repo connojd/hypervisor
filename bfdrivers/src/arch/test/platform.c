@@ -169,3 +169,8 @@ platform_vmcall_event(struct vmcall_registers_t *regs)
 {
     regs->r01 = g_vmcall;
 }
+
+void
+platform_load_gdt_rw(void)
+{
+}

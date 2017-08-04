@@ -35,6 +35,7 @@
 #include <linux/kallsyms.h>
 
 #include <asm/tlbflush.h>
+#include <asm/processor.h>
 
 typedef long (*set_affinity_fn)(pid_t, const struct cpumask *);
 set_affinity_fn set_cpu_affinity = 0;
@@ -182,4 +183,11 @@ void
 platform_restore_affinity(int64_t affinity)
 {
     (void) affinity;
+}
+
+void
+platform_load_gdt_rw(void)
+{
+    int cpu = raw_smp_processor_id();
+    load_direct_gdt(cpu);
 }

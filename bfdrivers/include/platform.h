@@ -165,6 +165,9 @@ platform_vmcall(struct vmcall_registers_t *regs);
 void
 platform_vmcall_event(struct vmcall_registers_t *regs);
 
+void
+platform_load_gdt_rw(void);
+
 #ifdef __cplusplus
 }
 #endif

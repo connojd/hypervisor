@@ -272,6 +272,7 @@ vmcs_intel_x64::write_16bit_guest_state(gsl::not_null<vmcs_intel_x64_state *> st
     vmcs::guest_gs_selector::set(state->gs());
     vmcs::guest_ldtr_selector::set(state->ldtr());
     vmcs::guest_tr_selector::set(state->tr());
+    bfdebug << "guest_tr_selector: " << view_as_pointer(vmcs::guest_tr_selector::get()) << '\n';
 
     // unused: VMCS_GUEST_INTERRUPT_STATUS
 }
@@ -340,6 +341,7 @@ vmcs_intel_x64::write_natural_guest_state(gsl::not_null<vmcs_intel_x64_state *> 
     vmcs::guest_tr_base::set(state->tr_base());
 
     vmcs::guest_gdtr_base::set(state->gdt_base());
+    bfdebug << "guest_gdtr_base: " << view_as_pointer(vmcs::guest_gdtr_base::get()) << '\n';
     vmcs::guest_idtr_base::set(state->idt_base());
 
     vmcs::guest_dr7::set(state->dr7());

@@ -88,6 +88,57 @@ extern __cpuid_eax
 
 section .text
 
+;debug_write:
+;    push rdi
+;    push rdx
+;    push rcx
+;    push rax
+;    mov dx, 0x03f8
+;    mov al, 0x30
+;    out dx, al
+;    mov al, 0x0a
+;    out dx, al
+;    xor edi, edi
+;    call __cpuid_eax wrt ..plt
+;    pop rax
+;    pop rcx
+;    pop rdx
+;    pop rdi
+;    ret
+
+
+;vmread_fail_invalid:
+;    push rdi
+;    push rdx
+;    push rcx
+;    push rax
+;    mov dx, 0x03f8
+;    mov al, 0x31
+;    out dx, al
+;    xor edi, edi
+;    call __cpuid_eax wrt ..plt
+;    pop rax
+;    pop rcx
+;    pop rdx
+;    pop rdi
+;    hlt
+;
+;vmread_fail_valid:
+;    push rdi
+;    push rdx
+;    push rcx
+;    push rax
+;    mov dx, 0x03f8
+;    mov al, 0x32
+;    out dx, al
+;    xor edi, edi
+;    call __cpuid_eax wrt ..plt
+;    pop rax
+;    pop rcx
+;    pop rdx
+;    pop rdi
+;    hlt
+
 ; Promote VMCS
 ;
 ; Continues execution using the Guest state. Once this function executes,
@@ -100,6 +151,8 @@ section .text
 ;
 vmcs_promote:
 
+;    cli
+;    call debug_write
     mov r15, rdi
 
     ;
@@ -108,30 +161,50 @@ vmcs_promote:
 
     mov rsi, VMCS_GUEST_CR0
     vmread rdi, rsi
+;    jc vmread_fail_invalid
+;    jz vmread_fail_valid
+;    call debug_write
+
     call __write_cr0 wrt ..plt
 
     mov rsi, VMCS_GUEST_CR3
     vmread rdi, rsi
+;    jc vmread_fail_invalid
+;    jz vmread_fail_valid
+;    call debug_write
     call __write_cr3 wrt ..plt
 
     mov rsi, VMCS_GUEST_CR4
     vmread rdi, rsi
+;    jc vmread_fail_invalid
+;    jz vmread_fail_valid
+;    call debug_write
     call __write_cr4 wrt ..plt
 
     mov rsi, VMCS_GUEST_DR7
     vmread rdi, rsi
+;    jc vmread_fail_invalid
+;    jz vmread_fail_valid
+;    call debug_write
     call __write_dr7 wrt ..plt
 
     ;
     ; Restore GDT
     ;
 
+    cli
     mov rsi, VMCS_GUEST_GDTR_BASE
     vmread rdi, rsi
+;    jc vmread_fail_invalid
+;    jz vmread_fail_valid
+;    call debug_write
     push rdi
 
     mov rsi, VMCS_GUEST_GDTR_LIMIT
     vmread rdi, rsi
+;    jc vmread_fail_invalid
+;    jz vmread_fail_valid
+;    call debug_write
     push di
 
     mov rdi, rsp
@@ -143,10 +216,16 @@ vmcs_promote:
 
     mov rsi, VMCS_GUEST_IDTR_BASE
     vmread rdi, rsi
+;    jc vmread_fail_invalid
+;    jz vmread_fail_valid
+;    call debug_write
     push rdi
 
     mov rsi, VMCS_GUEST_IDTR_LIMIT
     vmread rdi, rsi
+;    jc vmread_fail_invalid
+;    jz vmread_fail_valid
+;    call debug_write
     push di
 
     mov rdi, rsp
@@ -158,20 +237,32 @@ vmcs_promote:
 
     mov rsi, VMCS_GUEST_GDTR_BASE
     vmread rdi, rsi
+;    jc vmread_fail_invalid
+;    jz vmread_fail_valid
+;    call debug_write
     mov rsi, VMCS_GUEST_TR_SELECTOR
     vmread rsi, rsi
+;    jc vmread_fail_invalid
+;    jz vmread_fail_valid
+;    call debug_write
 
     add rdi, rsi
 
+;    call debug_write
     mov rax, 0xFFFFFDFFFFFFFFFF
+;    call debug_write
     and [rdi], rax
 
     ;
     ; Restore Selectors
     ;
 
+;   call debug_write
     mov rsi, VMCS_GUEST_ES_SELECTOR
     vmread rdi, rsi
+;    jc vmread_fail_invalid
+;    jz vmread_fail_valid
+;    call debug_write
     call __write_es wrt ..plt
 
     mov rsi, VMCS_GUEST_CS_SELECTOR

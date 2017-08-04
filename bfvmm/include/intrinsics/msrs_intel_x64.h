@@ -2718,7 +2718,7 @@ namespace msrs
         {
             constexpr const auto mask = 0x0000000000000800UL;
             constexpr const auto from = 11;
-            constexpr const auto name = "lma";
+            constexpr const auto name = "nxe";
 
             inline auto get() noexcept
             { return get_bit(__read_msr(addr), from) != 0; }

@@ -39,7 +39,7 @@ __attribute__((weak)) map_with_cr3(
     expects(lower(vmap) == 0);
     expects(virt != 0);
     expects(cr3 != 0);
-    expects(lower(cr3) == 0);
+//    expects(lower(cr3) == 0);
     expects(size != 0);
 
     for (auto offset = 0UL; offset < size; offset += x64::page_size)
