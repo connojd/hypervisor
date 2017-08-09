@@ -76,16 +76,16 @@ void
 vmxon_intel_x64::stop()
 {
     this->execute_vmxoff();
-    bfdebug << "    called execute_vmxoff\n";
+//    bfdebug << "    called execute_vmxoff\n";
     cr4::vmx_enable_bit::set(false);
-    bfdebug << "    cleared vmx_enable_bit\n";
+//    bfdebug << "    cleared vmx_enable_bit\n";
 
     if (cr4::vmx_enable_bit::get())
         throw std::logic_error("failed to disable VMXON");
 
-    bfdebug << "    releasing vmxon region\n";
+//    bfdebug << "    releasing vmxon region\n";
     this->release_vmxon_region();
-    bfdebug << "    released vmxon region\n";
+//    bfdebug << "    released vmxon region\n";
 }
 
 void
@@ -192,12 +192,4 @@ vmxon_intel_x64::execute_vmxoff()
     }
 
     vmx::off();
-    //bfdebug << "calling cafebabe for vmxoff service\n";
-
-    //struct vmcall_registers_t regs;
-    //regs.r00 = VMCALL_REGISTERS;
-    //regs.r01 = VMCALL_MAGIC_NUMBER;
-    //regs.r02 = 0xcafebabe;
-
-    //platform_vmcall(&regs);
 }

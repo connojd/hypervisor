@@ -569,7 +569,7 @@ common_stop_vmm(void)
         if (regs.r01 != 0)
             return ENTRY_ERROR_VMM_STOP_FAILED;
 
-        platform_load_gdt_rw();
+        //platform_load_gdt_rw();
 
         ret = execute_symbol("stop_vmm", (uint64_t)cpuid, 0, (uint64_t)cpuid);
         if (ret != BFELF_SUCCESS)

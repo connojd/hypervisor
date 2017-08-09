@@ -134,15 +134,15 @@ vcpu_intel_x64::run(user_data *data)
 void
 vcpu_intel_x64::hlt(user_data *data)
 {
-    bfdebug << "executing vcpu_intel_x64::hlt\n";
+    //bfdebug << "executing vcpu_intel_x64::hlt\n";
     if (!this->is_initialized())
         return;
 
-    bfdebug << "vcpu is initialized\n";
+    //bfdebug << "vcpu is initialized\n";
 
     if (m_vmcs_launched)
     {
-        bfdebug << "m_vmcs is launched\n";
+        //bfdebug << "m_vmcs is launched\n";
         auto ___ = gsl::on_success([&]
         { m_vmcs_launched = false; });
 

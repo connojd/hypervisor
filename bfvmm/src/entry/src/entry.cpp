@@ -71,10 +71,10 @@ stop_vmm(uint64_t arg) noexcept
 {
     return guard_exceptions(ENTRY_ERROR_VMM_STOP_FAILED, [&]()
     {
-        bfdebug << "executing stop_vmm in vmm" << bfendl;
-        bfdebug << "    calling hlt_vcpu" << bfendl;
+//        bfdebug << "executing stop_vmm in vmm" << bfendl;
+//       bfdebug << "    calling hlt_vcpu" << bfendl;
         g_vcm->hlt_vcpu(arg, pre_hlt_vcpu(arg));
-        bfdebug << "    calling delete_vcpu" << bfendl;
+//        bfdebug << "    calling delete_vcpu" << bfendl;
         g_vcm->delete_vcpu(arg, pre_delete_vcpu(arg));
 
         bfdebug << "success: host os is " << bfcolor_red "not " << bfcolor_end

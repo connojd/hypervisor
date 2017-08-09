@@ -54,6 +54,7 @@ default rel
 %define VMCS_GUEST_LDTR_SELECTOR                                  0x0000080C
 %define VMCS_GUEST_TR_SELECTOR                                    0x0000080E
 
+%define VMCS_HOST_GDTR_BASE                                       0x00006C0C
 %define VMCS_GUEST_GDTR_BASE                                      0x00006816
 %define VMCS_GUEST_GDTR_LIMIT                                     0x00004810
 
@@ -76,13 +77,12 @@ extern __write_fs
 extern __write_ldtr
 extern __write_tr
 extern __write_msr
-extern __write_msr
 extern __write_gdt
 extern __write_idt
-extern __write_cr0;
-extern __write_cr3;
-extern __write_cr4;
-extern __write_dr7;
+extern __write_cr0
+extern __write_cr3
+extern __write_cr4
+extern __write_dr7
 
 extern __cpuid_eax
 
@@ -151,118 +151,49 @@ section .text
 ;
 vmcs_promote:
 
-;    cli
-;    call debug_write
     mov r15, rdi
 
     ;
-    ; Restore Control Registers
+    ; Clear TSS Busy
+    ;
+    ; VMCS_HOST_GDTR_BASE contains the virtual address of the guest's GDT
+    ; that was mapped read/write (see handle_vmxoff).
     ;
 
-    mov rsi, VMCS_GUEST_CR0
+    mov rsi, VMCS_HOST_GDTR_BASE
     vmread rdi, rsi
-;    jc vmread_fail_invalid
-;    jz vmread_fail_valid
-;    call debug_write
+    mov rsi, VMCS_GUEST_TR_SELECTOR
+    vmread rsi, rsi
 
-    call __write_cr0 wrt ..plt
-
-    mov rsi, VMCS_GUEST_CR3
-    vmread rdi, rsi
-;    jc vmread_fail_invalid
-;    jz vmread_fail_valid
-;    call debug_write
-    call __write_cr3 wrt ..plt
-
-    mov rsi, VMCS_GUEST_CR4
-    vmread rdi, rsi
-;    jc vmread_fail_invalid
-;    jz vmread_fail_valid
-;    call debug_write
-    call __write_cr4 wrt ..plt
-
-    mov rsi, VMCS_GUEST_DR7
-    vmread rdi, rsi
-;    jc vmread_fail_invalid
-;    jz vmread_fail_valid
-;    call debug_write
-    call __write_dr7 wrt ..plt
+    add rdi, rsi
+    mov rax, 0xFFFFFDFFFFFFFFFF
+    and [rdi], rax
 
     ;
-    ; Restore GDT
+    ; Load temporary GDT
     ;
 
-    cli
-    mov rsi, VMCS_GUEST_GDTR_BASE
+    mov rsi, VMCS_HOST_GDTR_BASE
     vmread rdi, rsi
-;    jc vmread_fail_invalid
-;    jz vmread_fail_valid
-;    call debug_write
     push rdi
 
     mov rsi, VMCS_GUEST_GDTR_LIMIT
     vmread rdi, rsi
-;    jc vmread_fail_invalid
-;    jz vmread_fail_valid
-;    call debug_write
     push di
 
     mov rdi, rsp
     call __write_gdt wrt ..plt
 
     ;
-    ; Restore IDT
-    ;
-
-    mov rsi, VMCS_GUEST_IDTR_BASE
-    vmread rdi, rsi
-;    jc vmread_fail_invalid
-;    jz vmread_fail_valid
-;    call debug_write
-    push rdi
-
-    mov rsi, VMCS_GUEST_IDTR_LIMIT
-    vmread rdi, rsi
-;    jc vmread_fail_invalid
-;    jz vmread_fail_valid
-;    call debug_write
-    push di
-
-    mov rdi, rsp
-    call __write_idt wrt ..plt
-
-    ;
-    ; Clear TSS Busy
-    ;
-
-    mov rsi, VMCS_GUEST_GDTR_BASE
-    vmread rdi, rsi
-;    jc vmread_fail_invalid
-;    jz vmread_fail_valid
-;    call debug_write
-    mov rsi, VMCS_GUEST_TR_SELECTOR
-    vmread rsi, rsi
-;    jc vmread_fail_invalid
-;    jz vmread_fail_valid
-;    call debug_write
-
-    add rdi, rsi
-
-;    call debug_write
-    mov rax, 0xFFFFFDFFFFFFFFFF
-;    call debug_write
-    and [rdi], rax
-
-    ;
     ; Restore Selectors
     ;
+    ; Now, the GDTR base references read/write memory in the
+    ; VMM's address space, so that when ltr is executed, the
+    ; processor can safely update the busy bit in the TSS.
+    ;
 
-;   call debug_write
     mov rsi, VMCS_GUEST_ES_SELECTOR
     vmread rdi, rsi
-;    jc vmread_fail_invalid
-;    jz vmread_fail_valid
-;    call debug_write
     call __write_es wrt ..plt
 
     mov rsi, VMCS_GUEST_CS_SELECTOR
@@ -292,6 +223,57 @@ vmcs_promote:
     mov rsi, VMCS_GUEST_TR_SELECTOR
     vmread rdi, rsi
     call __write_tr wrt ..plt
+
+    ;
+    ; Restore the guest's actual GDT
+    ;
+
+    mov rsi, VMCS_GUEST_GDTR_BASE
+    vmread rdi, rsi
+    push rdi
+
+    mov rsi, VMCS_GUEST_GDTR_LIMIT
+    vmread rdi, rsi
+    push di
+
+    mov rdi, rsp
+    call __write_gdt wrt ..plt
+
+    ;
+    ; Restore Control Registers
+    ;
+
+    mov rsi, VMCS_GUEST_CR0
+    vmread rdi, rsi
+
+    call __write_cr0 wrt ..plt
+
+    mov rsi, VMCS_GUEST_CR3
+    vmread rdi, rsi
+    call __write_cr3 wrt ..plt
+
+    mov rsi, VMCS_GUEST_CR4
+    vmread rdi, rsi
+    call __write_cr4 wrt ..plt
+
+    mov rsi, VMCS_GUEST_DR7
+    vmread rdi, rsi
+    call __write_dr7 wrt ..plt
+
+    ;
+    ; Restore IDT
+    ;
+
+    mov rsi, VMCS_GUEST_IDTR_BASE
+    vmread rdi, rsi
+    push rdi
+
+    mov rsi, VMCS_GUEST_IDTR_LIMIT
+    vmread rdi, rsi
+    push di
+
+    mov rdi, rsp
+    call __write_idt wrt ..plt
 
     ;
     ; Restore MSRs

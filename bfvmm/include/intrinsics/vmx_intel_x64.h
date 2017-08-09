@@ -54,7 +54,6 @@ namespace vmx
 
     inline void off()
     {
-        bfdebug << "    calling __vmxoff\n";
         if (!__vmxoff())
             throw std::runtime_error("vmx::off failed");
     }

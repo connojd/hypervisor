@@ -257,85 +257,75 @@ exit_handler_intel_x64::complete_vmcall(
     advance_rip();
 }
 
+//    bfdebug << "guest cr0: " << view_as_pointer(vmcs::guest_cr0::get()) << '\n';
+//    bfdebug << "host  cr0: " << view_as_pointer(vmcs::host_cr0::get()) << '\n';
+//    bfdebug << "guest cr0_fixed0: " << view_as_pointer(intel_x64::msrs::ia32_vmx_cr0_fixed0::get()) << '\n';
+//    bfdebug << "guest cr0_fixed1: " << view_as_pointer(intel_x64::msrs::ia32_vmx_cr0_fixed1::get()) << '\n';
+//
+//    bfdebug << "guest cr4: " << view_as_pointer(vmcs::guest_cr4::get()) << '\n';
+//    bfdebug << "host  cr4: " << view_as_pointer(vmcs::host_cr4::get()) << '\n';
+//    bfdebug << "guest cr4_fixed0: " << view_as_pointer(intel_x64::msrs::ia32_vmx_cr4_fixed0::get()) << '\n';
+//    bfdebug << "guest cr4_fixed1: " << view_as_pointer(intel_x64::msrs::ia32_vmx_cr4_fixed1::get()) << '\n';
+//
+////    bfdebug << "guest cr3: " << view_as_pointer(vmcs::guest_cr3::get()) << '\n';
+////    bfdebug << "host  cr3: " << view_as_pointer(intel_x64::cr3::get()) << '\n';
+////    bfdebug << "guest dr7: " << view_as_pointer(vmcs::guest_dr7::get()) << '\n';
+//    bfdebug << "guest rflags: " << view_as_pointer(vmcs::guest_rflags::get()) << '\n';
+//    bfdebug << "host  rflags: " << view_as_pointer(x64::rflags::get()) << '\n';
+//    bfdebug << "guest gdtr base: " << view_as_pointer(vmcs::guest_gdtr_base::get()) << '\n';
+//    bfdebug << "guest gdtr limit: " << view_as_pointer(vmcs::guest_gdtr_limit::get()) << '\n';
+////    bfdebug << "guest idtr base: " << view_as_pointer(vmcs::guest_idtr_base::get()) << '\n';
+////    bfdebug << "guest idtr limit: " << view_as_pointer(vmcs::guest_idtr_limit::get()) << '\n';
+//
+//    bfdebug << "guest TSS desc type: " << view_as_pointer(vmcs::guest_tr_access_rights::type::get()) << '\n';
+//    bfdebug << "guest TSS desc s: " << view_as_pointer(vmcs::guest_tr_access_rights::s::get()) << '\n';
+//    bfdebug << "guest TSS desc dpl: " << view_as_pointer(vmcs::guest_tr_access_rights::dpl::get()) << '\n';
+//    bfdebug << "guest TSS desc present: " << view_as_pointer(vmcs::guest_tr_access_rights::present::get()) << '\n';
+//    bfdebug << "guest TSS desc avl: " << view_as_pointer(vmcs::guest_tr_access_rights::avl::get()) << '\n';
+//    bfdebug << "guest TSS desc l: " << view_as_pointer(vmcs::guest_tr_access_rights::l::get()) << '\n';
+//    bfdebug << "guest TSS desc db: " << view_as_pointer(vmcs::guest_tr_access_rights::db::get()) << '\n';
+//    bfdebug << "guest TSS desc granularity: " << view_as_pointer(vmcs::guest_tr_access_rights::granularity::get()) << '\n';
+//    bfdebug << "guest TSS desc reserved: " << view_as_pointer(vmcs::guest_tr_access_rights::reserved::get()) << '\n';
+//    bfdebug << "guest TSS desc unusable: " << view_as_pointer(vmcs::guest_tr_access_rights::unusable::get()) << '\n';
+//    bfdebug << "guest tr limit: " << view_as_pointer(vmcs::guest_tr_limit::get()) << '\n';
+//    bfdebug << "guest efer: " << view_as_pointer(vmcs::guest_ia32_efer::get()) << '\n';
+//
+////    bfdebug << "guest cs selector: " << view_as_pointer(vmcs::guest_cs_selector::get()) << '\n';
+////    bfdebug << "host  cs selector: " << view_as_pointer(x64::segment_register::cs::get()) << '\n';
+////    bfdebug << "guest ss selector: " << view_as_pointer(vmcs::guest_ss_selector::get()) << '\n';
+////    bfdebug << "host  ss selector: " << view_as_pointer(x64::segment_register::ss::get()) << '\n';
+////    bfdebug << "guest es selector: " << view_as_pointer(vmcs::guest_es_selector::get()) << '\n';
+////    bfdebug << "host  es selector: " << view_as_pointer(x64::segment_register::es::get()) << '\n';
+////    bfdebug << "guest ds selector: " << view_as_pointer(vmcs::guest_ds_selector::get()) << '\n';
+////    bfdebug << "host  ds selector: " << view_as_pointer(x64::segment_register::ds::get()) << '\n';
+////    bfdebug << "guest fs selector: " << view_as_pointer(vmcs::guest_fs_selector::get()) << '\n';
+////    bfdebug << "host  fs selector: " << view_as_pointer(x64::segment_register::fs::get()) << '\n';
+////    bfdebug << "guest gs selector: " << view_as_pointer(vmcs::guest_gs_selector::get()) << '\n';
+////    bfdebug << "host  gs selector: " << view_as_pointer(x64::segment_register::gs::get()) << '\n';
+//    bfdebug << "guest tr selector: " << view_as_pointer(vmcs::guest_tr_selector::get()) << '\n';
+//    bfdebug << "host  tr selector: " << view_as_pointer(x64::segment_register::tr::get()) << '\n';
+
+
+// TODO: add compile check for page_size vs STACK_SIZE
 void
 exit_handler_intel_x64::handle_vmxoff()
 {
-    auto gdt_base = (uint64_t *)vmcs::guest_gdtr_base::get();
-    auto gdt_limit = vmcs::guest_gdtr_limit::get();
-    auto tr_select = vmcs::guest_tr_selector::get();
-    auto tr_index = vmcs::guest_tr_selector::index::get();
+    auto gdt_size = vmcs::guest_gdtr_limit::get() + 1;
+    if (gdt_size > x64::page_size)
+        throw std::runtime_error("guest gdt size > x64::page_size");
 
-    bfdebug << "guest cr0: " << view_as_pointer(vmcs::guest_cr0::get()) << '\n';
-    bfdebug << "host  cr0: " << view_as_pointer(vmcs::host_cr0::get()) << '\n';
-    bfdebug << "guest cr0_fixed0: " << view_as_pointer(intel_x64::msrs::ia32_vmx_cr0_fixed0::get()) << '\n';
-    bfdebug << "guest cr0_fixed1: " << view_as_pointer(intel_x64::msrs::ia32_vmx_cr0_fixed1::get()) << '\n';
+    auto gdt_phys = bfn::virt_to_phys_with_cr3(vmcs::guest_gdtr_base::get(), vmcs::guest_cr3::get());
+    auto gdt_map = bfn::make_unique_map_x64<char>(gdt_phys);
+    if (!gdt_map)
+        throw std::runtime_error("failed to make gdt map");
 
-    bfdebug << "guest cr4: " << view_as_pointer(vmcs::guest_cr4::get()) << '\n';
-    bfdebug << "host  cr4: " << view_as_pointer(vmcs::host_cr4::get()) << '\n';
-    bfdebug << "guest cr4_fixed0: " << view_as_pointer(intel_x64::msrs::ia32_vmx_cr4_fixed0::get()) << '\n';
-    bfdebug << "guest cr4_fixed1: " << view_as_pointer(intel_x64::msrs::ia32_vmx_cr4_fixed1::get()) << '\n';
+    auto addr = gdt_map.get();
+    char gdt[x64::page_size];
+    __builtin_memcpy(gdt, addr, gdt_size);
 
-//    bfdebug << "guest cr3: " << view_as_pointer(vmcs::guest_cr3::get()) << '\n';
-//    bfdebug << "host  cr3: " << view_as_pointer(intel_x64::cr3::get()) << '\n';
-//    bfdebug << "guest dr7: " << view_as_pointer(vmcs::guest_dr7::get()) << '\n';
-    bfdebug << "guest rflags: " << view_as_pointer(vmcs::guest_rflags::get()) << '\n';
-    bfdebug << "host  rflags: " << view_as_pointer(x64::rflags::get()) << '\n';
-    bfdebug << "guest gdtr base: " << view_as_pointer(vmcs::guest_gdtr_base::get()) << '\n';
-    bfdebug << "guest gdtr limit: " << view_as_pointer(vmcs::guest_gdtr_limit::get()) << '\n';
-//    bfdebug << "guest idtr base: " << view_as_pointer(vmcs::guest_idtr_base::get()) << '\n';
-//    bfdebug << "guest idtr limit: " << view_as_pointer(vmcs::guest_idtr_limit::get()) << '\n';
+    gdt_map.reset();
 
-    bfdebug << "guest TSS desc type: " << view_as_pointer(vmcs::guest_tr_access_rights::type::get()) << '\n';
-    bfdebug << "guest TSS desc s: " << view_as_pointer(vmcs::guest_tr_access_rights::s::get()) << '\n';
-    bfdebug << "guest TSS desc dpl: " << view_as_pointer(vmcs::guest_tr_access_rights::dpl::get()) << '\n';
-    bfdebug << "guest TSS desc present: " << view_as_pointer(vmcs::guest_tr_access_rights::present::get()) << '\n';
-    bfdebug << "guest TSS desc avl: " << view_as_pointer(vmcs::guest_tr_access_rights::avl::get()) << '\n';
-    bfdebug << "guest TSS desc l: " << view_as_pointer(vmcs::guest_tr_access_rights::l::get()) << '\n';
-    bfdebug << "guest TSS desc db: " << view_as_pointer(vmcs::guest_tr_access_rights::db::get()) << '\n';
-    bfdebug << "guest TSS desc granularity: " << view_as_pointer(vmcs::guest_tr_access_rights::granularity::get()) << '\n';
-    bfdebug << "guest TSS desc reserved: " << view_as_pointer(vmcs::guest_tr_access_rights::reserved::get()) << '\n';
-    bfdebug << "guest TSS desc unusable: " << view_as_pointer(vmcs::guest_tr_access_rights::unusable::get()) << '\n';
-    bfdebug << "guest tr limit: " << view_as_pointer(vmcs::guest_tr_limit::get()) << '\n';
-    bfdebug << "guest efer: " << view_as_pointer(vmcs::guest_ia32_efer::get()) << '\n';
-
-//    bfdebug << "guest cs selector: " << view_as_pointer(vmcs::guest_cs_selector::get()) << '\n';
-//    bfdebug << "host  cs selector: " << view_as_pointer(x64::segment_register::cs::get()) << '\n';
-//    bfdebug << "guest ss selector: " << view_as_pointer(vmcs::guest_ss_selector::get()) << '\n';
-//    bfdebug << "host  ss selector: " << view_as_pointer(x64::segment_register::ss::get()) << '\n';
-//    bfdebug << "guest es selector: " << view_as_pointer(vmcs::guest_es_selector::get()) << '\n';
-//    bfdebug << "host  es selector: " << view_as_pointer(x64::segment_register::es::get()) << '\n';
-//    bfdebug << "guest ds selector: " << view_as_pointer(vmcs::guest_ds_selector::get()) << '\n';
-//    bfdebug << "host  ds selector: " << view_as_pointer(x64::segment_register::ds::get()) << '\n';
-//    bfdebug << "guest fs selector: " << view_as_pointer(vmcs::guest_fs_selector::get()) << '\n';
-//    bfdebug << "host  fs selector: " << view_as_pointer(x64::segment_register::fs::get()) << '\n';
-//    bfdebug << "guest gs selector: " << view_as_pointer(vmcs::guest_gs_selector::get()) << '\n';
-//    bfdebug << "host  gs selector: " << view_as_pointer(x64::segment_register::gs::get()) << '\n';
-    bfdebug << "guest tr selector: " << view_as_pointer(vmcs::guest_tr_selector::get()) << '\n';
-    bfdebug << "host  tr selector: " << view_as_pointer(x64::segment_register::tr::get()) << '\n';
-
-    uintptr_t gdt_phys = bfn::virt_to_phys_with_cr3(vmcs::guest_gdtr_base::get(), vmcs::guest_cr3::get());
-    auto gdt = bfn::make_unique_map_x64<uintptr_t>(gdt_phys);
-    if (!gdt)
-        bfdebug << "gdt map is invalid!\n";
-
-    auto limit = (gdt_limit + 1) >> 3;
-    auto gdt_addr = gdt.get();
-
-    //for (i = 0; i < limit; i++)
-
-    auto tss_addr = gdt_addr + (tr_select >> 3);
-
-    bfdebug << "gdt[0]: " << view_as_pointer(gdt_addr[0]) << '\n';
-    bfdebug << "gdt[1]: " << view_as_pointer(gdt_addr[1]) << '\n';
-
-    bfdebug << "tss (first, pre clear): " << view_as_pointer(tss_addr[0]) << '\n';
-    bfdebug << "tss (second, pre clear): " << view_as_pointer(tss_addr[1]) << '\n';
-
-    *tss_addr &= 0xFFFFFDFFFFFFFFFF;
-
-    bfdebug << "tss (first, post clear): " << view_as_pointer(tss_addr[0]) << '\n';
-    bfdebug << "tss (second, post clear): " << view_as_pointer(tss_addr[1]) << '\n';
-
+    vmcs::host_gdtr_base::set(reinterpret_cast<uintptr_t>(gdt_map.get()));
     m_vmcs->promote();
 }
 
@@ -542,11 +532,6 @@ exit_handler_intel_x64::handle_vmcall_versions(vmcall_registers_t &regs)
 void
 exit_handler_intel_x64::handle_vmcall_registers(vmcall_registers_t &regs)
 {
-//    if (regs.r02 == 0xcafebabe) {
-//        bfdebug << "handling 0xcafebabe...running vmxoff\n";
-//        vmx::off();
-//    }
-
     bfdebug << "vmcall registers:" << bfendl;
     bfdebug << "r02: " << view_as_pointer(regs.r02) << bfendl;
     bfdebug << "r03: " << view_as_pointer(regs.r03) << bfendl;
