@@ -56,7 +56,6 @@ vmcs_intel_x64::launch(gsl::not_null<vmcs_intel_x64_state *> host_state,
                        gsl::not_null<vmcs_intel_x64_state *> guest_state)
 {
     this->create_vmcs_region();
-    bfdebug << "vmcs region: " << view_as_pointer(m_vmcs_region_phys) << '\n';
 
     auto ___ = gsl::on_failure([&]
     { this->release_vmcs_region(); });
@@ -67,7 +66,6 @@ vmcs_intel_x64::launch(gsl::not_null<vmcs_intel_x64_state *> host_state,
     { this->release_exit_handler_stack(); });
 
     this->clear();
-    bfdebug << "vmcs region: " << view_as_pointer(m_vmcs_region_phys) << '\n';
     this->load();
     this->write_fields(host_state, guest_state);
 
@@ -89,9 +87,12 @@ vmcs_intel_x64::launch(gsl::not_null<vmcs_intel_x64_state *> host_state,
 }
 
 void
-vmcs_intel_x64::promote()
+vmcs_intel_x64::promote(char *guest_gdt)
 {
-    vmcs_promote(vmcs::host_gs_base::get());
+    if (guest_gdt == nullptr)
+        throw std::invalid_argument("guest_gdt is NULL");
+
+    vmcs_promote(vmcs::host_gs_base::get(), guest_gdt);
     throw std::runtime_error("vmcs promote failed");
 }
 

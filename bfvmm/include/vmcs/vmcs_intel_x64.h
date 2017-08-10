@@ -122,10 +122,10 @@ public:
     ///       when "-O3" was enabled. The order of each instruction is very
     ///       important
     ///
-    /// @expects none
+    /// @expects guest_gdt != nullptr
     /// @ensures none
     ///
-    virtual void promote();
+    virtual void promote(char *guest_gdt);
 
     /// Load
     ///

@@ -180,9 +180,10 @@ static std::map<uint64_t, std::string> exit_reasons
 };
 
 static void
-vmcs_promote_fail(bool state_save)
+vmcs_promote_fail(bool state_save, char *addr)
 {
     (void) state_save;
+    (void) addr;
     return;
 }
 
@@ -500,7 +501,7 @@ vmcs_ut::test_promote_failure()
     {
         vmcs_intel_x64 vmcs{};
 
-        this->expect_exception([&] { vmcs.promote(); }, ""_ut_ree);
+        this->expect_exception([&] { vmcs.promote(nullptr); }, ""_ut_ree);
     });
 }
 

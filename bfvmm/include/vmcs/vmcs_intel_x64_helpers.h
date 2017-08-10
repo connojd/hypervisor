@@ -136,7 +136,7 @@ auto set_vm_control_if_allowed(bool val, MA msr_addr, CA ctls_addr, const char *
             if (verbose)
             {
                 bfwarning << "set_vm_control_if_allowed failed: " << name
-                          << "control is not allowed to be cleared to 0" << bfendl;
+                          << " control is not allowed to be cleared to 0" << bfendl;
             }
         }
     }
@@ -153,7 +153,7 @@ auto set_vm_control_if_allowed(bool val, MA msr_addr, CA ctls_addr, const char *
             if (verbose)
             {
                 bfwarning << "set_vm_control_if_allowed failed: " << name
-                          << "control is not allowed to be set to 1" << bfendl;
+                          << " control is not allowed to be set to 1" << bfendl;
             }
         }
     }

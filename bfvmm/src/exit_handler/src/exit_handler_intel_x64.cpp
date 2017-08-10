@@ -27,6 +27,7 @@
 #include <guard_exceptions.h>
 
 #include <memory_manager/memory_manager_x64.h>
+#include <memory_manager/mem_attr_x64.h>
 
 #include <exit_handler/exit_handler_intel_x64.h>
 #include <exit_handler/exit_handler_intel_x64_entry.h>
@@ -305,28 +306,23 @@ exit_handler_intel_x64::complete_vmcall(
 //    bfdebug << "guest tr selector: " << view_as_pointer(vmcs::guest_tr_selector::get()) << '\n';
 //    bfdebug << "host  tr selector: " << view_as_pointer(x64::segment_register::tr::get()) << '\n';
 
-
-// TODO: add compile check for page_size vs STACK_SIZE
 void
 exit_handler_intel_x64::handle_vmxoff()
 {
-    auto gdt_size = vmcs::guest_gdtr_limit::get() + 1;
-    if (gdt_size > x64::page_size)
-        throw std::runtime_error("guest gdt size > x64::page_size");
+    auto pages = ((vmcs::guest_gdtr_limit::get() + 1U) >> x64::page_shift) + 1;
+    auto size = pages * x64::page_size;
 
-    auto gdt_phys = bfn::virt_to_phys_with_cr3(vmcs::guest_gdtr_base::get(), vmcs::guest_cr3::get());
-    auto gdt_map = bfn::make_unique_map_x64<char>(gdt_phys);
+    auto cr3 = vmcs::guest_cr3::get();
+    auto virt = vmcs::guest_gdtr_base::get();
+    auto phys = bfn::virt_to_phys_with_cr3(virt, cr3);
+
+    auto range = {std::make_pair(phys, size)};
+    auto gdt_map = bfn::make_unique_map_x64<char>(range, memory_attr::rw_wb);
+
     if (!gdt_map)
         throw std::runtime_error("failed to make gdt map");
 
-    auto addr = gdt_map.get();
-    char gdt[x64::page_size];
-    __builtin_memcpy(gdt, addr, gdt_size);
-
-    gdt_map.reset();
-
-    vmcs::host_gdtr_base::set(reinterpret_cast<uintptr_t>(gdt_map.get()));
-    m_vmcs->promote();
+    m_vmcs->promote(gdt_map.get());
 }
 
 void

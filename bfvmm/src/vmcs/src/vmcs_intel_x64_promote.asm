@@ -152,16 +152,16 @@ section .text
 vmcs_promote:
 
     mov r15, rdi
+    mov r14, rsi
 
     ;
     ; Clear TSS Busy
     ;
-    ; VMCS_HOST_GDTR_BASE contains the virtual address of the guest's GDT
-    ; that was mapped read/write (see handle_vmxoff).
+    ; rsi contains the virtual address of the guest's GDT in the
+    ; VMM's address space.
     ;
 
-    mov rsi, VMCS_HOST_GDTR_BASE
-    vmread rdi, rsi
+    mov rdi, rsi
     mov rsi, VMCS_GUEST_TR_SELECTOR
     vmread rsi, rsi
 
@@ -170,11 +170,12 @@ vmcs_promote:
     and [rdi], rax
 
     ;
-    ; Load temporary GDT
+    ; Temporarily load the guest's GDT using the r/w mapping
+    ; so that writes to it (e.g. ltr) don't fault when
+    ; restoring segment registers.
     ;
 
-    mov rsi, VMCS_HOST_GDTR_BASE
-    vmread rdi, rsi
+    mov rdi, r14
     push rdi
 
     mov rsi, VMCS_GUEST_GDTR_LIMIT
@@ -189,7 +190,7 @@ vmcs_promote:
     ;
     ; Now, the GDTR base references read/write memory in the
     ; VMM's address space, so that when ltr is executed, the
-    ; processor can safely update the busy bit in the TSS.
+    ; processor can safely set the busy bit in the TSS.
     ;
 
     mov rsi, VMCS_GUEST_ES_SELECTOR
@@ -225,21 +226,6 @@ vmcs_promote:
     call __write_tr wrt ..plt
 
     ;
-    ; Restore the guest's actual GDT
-    ;
-
-    mov rsi, VMCS_GUEST_GDTR_BASE
-    vmread rdi, rsi
-    push rdi
-
-    mov rsi, VMCS_GUEST_GDTR_LIMIT
-    vmread rdi, rsi
-    push di
-
-    mov rdi, rsp
-    call __write_gdt wrt ..plt
-
-    ;
     ; Restore Control Registers
     ;
 
@@ -259,6 +245,21 @@ vmcs_promote:
     mov rsi, VMCS_GUEST_DR7
     vmread rdi, rsi
     call __write_dr7 wrt ..plt
+
+    ;
+    ; Restore the guest's actual GDT
+    ;
+
+    mov rsi, VMCS_GUEST_GDTR_BASE
+    vmread rdi, rsi
+    push rdi
+
+    mov rsi, VMCS_GUEST_GDTR_LIMIT
+    vmread rdi, rsi
+    push di
+
+    mov rdi, rsp
+    call __write_gdt wrt ..plt
 
     ;
     ; Restore IDT
