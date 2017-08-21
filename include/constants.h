@@ -222,7 +222,7 @@
  *       in this file as well.
  */
 #ifndef STACK_SIZE
-#define STACK_SIZE (1ULL << 15)
+#define STACK_SIZE (1ULL << 16)
 #endif
 
 /**
