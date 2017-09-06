@@ -1,0 +1,33 @@
+#!/bin/bash
+
+if [ $# -lt 4 ];
+then
+    echo "USAGE: runcjag <coreid> <npages> <usehugepg> <phys_mapping> [send|receive]"
+    exit
+fi
+
+recv=""
+core=$1
+npages=$2 # number of 2M pages
+use_hugepg=$3
+phys_mapping=$4
+
+if [ $5 == "receive" ];
+then
+    recv=" -r"
+elif [ $5 != "send" ];
+then
+    echo "USAGE: runcjag <coreid> <npages> <usehugepg> <phys_mapping> [send|receive]"
+    exit
+fi
+
+./makefiles/hyperkernel/bfexec/bin/native/bfexec \
+    $core \
+    $npages \
+    $use_hugepg \
+    $phys_mapping \
+    ./makefiles/hyperkernel/tests/cjag/bin/cross/cjag \
+    -s 8 \
+    -w 12 \
+    -c 6291456 \
+    $recv

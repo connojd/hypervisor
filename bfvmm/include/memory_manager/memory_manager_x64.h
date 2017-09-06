@@ -362,6 +362,7 @@ private:
 
 public:
 
+    uint64_t m_total_bytes;
     memory_manager_x64(const memory_manager_x64 &) = delete;
     memory_manager_x64 &operator=(const memory_manager_x64 &) = delete;
 };

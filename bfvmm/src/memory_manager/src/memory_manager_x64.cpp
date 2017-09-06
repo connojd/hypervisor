@@ -70,6 +70,8 @@ memory_manager_x64::alloc(size_type size) noexcept
 
     try
     {
+        m_total_bytes += size;
+
         if (lower(size) == 0)
             return reinterpret_cast<pointer>(g_page_pool.alloc(size));
 
@@ -89,10 +91,12 @@ memory_manager_x64::alloc_map(size_type size) noexcept
 
     try
     {
+        m_total_bytes += size;
         return reinterpret_cast<pointer>(g_mem_map_pool.alloc(size));
     }
     catch (...)
     { }
+
 
     return nullptr;
 }
