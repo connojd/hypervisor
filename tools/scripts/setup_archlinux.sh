@@ -44,7 +44,7 @@ install_common_packages() {
     sudo pacman -S --needed --noconfirm base-devel
     sudo pacman -S --needed --noconfirm linux-headers
     sudo pacman -S --needed --noconfirm nasm
-    sudo pacman -S --needed --noconfirm clang
+#    sudo pacman -S --needed --noconfirm clang
     sudo pacman -S --needed --noconfirm texinfo
     sudo pacman -S --needed --noconfirm cmake
 }
@@ -54,7 +54,7 @@ install_common_packages() {
 # ------------------------------------------------------------------------------
 
 case $( grep ^ID_LIKE= /etc/os-release | cut -d'=' -f 2 ) in
-archlinux|"\"arch\"")
+archlinux|"\"arch\""|arch)
     install_common_packages
     ;;
 

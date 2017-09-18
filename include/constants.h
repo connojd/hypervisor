@@ -127,6 +127,8 @@
  * Note: defined in bytes (defaults to 8MB)
  */
 #ifndef MAX_HEAP_POOL
+//#define MAX_HEAP_POOL (207 * 256ULL * MAX_PAGE_SIZE * sizeof(uintptr_t)) --- worked
+//#define MAX_HEAP_POOL (207 * 256ULL * MAX_PAGE_SIZE * sizeof(uintptr_t))
 #define MAX_HEAP_POOL (256ULL * MAX_PAGE_SIZE * sizeof(uintptr_t))
 #endif
 
@@ -139,6 +141,9 @@
  * Note: defined in bytes (defaults to 32MB)
  */
 #ifndef MAX_PAGE_POOL
+//#define MAX_PAGE_POOL (32 * 256ULL * MAX_PAGE_SIZE)
+//#define MAX_PAGE_POOL (128 * 256ULL * MAX_PAGE_SIZE) --- worked
+//#define MAX_PAGE_POOL (180 * 256ULL * MAX_PAGE_SIZE) ---- worked
 #define MAX_PAGE_POOL (32 * 256ULL * MAX_PAGE_SIZE)
 #endif
 
@@ -152,6 +157,8 @@
  */
 #ifndef MAX_MEM_MAP_POOL
 #define MAX_MEM_MAP_POOL (256ULL * MAX_PAGE_SIZE  * sizeof(uintptr_t))
+//#define MAX_MEM_MAP_POOL (300ULL * MAX_PAGE_SIZE  * sizeof(uintptr_t)) --- worked
+//#define MAX_MEM_MAP_POOL (400ULL * MAX_PAGE_SIZE  * sizeof(uintptr_t))
 #endif
 
 /*
@@ -189,7 +196,7 @@
  * Note: defined in shifted bits
  */
 #ifndef DEBUG_RING_SHIFT
-#define DEBUG_RING_SHIFT (15)
+#define DEBUG_RING_SHIFT (12)
 #endif
 
 /**
@@ -222,7 +229,7 @@
  *       in this file as well.
  */
 #ifndef STACK_SIZE
-#define STACK_SIZE (1ULL << 16)
+#define STACK_SIZE (1ULL << 15)
 #endif
 
 /**
@@ -260,7 +267,7 @@
  * Note: Defined in bytes
  */
 #ifndef VMCALL_IN_BUFFER_SIZE
-#define VMCALL_IN_BUFFER_SIZE (32 * MAX_PAGE_SIZE)
+#define VMCALL_IN_BUFFER_SIZE (1 * MAX_PAGE_SIZE)
 #endif
 
 /**
@@ -269,7 +276,7 @@
  * Note: Defined in bytes
  */
 #ifndef VMCALL_OUT_BUFFER_SIZE
-#define VMCALL_OUT_BUFFER_SIZE (32 * MAX_PAGE_SIZE)
+#define VMCALL_OUT_BUFFER_SIZE (1 * MAX_PAGE_SIZE)
 #endif
 
 /**
@@ -286,7 +293,7 @@
  * Note: See bfvmm/serial/serial_port_intel_x64.h
  */
 #ifndef DEFAULT_COM_PORT
-#define DEFAULT_COM_PORT 0x3F8U
+#define DEFAULT_COM_PORT 0x2F8U
 #endif
 
 /**

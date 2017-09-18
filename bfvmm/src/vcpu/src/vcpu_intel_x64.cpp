@@ -23,6 +23,7 @@
 #include <vcpu/vcpu_intel_x64.h>
 #include <vmcs/vmcs_intel_x64_debug.h>
 #include <intrinsics/srs_x64.h>
+#include <intrinsics/msrs_intel_x64.h>
 
 vcpu_intel_x64::vcpu_intel_x64(
     vcpuid::type id,
@@ -42,9 +43,12 @@ vcpu_intel_x64::vcpu_intel_x64(
     m_guest_state(std::move(guest_state))
 { }
 
+
 void
 vcpu_intel_x64::init(user_data *data)
 {
+    static bool cos_set = false;
+
     auto ___ = gsl::on_failure([&]
     { this->fini(); });
 
@@ -81,6 +85,20 @@ vcpu_intel_x64::init(user_data *data)
 
     m_exit_handler->set_vmcs(m_vmcs.get());
     m_exit_handler->set_state_save(m_state_save.get());
+
+    // set CBMs for COSs 0-4
+    if (!cos_set) {
+        intel_x64::msrs::set(0xc90, 0x003ffULL);
+        intel_x64::msrs::set(0xc91, 0xffc00ULL);
+        intel_x64::msrs::set(0xc92, 0x00f00ULL);
+        intel_x64::msrs::set(0xc93, 0x0f000ULL);
+        intel_x64::msrs::set(0xc94, 0xfffffULL);
+	cos_set = true;
+    }
+
+    // set PQR_ASSOC with appropriate COS
+    //intel_x64::msrs::set(0xc8f, ((uint64_t)(this->id()) << 32));
+    intel_x64::msrs::set(0xc8f, (4ULL << 32));
 
     vcpu::init(data);
 }

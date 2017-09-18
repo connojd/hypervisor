@@ -185,9 +185,9 @@ platform_restore_affinity(int64_t affinity)
     (void) affinity;
 }
 
-void
-platform_load_gdt_rw(void)
-{
-    int cpu = raw_smp_processor_id();
-    load_direct_gdt(cpu);
-}
+//void
+//platform_load_gdt_rw(void)
+//{
+//    int cpu = raw_smp_processor_id();
+//    load_direct_gdt(cpu);
+//}

@@ -35,7 +35,7 @@ section .text
 global thread_context_cpuid:function
 thread_context_cpuid:
 
-    mov rdx, 0x10000
+    mov rdx, 0x8000
     sub rdx, 0x1
 
     mov rax, rsp
@@ -53,7 +53,7 @@ thread_context_cpuid:
 global thread_context_tlsptr:function
 thread_context_tlsptr:
 
-    mov rdx, 0x10000
+    mov rdx, 0x8000
     sub rdx, 0x1
 
     mov rax, rsp

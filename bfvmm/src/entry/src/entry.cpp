@@ -51,8 +51,8 @@ start_vmm(uint64_t arg) noexcept
 //        bfdebug << "calling run_vcpu\n";
         g_vcm->run_vcpu(arg, pre_run_vcpu(arg));
 
-//        bfdebug << "success: host os is " << bfcolor_green "now " << bfcolor_end
-//                << "in a vm on vcpuid = " << arg << bfendl;
+        bfdebug << "success: host os is " << bfcolor_green "now " << bfcolor_end
+                << "in a vm on vcpuid = " << arg << bfendl;
 
         return ENTRY_SUCCESS;
     });
@@ -77,8 +77,8 @@ stop_vmm(uint64_t arg) noexcept
 //        bfdebug << "    calling delete_vcpu" << bfendl;
         g_vcm->delete_vcpu(arg, pre_delete_vcpu(arg));
 
-//        bfdebug << "success: host os is " << bfcolor_red "not " << bfcolor_end
-//                << "in a vm on vcpuid = " << arg << bfendl;
+        bfdebug << "success: host os is " << bfcolor_red "not " << bfcolor_end
+                << "in a vm on vcpuid = " << arg << bfendl;
 
         return ENTRY_SUCCESS;
     });
