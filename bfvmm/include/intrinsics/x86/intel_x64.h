@@ -25,5 +25,6 @@
 #include <intrinsics/x86/intel/crs_intel_x64.h>
 #include <intrinsics/x86/intel/vmcs/vmcs_intel_x64.h>
 #include <intrinsics/x86/intel/cpuid_intel_x64.h>
+#include <intrinsics/x86/intel/event.h>
 
 #endif
