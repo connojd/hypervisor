@@ -16231,8 +16231,138 @@ namespace ia32_x2apic_sivr
     inline void set(value_type val) noexcept
     { _write_msr(addr, val); }
 
+    namespace vector
+    {
+        constexpr const auto mask = 0x00000000000000FFULL;
+        constexpr const auto from = 0ULL;
+        constexpr const auto name = "vector";
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
+    }
+
+    namespace apic_enable_bit
+    {
+        constexpr const auto mask = 0x0000000000000100ULL;
+        constexpr const auto from = 8ULL;
+        constexpr const auto name = "apic_enable_bit";
+
+        inline auto is_enabled()
+        { return is_bit_set(_read_msr(addr), from); }
+
+        inline auto is_enabled(value_type msr)
+        { return is_bit_set(msr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_msr(addr), from); }
+
+        inline auto is_disabled(value_type msr)
+        { return is_bit_cleared(msr, from); }
+
+        inline void enable()
+        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
+
+        inline auto enable(value_type msr)
+        { return set_bit(msr, from); }
+
+        inline void disable()
+        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
+
+        inline auto disable(value_type msr)
+        { return clear_bit(msr, from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
+    }
+
+    namespace focus_checking
+    {
+        constexpr const auto mask = 0x0000000000000200ULL;
+        constexpr const auto from = 9ULL;
+        constexpr const auto name = "focus_checking";
+
+        inline auto is_disabled()
+        { return is_bit_set(_read_msr(addr), from); }
+
+        inline auto is_disabled(value_type msr)
+        { return is_bit_set(msr, from); }
+
+        inline auto is_enabled()
+        { return is_bit_cleared(_read_msr(addr), from); }
+
+        inline auto is_enabled(value_type msr)
+        { return is_bit_cleared(msr, from); }
+
+        inline void disable()
+        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
+
+        inline auto disable(value_type msr)
+        { return set_bit(msr, from); }
+
+        inline void enable()
+        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
+
+        inline auto enable(value_type msr)
+        { return clear_bit(msr, from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
+    }
+
+    namespace suppress_eoi_broadcast
+    {
+        constexpr const auto mask = 0x0000000000001000ULL;
+        constexpr const auto from = 12ULL;
+        constexpr const auto name = "suppress_eoi_broadcast";
+
+        inline auto is_enabled()
+        { return is_bit_set(_read_msr(addr), from); }
+
+        inline auto is_enabled(value_type msr)
+        { return is_bit_set(msr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_msr(addr), from); }
+
+        inline auto is_disabled(value_type msr)
+        { return is_bit_cleared(msr, from); }
+
+        inline void enable()
+        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
+
+        inline auto enable(value_type msr)
+        { return set_bit(msr, from); }
+
+        inline void disable()
+        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
+
+        inline auto disable(value_type msr)
+        { return clear_bit(msr, from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
+    }
+
     inline void dump(int level, std::string *msg = nullptr)
-    { bfdebug_nhex(level, name, get(), msg); }
+    {
+        bfdebug_nhex(level, name, get(), msg);
+        vector::dump(level, msg);
+        apic_enable_bit::dump(level, msg);
+        focus_checking::dump(level, msg);
+        suppress_eoi_broadcast::dump(level, msg);
+    }
 }
 
 namespace ia32_x2apic_isr0
@@ -16549,8 +16679,138 @@ namespace ia32_x2apic_lvt_cmci
     inline void set(value_type val) noexcept
     { _write_msr(addr, val); }
 
+    namespace vector
+    {
+        constexpr const auto mask = 0x00000000000000FFULL;
+        constexpr const auto from = 0ULL;
+        constexpr const auto name = "vector";
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
+    }
+
+    namespace delivery_mode
+    {
+        constexpr const auto mask = 0x0000000000000700ULL;
+        constexpr const auto from = 8ULL;
+        constexpr const auto name = "delivery_mode";
+
+        constexpr const auto fixed = 0U;
+        constexpr const auto smi = 2U;
+        constexpr const auto nmi = 4U;
+        constexpr const auto init = 5U;
+        constexpr const auto extint = 7U;
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        {
+            switch (get()) {
+                case fixed: bfdebug_subtext(level, name, "fixed", msg); break;
+                case smi: bfdebug_subtext(level, name, "smi", msg); break;
+                case nmi: bfdebug_subtext(level, name, "nmi", msg); break;
+                case init: bfdebug_subtext(level, name, "init", msg); break;
+                case extint: bfdebug_subtext(level, name, "extint", msg); break;
+                default: bfalert_subtext(level, name, "RESERVED", msg); break;
+            }
+        }
+    }
+
+    namespace delivery_status
+    {
+        constexpr const auto mask = 0x0000000000001000ULL;
+        constexpr const auto from = 12ULL;
+        constexpr const auto name = "delivery_status";
+
+        constexpr const auto idle = 0U;
+        constexpr const auto send_pending = 1U;
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        {
+            switch (get()) {
+                case idle: bfdebug_subtext(level, name, "idle", msg); break;
+                case send_pending: bfdebug_subtext(level, name, "send pending", msg); break;
+                default: bferror_subtext(level, name, "INVALID", msg); break;
+            }
+        }
+    }
+
+    namespace mask_bit
+    {
+        constexpr const auto mask = 0x0000000000010000ULL;
+        constexpr const auto from = 16ULL;
+        constexpr const auto name = "mask_bit";
+
+        inline auto is_enabled()
+        { return is_bit_set(_read_msr(addr), from); }
+
+        inline auto is_enabled(value_type msr)
+        { return is_bit_set(msr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_msr(addr), from); }
+
+        inline auto is_disabled(value_type msr)
+        { return is_bit_cleared(msr, from); }
+
+        inline void enable()
+        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
+
+        inline auto enable(value_type msr)
+        { return set_bit(msr, from); }
+
+        inline void disable()
+        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
+
+        inline auto disable(value_type msr)
+        { return clear_bit(msr, from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
+    }
+
     inline void dump(int level, std::string *msg = nullptr)
-    { bfdebug_nhex(level, name, get(), msg); }
+    {
+        bfdebug_nhex(level, name, get(),  msg);
+        vector::dump(level, msg);
+        delivery_mode::dump(level, msg);
+        delivery_status::dump(level, msg);
+        mask_bit::dump(level, msg);
+    }
 }
 
 namespace ia32_x2apic_icr
@@ -16579,8 +16839,134 @@ namespace ia32_x2apic_lvt_timer
     inline void set(value_type val) noexcept
     { _write_msr(addr, val); }
 
+    namespace vector
+    {
+        constexpr const auto mask = 0x00000000000000FFULL;
+        constexpr const auto from = 0ULL;
+        constexpr const auto name = "vector";
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
+    }
+
+    namespace delivery_status
+    {
+        constexpr const auto mask = 0x0000000000001000ULL;
+        constexpr const auto from = 12ULL;
+        constexpr const auto name = "delivery_status";
+
+        constexpr const auto idle = 0U;
+        constexpr const auto send_pending = 1U;
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        {
+            switch (get()) {
+                case idle: bfdebug_subtext(level, name, "idle", msg); break;
+                case send_pending: bfdebug_subtext(level, name, "send pending", msg); break;
+                default: bferror_subtext(level, name, "INVALID", msg); break;
+            }
+        }
+    }
+
+    namespace mask_bit
+    {
+        constexpr const auto mask = 0x0000000000010000ULL;
+        constexpr const auto from = 16ULL;
+        constexpr const auto name = "mask_bit";
+
+        inline auto is_enabled()
+        { return is_bit_set(_read_msr(addr), from); }
+
+        inline auto is_enabled(value_type msr)
+        { return is_bit_set(msr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_msr(addr), from); }
+
+        inline auto is_disabled(value_type msr)
+        { return is_bit_cleared(msr, from); }
+
+        inline void enable()
+        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
+
+        inline auto enable(value_type msr)
+        { return set_bit(msr, from); }
+
+        inline void disable()
+        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
+
+        inline auto disable(value_type msr)
+        { return clear_bit(msr, from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
+    }
+
+    namespace timer_mode
+    {
+        constexpr const auto mask = 0x0000000000060000ULL;
+        constexpr const auto from = 17ULL;
+        constexpr const auto name = "timer_mode";
+
+        constexpr const auto one_shot = 0U;
+        constexpr const auto periodic = 1U;
+        constexpr const auto tsc_deadline = 2U;
+
+        inline auto get()
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr)
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val)
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val)
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        {
+            switch (get()) {
+                case one_shot: bfdebug_subtext(level, name, "one-shot", msg); break;
+                case periodic: bfdebug_subtext(level, name, "periodic", msg); break;
+                case tsc_deadline: bfdebug_subtext(level, name, "TSC-deadline", msg); break;
+                default: bferror_subtext(level, name, "RESERVED", msg); break;
+            }
+        }
+    }
+
     inline void dump(int level, std::string *msg = nullptr)
-    { bfdebug_nhex(level, name, get(), msg); }
+    {
+        bfdebug_nhex(level, name, get(), msg);
+        vector::dump(level, msg);
+        delivery_status::dump(level, msg);
+        mask_bit::dump(level, msg);
+        timer_mode::dump(level, msg);
+    }
 }
 
 namespace ia32_x2apic_lvt_thermal
@@ -16594,8 +16980,138 @@ namespace ia32_x2apic_lvt_thermal
     inline void set(value_type val) noexcept
     { _write_msr(addr, val); }
 
+    namespace vector
+    {
+        constexpr const auto mask = 0x00000000000000FFULL;
+        constexpr const auto from = 0ULL;
+        constexpr const auto name = "vector";
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
+    }
+
+    namespace delivery_mode
+    {
+        constexpr const auto mask = 0x0000000000000700ULL;
+        constexpr const auto from = 8ULL;
+        constexpr const auto name = "delivery_mode";
+
+        constexpr const auto fixed = 0U;
+        constexpr const auto smi = 2U;
+        constexpr const auto nmi = 4U;
+        constexpr const auto init = 5U;
+        constexpr const auto extint = 7U;
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        {
+            switch (get()) {
+                case fixed: bfdebug_subtext(level, name, "fixed", msg); break;
+                case smi: bfdebug_subtext(level, name, "smi", msg); break;
+                case nmi: bfdebug_subtext(level, name, "nmi", msg); break;
+                case init: bfdebug_subtext(level, name, "init", msg); break;
+                case extint: bfdebug_subtext(level, name, "extint", msg); break;
+                default: bfalert_subtext(level, name, "RESERVED", msg); break;
+            }
+        }
+    }
+
+    namespace delivery_status
+    {
+        constexpr const auto mask = 0x0000000000001000ULL;
+        constexpr const auto from = 12ULL;
+        constexpr const auto name = "delivery_status";
+
+        constexpr const auto idle = 0U;
+        constexpr const auto send_pending = 1U;
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        {
+            switch (get()) {
+                case idle: bfdebug_subtext(level, name, "idle", msg); break;
+                case send_pending: bfdebug_subtext(level, name, "send pending", msg); break;
+                default: bferror_subtext(level, name, "INVALID", msg); break;
+            }
+        }
+    }
+
+    namespace mask_bit
+    {
+        constexpr const auto mask = 0x0000000000010000ULL;
+        constexpr const auto from = 16ULL;
+        constexpr const auto name = "mask_bit";
+
+        inline auto is_enabled()
+        { return is_bit_set(_read_msr(addr), from); }
+
+        inline auto is_enabled(value_type msr)
+        { return is_bit_set(msr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_msr(addr), from); }
+
+        inline auto is_disabled(value_type msr)
+        { return is_bit_cleared(msr, from); }
+
+        inline void enable()
+        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
+
+        inline auto enable(value_type msr)
+        { return set_bit(msr, from); }
+
+        inline void disable()
+        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
+
+        inline auto disable(value_type msr)
+        { return clear_bit(msr, from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
+    }
+
     inline void dump(int level, std::string *msg = nullptr)
-    { bfdebug_nhex(level, name, get(), msg); }
+    {
+        bfdebug_nhex(level, name, get(),  msg);
+        vector::dump(level, msg);
+        delivery_mode::dump(level, msg);
+        delivery_status::dump(level, msg);
+        mask_bit::dump(level, msg);
+    }
 }
 
 namespace ia32_x2apic_lvt_pmi
@@ -16609,8 +17125,138 @@ namespace ia32_x2apic_lvt_pmi
     inline void set(value_type val) noexcept
     { _write_msr(addr, val); }
 
+    namespace vector
+    {
+        constexpr const auto mask = 0x00000000000000FFULL;
+        constexpr const auto from = 0ULL;
+        constexpr const auto name = "vector";
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
+    }
+
+    namespace delivery_mode
+    {
+        constexpr const auto mask = 0x0000000000000700ULL;
+        constexpr const auto from = 8ULL;
+        constexpr const auto name = "delivery_mode";
+
+        constexpr const auto fixed = 0U;
+        constexpr const auto smi = 2U;
+        constexpr const auto nmi = 4U;
+        constexpr const auto init = 5U;
+        constexpr const auto extint = 7U;
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        {
+            switch (get()) {
+                case fixed: bfdebug_subtext(level, name, "fixed", msg); break;
+                case smi: bfdebug_subtext(level, name, "smi", msg); break;
+                case nmi: bfdebug_subtext(level, name, "nmi", msg); break;
+                case init: bfdebug_subtext(level, name, "init", msg); break;
+                case extint: bfdebug_subtext(level, name, "extint", msg); break;
+                default: bfalert_subtext(level, name, "RESERVED", msg); break;
+            }
+        }
+    }
+
+    namespace delivery_status
+    {
+        constexpr const auto mask = 0x0000000000001000ULL;
+        constexpr const auto from = 12ULL;
+        constexpr const auto name = "delivery_status";
+
+        constexpr const auto idle = 0U;
+        constexpr const auto send_pending = 1U;
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        {
+            switch (get()) {
+                case idle: bfdebug_subtext(level, name, "idle", msg); break;
+                case send_pending: bfdebug_subtext(level, name, "send pending", msg); break;
+                default: bferror_subtext(level, name, "INVALID", msg); break;
+            }
+        }
+    }
+
+    namespace mask_bit
+    {
+        constexpr const auto mask = 0x0000000000010000ULL;
+        constexpr const auto from = 16ULL;
+        constexpr const auto name = "mask_bit";
+
+        inline auto is_enabled()
+        { return is_bit_set(_read_msr(addr), from); }
+
+        inline auto is_enabled(value_type msr)
+        { return is_bit_set(msr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_msr(addr), from); }
+
+        inline auto is_disabled(value_type msr)
+        { return is_bit_cleared(msr, from); }
+
+        inline void enable()
+        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
+
+        inline auto enable(value_type msr)
+        { return set_bit(msr, from); }
+
+        inline void disable()
+        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
+
+        inline auto disable(value_type msr)
+        { return clear_bit(msr, from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
+    }
+
     inline void dump(int level, std::string *msg = nullptr)
-    { bfdebug_nhex(level, name, get(), msg); }
+    {
+        bfdebug_nhex(level, name, get(),  msg);
+        vector::dump(level, msg);
+        delivery_mode::dump(level, msg);
+        delivery_status::dump(level, msg);
+        mask_bit::dump(level, msg);
+    }
 }
 
 namespace ia32_x2apic_lvt_lint0
@@ -16624,8 +17270,218 @@ namespace ia32_x2apic_lvt_lint0
     inline void set(value_type val) noexcept
     { _write_msr(addr, val); }
 
+    namespace vector
+    {
+        constexpr const auto mask = 0x00000000000000FFULL;
+        constexpr const auto from = 0ULL;
+        constexpr const auto name = "vector";
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
+    }
+
+    namespace delivery_mode
+    {
+        constexpr const auto mask = 0x0000000000000700ULL;
+        constexpr const auto from = 8ULL;
+        constexpr const auto name = "delivery_mode";
+
+        constexpr const auto fixed = 0U;
+        constexpr const auto smi = 2U;
+        constexpr const auto nmi = 4U;
+        constexpr const auto init = 5U;
+        constexpr const auto extint = 7U;
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        {
+            switch (get()) {
+                case fixed: bfdebug_subtext(level, name, "fixed", msg); break;
+                case smi: bfdebug_subtext(level, name, "smi", msg); break;
+                case nmi: bfdebug_subtext(level, name, "nmi", msg); break;
+                case init: bfdebug_subtext(level, name, "init", msg); break;
+                case extint: bfdebug_subtext(level, name, "extint", msg); break;
+                default: bfalert_subtext(level, name, "RESERVED", msg); break;
+            }
+        }
+    }
+
+    namespace delivery_status
+    {
+        constexpr const auto mask = 0x0000000000001000ULL;
+        constexpr const auto from = 12ULL;
+        constexpr const auto name = "delivery_status";
+
+        constexpr const auto idle = 0U;
+        constexpr const auto send_pending = 1U;
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        {
+            switch (get()) {
+                case idle: bfdebug_subtext(level, name, "idle", msg); break;
+                case send_pending: bfdebug_subtext(level, name, "send pending", msg); break;
+                default: bferror_subtext(level, name, "INVALID", msg); break;
+            }
+        }
+    }
+
+    namespace polarity
+    {
+        constexpr const auto mask = 0x0000000000002000ULL;
+        constexpr const auto from = 13ULL;
+        constexpr const auto name = "polarity";
+
+        constexpr const auto active_high = 0U;
+        constexpr const auto active_low = 1U;
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        {
+            switch (get()) {
+                case active_high: bfdebug_subtext(level, name, "active_high", msg); break;
+                case active_low: bfdebug_subtext(level, name, "active_low", msg); break;
+                default: bferror_subtext(level, name, "INVALID", msg); break;
+            }
+        }
+    }
+
+    namespace remote_irr
+    {
+        constexpr const auto mask = 0x0000000000004000ULL;
+        constexpr const auto from = 14ULL;
+        constexpr const auto name = "remote_irr";
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
+    }
+
+    namespace trigger_mode
+    {
+        constexpr const auto mask = 0x0000000000008000ULL;
+        constexpr const auto from = 15ULL;
+        constexpr const auto name = "trigger_mode";
+
+        constexpr const auto edge = 0U;
+        constexpr const auto level = 1U;
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int lev, std::string *msg = nullptr)
+        {
+            switch (get()) {
+                case edge: bfdebug_subtext(lev, name, "edge", msg); break;
+                case level: bfdebug_subtext(lev, name, "level", msg); break;
+                default: bferror_subtext(lev, name, "INVALID", msg); break;
+            }
+        }
+    }
+
+    namespace mask_bit
+    {
+        constexpr const auto mask = 0x0000000000010000ULL;
+        constexpr const auto from = 16ULL;
+        constexpr const auto name = "mask_bit";
+
+        inline auto is_enabled()
+        { return is_bit_set(_read_msr(addr), from); }
+
+        inline auto is_enabled(value_type msr)
+        { return is_bit_set(msr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_msr(addr), from); }
+
+        inline auto is_disabled(value_type msr)
+        { return is_bit_cleared(msr, from); }
+
+        inline void enable()
+        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
+
+        inline auto enable(value_type msr)
+        { return set_bit(msr, from); }
+
+        inline void disable()
+        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
+
+        inline auto disable(value_type msr)
+        { return clear_bit(msr, from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
+    }
+
     inline void dump(int level, std::string *msg = nullptr)
-    { bfdebug_nhex(level, name, get(), msg); }
+    {
+        bfdebug_nhex(level, name, get(),  msg);
+        vector::dump(level, msg);
+        delivery_status::dump(level, msg);
+        polarity::dump(level, msg);
+        remote_irr::dump(level, msg);
+        trigger_mode::dump(level, msg);
+        mask_bit::dump(level, msg);
+    }
 }
 
 namespace ia32_x2apic_lvt_lint1
@@ -16639,8 +17495,218 @@ namespace ia32_x2apic_lvt_lint1
     inline void set(value_type val) noexcept
     { _write_msr(addr, val); }
 
+    namespace vector
+    {
+        constexpr const auto mask = 0x00000000000000FFULL;
+        constexpr const auto from = 0ULL;
+        constexpr const auto name = "vector";
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
+    }
+
+    namespace delivery_mode
+    {
+        constexpr const auto mask = 0x0000000000000700ULL;
+        constexpr const auto from = 8ULL;
+        constexpr const auto name = "delivery_mode";
+
+        constexpr const auto fixed = 0U;
+        constexpr const auto smi = 2U;
+        constexpr const auto nmi = 4U;
+        constexpr const auto init = 5U;
+        constexpr const auto extint = 7U;
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        {
+            switch (get()) {
+                case fixed: bfdebug_subtext(level, name, "fixed", msg); break;
+                case smi: bfdebug_subtext(level, name, "smi", msg); break;
+                case nmi: bfdebug_subtext(level, name, "nmi", msg); break;
+                case init: bfdebug_subtext(level, name, "init", msg); break;
+                case extint: bfdebug_subtext(level, name, "extint", msg); break;
+                default: bfalert_subtext(level, name, "RESERVED", msg); break;
+            }
+        }
+    }
+
+    namespace delivery_status
+    {
+        constexpr const auto mask = 0x0000000000001000ULL;
+        constexpr const auto from = 12ULL;
+        constexpr const auto name = "delivery_status";
+
+        constexpr const auto idle = 0U;
+        constexpr const auto send_pending = 1U;
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        {
+            switch (get()) {
+                case idle: bfdebug_subtext(level, name, "idle", msg); break;
+                case send_pending: bfdebug_subtext(level, name, "send pending", msg); break;
+                default: bferror_subtext(level, name, "INVALID", msg); break;
+            }
+        }
+    }
+
+    namespace polarity
+    {
+        constexpr const auto mask = 0x0000000000002000ULL;
+        constexpr const auto from = 13ULL;
+        constexpr const auto name = "polarity";
+
+        constexpr const auto active_high = 0U;
+        constexpr const auto active_low = 1U;
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        {
+            switch (get()) {
+                case active_high: bfdebug_subtext(level, name, "active_high", msg); break;
+                case active_low: bfdebug_subtext(level, name, "active_low", msg); break;
+                default: bferror_subtext(level, name, "INVALID", msg); break;
+            }
+        }
+    }
+
+    namespace remote_irr
+    {
+        constexpr const auto mask = 0x0000000000004000ULL;
+        constexpr const auto from = 14ULL;
+        constexpr const auto name = "remote_irr";
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
+    }
+
+    namespace trigger_mode
+    {
+        constexpr const auto mask = 0x0000000000008000ULL;
+        constexpr const auto from = 15ULL;
+        constexpr const auto name = "trigger_mode";
+
+        constexpr const auto edge = 0U;
+        constexpr const auto level = 1U;
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int lev, std::string *msg = nullptr)
+        {
+            switch (get()) {
+                case edge: bfdebug_subtext(lev, name, "edge", msg); break;
+                case level: bfdebug_subtext(lev, name, "level", msg); break;
+                default: bferror_subtext(lev, name, "INVALID", msg); break;
+            }
+        }
+    }
+
+    namespace mask_bit
+    {
+        constexpr const auto mask = 0x0000000000010000ULL;
+        constexpr const auto from = 16ULL;
+        constexpr const auto name = "mask_bit";
+
+        inline auto is_enabled()
+        { return is_bit_set(_read_msr(addr), from); }
+
+        inline auto is_enabled(value_type msr)
+        { return is_bit_set(msr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_msr(addr), from); }
+
+        inline auto is_disabled(value_type msr)
+        { return is_bit_cleared(msr, from); }
+
+        inline void enable()
+        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
+
+        inline auto enable(value_type msr)
+        { return set_bit(msr, from); }
+
+        inline void disable()
+        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
+
+        inline auto disable(value_type msr)
+        { return clear_bit(msr, from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
+    }
+
     inline void dump(int level, std::string *msg = nullptr)
-    { bfdebug_nhex(level, name, get(), msg); }
+    {
+        bfdebug_nhex(level, name, get(),  msg);
+        vector::dump(level, msg);
+        delivery_status::dump(level, msg);
+        polarity::dump(level, msg);
+        remote_irr::dump(level, msg);
+        trigger_mode::dump(level, msg);
+        mask_bit::dump(level, msg);
+    }
 }
 
 namespace ia32_x2apic_lvt_error
@@ -16654,8 +17720,65 @@ namespace ia32_x2apic_lvt_error
     inline void set(value_type val) noexcept
     { _write_msr(addr, val); }
 
+    namespace vector
+    {
+        constexpr const auto mask = 0x00000000000000FFULL;
+        constexpr const auto from = 0ULL;
+        constexpr const auto name = "vector";
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
+    }
+
+    namespace delivery_status
+    {
+        constexpr const auto mask = 0x0000000000001000ULL;
+        constexpr const auto from = 12ULL;
+        constexpr const auto name = "delivery_status";
+
+        constexpr const auto idle = 0U;
+        constexpr const auto send_pending = 1U;
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        {
+            switch (get()) {
+                case idle: bfdebug_subtext(level, name, "idle", msg); break;
+                case send_pending: bfdebug_subtext(level, name, "send pending", msg); break;
+                default: bferror_subtext(level, name, "INVALID", msg); break;
+            }
+        }
+    }
+
     inline void dump(int level, std::string *msg = nullptr)
-    { bfdebug_nhex(level, name, get(), msg); }
+    {
+        bfdebug_nhex(level, name, get(),  msg);
+        vector::dump(level, msg);
+        delivery_status::dump(level, msg);
+    }
 }
 
 namespace ia32_x2apic_init_count
