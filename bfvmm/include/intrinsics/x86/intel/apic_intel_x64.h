@@ -73,26 +73,61 @@ namespace ia32_apic_base
         { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
+    namespace state
+    {
+        constexpr const auto mask = 0xC00ULL;
+        constexpr const auto from = 10ULL;
+        constexpr const auto name = "state";
+
+        constexpr const auto disabled = 0x0ULL;
+        constexpr const auto invalid = 0x4ULL;
+        constexpr const auto xapic = 0x8ULL;
+        constexpr const auto x2apic = 0xCULL;
+
+        inline auto get() noexcept
+        { return get_bits(_read_msr(addr), mask) >> from; }
+
+        inline auto get(value_type msr) noexcept
+        { return get_bits(msr, mask) >> from; }
+
+        inline void set(value_type val) noexcept
+        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+
+        inline auto set(value_type msr, value_type val) noexcept
+        { return set_bits(msr, mask, val << from); }
+
+        inline auto enable_x2apic_mode() noexcept
+        { set(x2apic); }
+
+        inline auto enable_x2apic_mode(value_type msr) noexcept
+        { set(msr, x2apic); }
+
+        inline auto enable_xapic_mode() noexcept
+        { set(xapic); }
+
+        inline auto enable_xapic_mode() noexcept
+        { set(msr, xapic); }
+
+        inline auto disable() noexcept
+        { set(disable); }
+
+        inline auto disable() noexcept
+        { set(msr, disable); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(), msg); }
+    }
+
     inline void dump(int level, std::string *msg = nullptr)
     {
         bfdebug_nhex(level, name, get(), msg);
         extd::dump(level, msg);
+        state::dump(level, msg);
     }
 }
 
 namespace lapic
 {
-    using apic_base_type = uintptr_t;
-
-    enum state
-    {
-        disabled = 0x0ULL,
-        xapic = 0x800ULL,
-        x2apic = 0xC00ULL;
-    }
-
-    constexpr auto x2apic_mode = 0x
-
     inline auto present() noexcept
     {
         return cpuid::feature_information::edx::apic::is_enabled();
@@ -102,12 +137,6 @@ namespace lapic
     {
         return cpuid::feature_information::ecx::x2apic::is_enabled();
     }
-
-    inline auto enable_x2apic_mode() noexcept
-    {
-        msrs::ia32_apic_base::extd::enable();
-    }
-
 }
 }
 
