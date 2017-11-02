@@ -27,6 +27,7 @@ namespace x64
 {
     constexpr const auto page_size                                   = 0x1000ULL;
     constexpr const auto page_shift                                  = 12ULL;
+    constexpr const auto page_mask = 0xFFFFFFFFFFFFF000ULL;
     constexpr const auto cache_line_size                             = 64ULL;
     constexpr const auto cache_line_shift                            = 6ULL;
 

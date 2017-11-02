@@ -1,6 +1,6 @@
 //
 // Bareflank Hypervisor
-// Copyright (C) 2015 Assured Information Security, Inc.
+// Copyright (C) 2017 Assured Information Security, Inc.
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -19,87 +19,98 @@
 #ifndef APIC_INTEL_X64_H
 #define APIC_INTEL_X64_H
 
-#include <bfbitmanip.h>
-
+#include <intrinsics/x86/intel/cpuid_intel_x64.h>
 #include <intrinsics/x86/intel/msrs_intel_x64.h>
-#include <intrinsics/x86/intel/vmcs/32bit_guest_state_fields.h>
-#include <intrinsics/x86/intel/vmcs/32bit_control_fields.h>
-#include <intrinsics/x86/intel/vmcs/natural_width_guest_state_fields.h>
+
+using namespace intel_x64;
 
 // *INDENT-OFF*
 
 namespace intel_x64
 {
-namespace vmcs
+namespace msrs
 {
 
-using vector_type = uint8_t;
-
-// This functions implements the checks described in #1 of section 33.3.3.4
-inline auto irq_window_open() noexcept
+namespace ia32_apic_base
 {
-    namespace guest_intr_state = guest_interruptibility_state;
+    constexpr const auto addr = 0x0000001BU;
+    constexpr const auto name = "ia32_apic_base";
 
-    if (guest_rflags::interrupt_enable_flag::is_disabled()) {
-        return false;
+    inline auto get() noexcept
+    { return _read_msr(addr); }
+
+    namespace extd
+    {
+        constexpr const auto mask = 0x00000400ULL;
+        constexpr const auto from = 10ULL;
+        constexpr const auto name = "extd";
+
+        inline auto is_enabled()
+        { return is_bit_set(_read_msr(addr), from); }
+
+        inline auto is_enabled(value_type msr)
+        { return is_bit_set(msr, from); }
+
+        inline auto is_disabled()
+        { return is_bit_cleared(_read_msr(addr), from); }
+
+        inline auto is_disabled(value_type msr)
+        { return is_bit_cleared(msr, from); }
+
+        inline void enable()
+        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
+
+        inline auto enable(value_type msr)
+        { return set_bit(msr, from); }
+
+        inline void disable()
+        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
+
+        inline auto disable(value_type msr)
+        { return clear_bit(msr, from); }
+
+        inline void dump(int level, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(), msg); }
     }
 
-    auto gis = guest_intr_state::get();
-    if (guest_intr_state::blocking_by_sti::is_enabled(gis)) {
-        return false;
-    }
-
-    if (guest_intr_state::blocking_by_mov_ss::is_enabled(gis)) {
-        return false;
-    }
-
-    switch (guest_activity_state::get()) {
-        case guest_activity_state::active:
-        case guest_activity_state::hlt:
-            return true;
-        default:
-            return false;
+    inline void dump(int level, std::string *msg = nullptr)
+    {
+        bfdebug_nhex(level, name, get(), msg);
+        extd::dump(level, msg);
     }
 }
 
-inline auto validate_irq_injection(vector_type vec) noexcept
+namespace lapic
 {
-    using namespace vm_entry_interruption_information;
+    using apic_base_type = uintptr_t;
 
-    constexpr auto type = interruption_type::external_interrupt;
-    auto info = 0ULL;
+    enum state
+    {
+        disabled = 0x0ULL,
+        xapic = 0x800ULL,
+        x2apic = 0xC00ULL;
+    }
 
-    info = vector::set(info, vec);
-    info = interruption_type::set(info, type);
-    info = valid_bit::enable(info);
-    set(info);
+    constexpr auto x2apic_mode = 0x
 
-    return;
+    inline auto present() noexcept
+    {
+        return cpuid::feature_information::edx::apic::is_enabled();
+    }
+
+    inline auto x2apic_supported() noexcept
+    {
+        return cpuid::feature_information::ecx::x2apic::is_enabled();
+    }
+
+    inline auto enable_x2apic_mode() noexcept
+    {
+        msrs::ia32_apic_base::extd::enable();
+    }
+
 }
-} // vmcs
-
-namespace x2apic
-{
-
-using vector_type = uint8_t;
-
-inline auto level_triggered(vector_type vec) noexcept
-{
-    auto reg = (vec & 0xE0U) >> 5U;
-    auto addr = msrs::ia32_x2apic_tmr0::addr | reg;
-
-    return is_bit_set(msrs::get(addr), (vec & 0x1FU));
-}
-
-inline auto in_service(vector_type vec) noexcept
-{
-    auto reg = (vec & 0xE0U) >> 5U;
-    auto addr = msrs::ia32_x2apic_isr0::addr | reg;
-
-    return is_bit_set(msrs::get(addr), (vec & 0x1FU));
 }
 
-} // x2apic
-} // intel_x64
+// *INDENT-ON*
 
 #endif

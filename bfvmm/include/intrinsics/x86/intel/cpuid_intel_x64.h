@@ -51,14 +51,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -73,14 +73,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -95,14 +95,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -117,14 +117,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -139,14 +139,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -161,14 +161,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -183,14 +183,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -205,14 +205,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -227,14 +227,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -249,14 +249,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -271,14 +271,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -293,14 +293,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -315,14 +315,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -337,14 +337,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -359,14 +359,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -381,14 +381,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -403,14 +403,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -425,14 +425,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -447,14 +447,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -469,14 +469,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -491,14 +491,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -513,14 +513,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -535,14 +535,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -557,14 +557,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -579,14 +579,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -601,14 +601,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -623,14 +623,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -645,14 +645,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -667,14 +667,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -689,14 +689,14 @@ namespace feature_information
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -738,9 +738,40 @@ namespace feature_information
         }
     }
 
+    namespace edx
+    {
+        constexpr const auto name = "feature_information_edx";
+
+        inline auto get() noexcept
+        { return _cpuid_edx(addr); }
+
+        namespace apic
+        {
+            constexpr const auto mask = 0x00000200ULL;
+            constexpr const auto from = 9ULL;
+            constexpr const auto name = "apic";
+
+            inline auto is_enabled()
+            { return is_bit_set(_cpuid_edx(addr), from); }
+
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
+
+            inline auto is_disabled()
+            { return is_bit_cleared(_cpuid_edx(addr), from); }
+
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
+
+            inline void dump(int level, std::string *msg = nullptr)
+            { bfdebug_subbool(level, name, is_enabled(), msg); }
+        }
+    }
+
     inline void dump(int level, std::string *msg = nullptr)
     {
         ecx::dump(level, msg);
+        edx::dump(level, msg);
     }
 }
 
@@ -768,8 +799,8 @@ namespace extended_feature_flags
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subeax(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -798,14 +829,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -820,14 +851,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -842,14 +873,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -864,14 +895,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -886,14 +917,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -908,14 +939,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -930,14 +961,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -952,14 +983,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -974,14 +1005,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -996,14 +1027,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1018,14 +1049,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1040,14 +1071,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1062,14 +1093,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1084,14 +1115,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1106,14 +1137,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1128,14 +1159,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1150,14 +1181,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1172,14 +1203,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1194,14 +1225,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1216,14 +1247,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1238,14 +1269,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1260,14 +1291,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1282,14 +1313,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1340,14 +1371,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1362,14 +1393,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1384,14 +1415,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1406,14 +1437,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1428,8 +1459,8 @@ namespace extended_feature_flags
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subecx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -1444,14 +1475,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1466,14 +1497,14 @@ namespace extended_feature_flags
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1526,8 +1557,8 @@ namespace arch_perf_monitoring
             inline auto get() noexcept
             { return get_bits(_cpuid_eax(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -1542,8 +1573,8 @@ namespace arch_perf_monitoring
             inline auto get() noexcept
             { return get_bits(_cpuid_eax(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -1558,8 +1589,8 @@ namespace arch_perf_monitoring
             inline auto get() noexcept
             { return get_bits(_cpuid_eax(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -1574,8 +1605,8 @@ namespace arch_perf_monitoring
             inline auto get() noexcept
             { return get_bits(_cpuid_eax(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -1607,14 +1638,14 @@ namespace arch_perf_monitoring
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ebx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ebx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1629,14 +1660,14 @@ namespace arch_perf_monitoring
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ebx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ebx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1651,14 +1682,14 @@ namespace arch_perf_monitoring
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ebx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ebx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1673,14 +1704,14 @@ namespace arch_perf_monitoring
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ebx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ebx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1695,14 +1726,14 @@ namespace arch_perf_monitoring
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ebx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ebx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1717,14 +1748,14 @@ namespace arch_perf_monitoring
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ebx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ebx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1739,14 +1770,14 @@ namespace arch_perf_monitoring
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ebx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ebx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1781,8 +1812,8 @@ namespace arch_perf_monitoring
             inline auto get() noexcept
             { return get_bits(_cpuid_edx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -1797,8 +1828,8 @@ namespace arch_perf_monitoring
             inline auto get() noexcept
             { return get_bits(_cpuid_edx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -1930,8 +1961,8 @@ namespace cache_parameters
             inline auto get() noexcept
             { return get_bits(_cpuid_eax(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -1946,8 +1977,8 @@ namespace cache_parameters
             inline auto get() noexcept
             { return get_bits(_cpuid_eax(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -1962,14 +1993,14 @@ namespace cache_parameters
             inline auto is_enabled()
             { return is_bit_set(_cpuid_eax(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_eax(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -1984,14 +2015,14 @@ namespace cache_parameters
             inline auto is_enabled()
             { return is_bit_set(_cpuid_eax(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_eax(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2006,8 +2037,8 @@ namespace cache_parameters
             inline auto get() noexcept
             { return get_bits(_cpuid_eax(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2022,8 +2053,8 @@ namespace cache_parameters
             inline auto get() noexcept
             { return get_bits(_cpuid_eax(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2057,8 +2088,8 @@ namespace cache_parameters
             inline auto get() noexcept
             { return get_bits(_cpuid_ebx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2073,8 +2104,8 @@ namespace cache_parameters
             inline auto get() noexcept
             { return get_bits(_cpuid_ebx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2089,8 +2120,8 @@ namespace cache_parameters
             inline auto get() noexcept
             { return get_bits(_cpuid_ebx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2121,8 +2152,8 @@ namespace cache_parameters
             inline auto get() noexcept
             { return get_bits(_cpuid_ecx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2151,14 +2182,14 @@ namespace cache_parameters
             inline auto is_enabled()
             { return is_bit_set(_cpuid_edx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_edx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2173,14 +2204,14 @@ namespace cache_parameters
             inline auto is_enabled()
             { return is_bit_set(_cpuid_edx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_edx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2195,14 +2226,14 @@ namespace cache_parameters
             inline auto is_enabled()
             { return is_bit_set(_cpuid_edx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_edx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2246,8 +2277,8 @@ namespace monitor_mwait
             inline auto get() noexcept
             { return get_bits(_cpuid_eax(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2276,8 +2307,8 @@ namespace monitor_mwait
             inline auto get() noexcept
             { return get_bits(_cpuid_ebx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2306,14 +2337,14 @@ namespace monitor_mwait
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2328,14 +2359,14 @@ namespace monitor_mwait
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2365,8 +2396,8 @@ namespace monitor_mwait
             inline auto get() noexcept
             { return get_bits(_cpuid_edx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2381,8 +2412,8 @@ namespace monitor_mwait
             inline auto get() noexcept
             { return get_bits(_cpuid_edx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2397,8 +2428,8 @@ namespace monitor_mwait
             inline auto get() noexcept
             { return get_bits(_cpuid_edx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2413,8 +2444,8 @@ namespace monitor_mwait
             inline auto get() noexcept
             { return get_bits(_cpuid_edx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2429,8 +2460,8 @@ namespace monitor_mwait
             inline auto get() noexcept
             { return get_bits(_cpuid_edx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2445,8 +2476,8 @@ namespace monitor_mwait
             inline auto get() noexcept
             { return get_bits(_cpuid_edx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2461,8 +2492,8 @@ namespace monitor_mwait
             inline auto get() noexcept
             { return get_bits(_cpuid_edx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2477,8 +2508,8 @@ namespace monitor_mwait
             inline auto get() noexcept
             { return get_bits(_cpuid_edx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2527,14 +2558,14 @@ namespace therm_power_management
             inline auto is_enabled()
             { return is_bit_set(_cpuid_eax(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_eax(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2549,14 +2580,14 @@ namespace therm_power_management
             inline auto is_enabled()
             { return is_bit_set(_cpuid_eax(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_eax(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2571,14 +2602,14 @@ namespace therm_power_management
             inline auto is_enabled()
             { return is_bit_set(_cpuid_eax(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_eax(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2593,14 +2624,14 @@ namespace therm_power_management
             inline auto is_enabled()
             { return is_bit_set(_cpuid_eax(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_eax(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2615,14 +2646,14 @@ namespace therm_power_management
             inline auto is_enabled()
             { return is_bit_set(_cpuid_eax(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_eax(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2637,14 +2668,14 @@ namespace therm_power_management
             inline auto is_enabled()
             { return is_bit_set(_cpuid_eax(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_eax(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2659,14 +2690,14 @@ namespace therm_power_management
             inline auto is_enabled()
             { return is_bit_set(_cpuid_eax(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_eax(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2681,14 +2712,14 @@ namespace therm_power_management
             inline auto is_enabled()
             { return is_bit_set(_cpuid_eax(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_eax(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2703,14 +2734,14 @@ namespace therm_power_management
             inline auto is_enabled()
             { return is_bit_set(_cpuid_eax(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_eax(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2725,14 +2756,14 @@ namespace therm_power_management
             inline auto is_enabled()
             { return is_bit_set(_cpuid_eax(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_eax(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2747,14 +2778,14 @@ namespace therm_power_management
             inline auto is_enabled()
             { return is_bit_set(_cpuid_eax(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_eax(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2769,14 +2800,14 @@ namespace therm_power_management
             inline auto is_enabled()
             { return is_bit_set(_cpuid_eax(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_eax(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2816,8 +2847,8 @@ namespace therm_power_management
             inline auto get() noexcept
             { return get_bits(_cpuid_ebx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2846,14 +2877,14 @@ namespace therm_power_management
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2868,14 +2899,14 @@ namespace therm_power_management
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -2938,8 +2969,8 @@ namespace topology_enumeration
             inline auto get() noexcept
             { return get_bits(_cpuid_eax(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2968,8 +2999,8 @@ namespace topology_enumeration
             inline auto get() noexcept
             { return get_bits(_cpuid_ebx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -2998,8 +3029,8 @@ namespace topology_enumeration
             inline auto get() noexcept
             { return get_bits(_cpuid_ecx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -3014,8 +3045,8 @@ namespace topology_enumeration
             inline auto get() noexcept
             { return get_bits(_cpuid_ecx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -3045,8 +3076,8 @@ namespace topology_enumeration
             inline auto get() noexcept
             { return get_bits(_cpuid_edx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -3149,14 +3180,14 @@ namespace extended_state_enum
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subeax(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subeax(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -3171,14 +3202,14 @@ namespace extended_state_enum
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subeax(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subeax(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -3193,14 +3224,14 @@ namespace extended_state_enum
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subeax(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subeax(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -3215,14 +3246,14 @@ namespace extended_state_enum
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subeax(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subeax(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -3254,8 +3285,8 @@ namespace extended_state_enum
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subebx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -3284,8 +3315,8 @@ namespace extended_state_enum
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subecx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -3314,8 +3345,8 @@ namespace extended_state_enum
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subedx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -3368,8 +3399,8 @@ namespace intel_rdt
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subebx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -3398,14 +3429,14 @@ namespace intel_rdt
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subedx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subedx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -3445,8 +3476,8 @@ namespace intel_rdt
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subebx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -3475,8 +3506,8 @@ namespace intel_rdt
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subecx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -3505,14 +3536,14 @@ namespace intel_rdt
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subedx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subedx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -3527,14 +3558,14 @@ namespace intel_rdt
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subedx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subedx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -3549,14 +3580,14 @@ namespace intel_rdt
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subedx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subedx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -3610,14 +3641,14 @@ namespace allocation_enumeration
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -3632,14 +3663,14 @@ namespace allocation_enumeration
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -3654,14 +3685,14 @@ namespace allocation_enumeration
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -3702,8 +3733,8 @@ namespace allocation_enumeration
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subeax(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -3732,8 +3763,8 @@ namespace allocation_enumeration
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subebx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -3762,14 +3793,14 @@ namespace allocation_enumeration
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -3798,8 +3829,8 @@ namespace allocation_enumeration
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subedx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -3841,8 +3872,8 @@ namespace allocation_enumeration
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subeax(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -3871,8 +3902,8 @@ namespace allocation_enumeration
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subebx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -3901,8 +3932,8 @@ namespace allocation_enumeration
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subedx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -3943,8 +3974,8 @@ namespace allocation_enumeration
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subeax(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -3973,14 +4004,14 @@ namespace allocation_enumeration
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -4009,8 +4040,8 @@ namespace allocation_enumeration
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subedx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -4064,14 +4095,14 @@ namespace intel_sgx
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subeax(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subeax(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -4086,14 +4117,14 @@ namespace intel_sgx
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subeax(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subeax(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -4123,8 +4154,8 @@ namespace intel_sgx
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subebx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -4153,8 +4184,8 @@ namespace intel_sgx
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subedx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -4169,8 +4200,8 @@ namespace intel_sgx
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subedx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -4269,8 +4300,8 @@ namespace intel_sgx
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subeax(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -4285,8 +4316,8 @@ namespace intel_sgx
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subeax(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -4316,8 +4347,8 @@ namespace intel_sgx
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subebx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -4346,8 +4377,8 @@ namespace intel_sgx
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subecx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -4362,8 +4393,8 @@ namespace intel_sgx
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subecx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -4393,8 +4424,8 @@ namespace intel_sgx
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subedx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -4448,8 +4479,8 @@ namespace trace_enumeration
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subeax(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -4478,14 +4509,14 @@ namespace trace_enumeration
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -4500,14 +4531,14 @@ namespace trace_enumeration
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -4522,14 +4553,14 @@ namespace trace_enumeration
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -4544,14 +4575,14 @@ namespace trace_enumeration
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -4566,14 +4597,14 @@ namespace trace_enumeration
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -4588,14 +4619,14 @@ namespace trace_enumeration
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -4629,14 +4660,14 @@ namespace trace_enumeration
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -4651,14 +4682,14 @@ namespace trace_enumeration
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -4673,14 +4704,14 @@ namespace trace_enumeration
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -4695,14 +4726,14 @@ namespace trace_enumeration
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -4717,14 +4748,14 @@ namespace trace_enumeration
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subecx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -4769,8 +4800,8 @@ namespace trace_enumeration
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subeax(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -4785,8 +4816,8 @@ namespace trace_enumeration
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subeax(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -4816,8 +4847,8 @@ namespace trace_enumeration
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subebx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -4832,8 +4863,8 @@ namespace trace_enumeration
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subebx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -4975,8 +5006,8 @@ namespace vendor_attribute
                 inline auto get() noexcept
                 { return get_bits(_cpuid_eax(addr), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -5005,8 +5036,8 @@ namespace vendor_attribute
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subebx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -5021,14 +5052,14 @@ namespace vendor_attribute
                 inline auto is_enabled()
                 { return is_bit_set(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_enabled(value_type msr)
-                { return is_bit_set(msr, from); }
+                inline auto is_enabled(value_type val)
+                { return is_bit_set(val, from); }
 
                 inline auto is_disabled()
                 { return is_bit_cleared(_cpuid_subebx(addr, leaf), from); }
 
-                inline auto is_disabled(value_type msr)
-                { return is_bit_cleared(msr, from); }
+                inline auto is_disabled(value_type val)
+                { return is_bit_cleared(val, from); }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -5058,8 +5089,8 @@ namespace vendor_attribute
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subecx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -5088,8 +5119,8 @@ namespace vendor_attribute
                 inline auto get() noexcept
                 { return get_bits(_cpuid_subedx(addr, leaf), mask) >> from; }
 
-                inline auto get(value_type msr) noexcept
-                { return get_bits(msr, mask) >> from; }
+                inline auto get(value_type val) noexcept
+                { return get_bits(val, mask) >> from; }
 
                 inline void dump(int level, std::string *msg = nullptr)
                 { bfdebug_subnhex(level, name, get(), msg); }
@@ -5195,14 +5226,14 @@ namespace ext_feature_info
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -5217,14 +5248,14 @@ namespace ext_feature_info
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -5239,14 +5270,14 @@ namespace ext_feature_info
             inline auto is_enabled()
             { return is_bit_set(_cpuid_ecx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_ecx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -5277,14 +5308,14 @@ namespace ext_feature_info
             inline auto is_enabled()
             { return is_bit_set(_cpuid_edx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_edx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -5299,14 +5330,14 @@ namespace ext_feature_info
             inline auto is_enabled()
             { return is_bit_set(_cpuid_edx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_edx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -5321,14 +5352,14 @@ namespace ext_feature_info
             inline auto is_enabled()
             { return is_bit_set(_cpuid_edx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_edx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -5343,14 +5374,14 @@ namespace ext_feature_info
             inline auto is_enabled()
             { return is_bit_set(_cpuid_edx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_edx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -5365,14 +5396,14 @@ namespace ext_feature_info
             inline auto is_enabled()
             { return is_bit_set(_cpuid_edx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_edx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }
@@ -5416,8 +5447,8 @@ namespace l2_info
             inline auto get() noexcept
             { return get_bits(_cpuid_ecx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -5432,8 +5463,8 @@ namespace l2_info
             inline auto get() noexcept
             { return get_bits(_cpuid_ecx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -5448,8 +5479,8 @@ namespace l2_info
             inline auto get() noexcept
             { return get_bits(_cpuid_ecx(addr), mask) >> from; }
 
-            inline auto get(value_type msr) noexcept
-            { return get_bits(msr, mask) >> from; }
+            inline auto get(value_type val) noexcept
+            { return get_bits(val, mask) >> from; }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subnhex(level, name, get(), msg); }
@@ -5490,14 +5521,14 @@ namespace invariant_tsc
             inline auto is_enabled()
             { return is_bit_set(_cpuid_edx(addr), from); }
 
-            inline auto is_enabled(value_type msr)
-            { return is_bit_set(msr, from); }
+            inline auto is_enabled(value_type val)
+            { return is_bit_set(val, from); }
 
             inline auto is_disabled()
             { return is_bit_cleared(_cpuid_edx(addr), from); }
 
-            inline auto is_disabled(value_type msr)
-            { return is_bit_cleared(msr, from); }
+            inline auto is_disabled(value_type val)
+            { return is_bit_cleared(val, from); }
 
             inline void dump(int level, std::string *msg = nullptr)
             { bfdebug_subbool(level, name, is_enabled(), msg); }

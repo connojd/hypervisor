@@ -20,11 +20,11 @@
 #define INTRINSICS_X86_INTEL_X64_H
 
 #include <intrinsics/x86/common_x64.h>
-#include <intrinsics/x86/intel/apic_intel_x64.h>
 #include <intrinsics/x86/intel/vmx_intel_x64.h>
 #include <intrinsics/x86/intel/msrs_intel_x64.h>
 #include <intrinsics/x86/intel/crs_intel_x64.h>
 #include <intrinsics/x86/intel/vmcs/vmcs_intel_x64.h>
 #include <intrinsics/x86/intel/cpuid_intel_x64.h>
+#include <intrinsics/x86/intel/x2apic.h>
 
 #endif

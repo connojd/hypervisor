@@ -40,5 +40,6 @@
 
 #include <intrinsics/x86/intel/vmcs/check.h>
 #include <intrinsics/x86/intel/vmcs/debug.h>
+#include <intrinsics/x86/intel/vmcs/event.h>
 
 #endif
