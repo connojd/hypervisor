@@ -254,6 +254,30 @@ namespace ia32_apic_base
 
 namespace lapic
 {
+    struct reg_info {
+        uint32_t offset;
+        bool read;
+        bool write;
+
+        reg_info(const uint32_t& off)
+            : offset(off) {}
+        reg_info(const uint32_t& off, const bool& r, const bool& w)
+            : offset(off), read(r), write(w) {}
+
+        bool operator<(const reg_info& rhs) const
+        { return offset < rhs.offset; }
+
+        bool operator==(const reg_info& rhs) const
+        { return offset == rhs.offset; }
+    };
+
+    using addr_type = const intel_x64::msrs::field_type;
+    using size_type = const std::size_t;
+
+    addr_type msr_start_reg = 0x800U;
+    addr_type msr_end_reg = 0xBFFU;
+    size_type msr_total_regs = (msr_end_reg - msr_start_reg) + 1U;
+
     inline auto is_present() noexcept
     {
         return cpuid::feature_information::edx::apic::is_enabled();
@@ -275,8 +299,34 @@ struct EXPORT_LAPIC lapic_control
     enum count_reg : uint32_t { initial, current };
     enum reg_op : uint32_t { read, write };
 
+    //
+    // Check if guest physical address is an APIC register and the desired
+    // read / write operation is allowed.
+    //
+    // @return offset if supplied address maps to a valid register and the
+    //    operation is allowed.
+    // @return -1 if the supplied address doesn't map to a valid register or the
+    //    operation is not allowed.
+    //
+    // @param addr - guest physical address of desired register
+    // @param op - the desired operation (read / write)
+    //
     virtual int validate_gpa_op(uintptr_t addr, reg_op op) = 0;
+
+    //
+    // Check if MSR address is an APIC register and the desired read / write
+    // operation is allowed.
+    //
+    // @return offset if supplied address maps to a valid register and the
+    //    operation is allowed.
+    // @return -1 if the supplied address doesn't map to a valid register or the
+    //    operation is not allowed.
+    //
+    // @param addr - MSR address of desired register
+    // @param op - the desired operation (read / write)
+    //
     virtual int validate_msr_op(msrs::field_type msr, reg_op op) = 0;
+
     virtual value_type read_register(uint32_t offset) = 0;
     virtual void write_register(uint32_t offset, value_type val) = 0;
 
