@@ -2129,32 +2129,6 @@ TEST_CASE("x2apic_control_write_icr")
     CHECK(msrs::ia32_x2apic_icr::get() == 0x0ULL);
 }
 
-TEST_CASE("x2apic_control_write_icr_low")
-{
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-    x2apic_control ctrl;
-
-    ctrl.write_icr_low(0xFFFFFFFFFFFFFFFFULL);
-    CHECK(msrs::ia32_x2apic_icr::get() == 0x00000000FFFFFFFFULL);
-
-    ctrl.write_icr_low(0x0ULL);
-    CHECK(msrs::ia32_x2apic_icr::get() == 0x0ULL);
-}
-
-TEST_CASE("x2apic_control_write_icr_high")
-{
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-    x2apic_control ctrl;
-
-    ctrl.write_icr_high(0xFFFFFFFFFFFFFFFFULL);
-    CHECK(msrs::ia32_x2apic_icr::get() == 0xFFFFFFFF00000000ULL);
-
-    ctrl.write_icr_high(0x0ULL);
-    CHECK(msrs::ia32_x2apic_icr::get() == 0x0ULL);
-}
-
 TEST_CASE("x2apic_control_write_lvt_cmci")
 {
     MockRepository mocks;

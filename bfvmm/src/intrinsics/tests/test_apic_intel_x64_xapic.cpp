@@ -133,10 +133,10 @@ TEST_CASE("xapic_control_read_id")
     setup_intrinsics(mocks);
     xapic_control ctrl(g_apic_page);
 
-    g_apic_page[xapic::registers::id.offset << 2] = 0xFFFFFFFFULL;
+    g_apic_page[xapic::regs::id.offset << 2] = 0xFFFFFFFFULL;
     CHECK(ctrl.read_id() == 0xFFFFFFFFULL);
 
-    g_apic_page[xapic::registers::id.offset << 2] = 0x0ULL;
+    g_apic_page[xapic::regs::id.offset << 2] = 0x0ULL;
     CHECK(ctrl.read_id() == 0x0ULL);
 }
 
@@ -147,10 +147,10 @@ TEST_CASE("xapid_control_write_tpr")
     xapic_control ctrl(g_apic_page);
 
     ctrl.write_tpr(0xFFFFFFFFULL);
-    CHECK(g_apic_page[xapic::registers::tpr.offset << 2] == 0xFFFFFFFFULL);
+    CHECK(g_apic_page[xapic::regs::tpr.offset << 2] == 0xFFFFFFFFULL);
 
     ctrl.write_tpr(0x0ULL);
-    CHECK(g_apic_page[xapic::registers::tpr.offset << 2] == 0x0ULL);
+    CHECK(g_apic_page[xapic::regs::tpr.offset << 2] == 0x0ULL);
 }
 
 #endif

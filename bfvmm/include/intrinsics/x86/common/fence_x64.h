@@ -16,25 +16,44 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#ifndef INTRINSICS_X86_COMMON_X64_H
-#define INTRINSICS_X86_COMMON_X64_H
+#ifndef FENCE_X64_H
+#define FENCE_X64_H
 
-#include <intrinsics/x86/common/msrs_x64.h>
-#include <intrinsics/x86/common/cpuid_x64.h>
-#include <intrinsics/x86/common/cache_x64.h>
-#include <intrinsics/x86/common/debug_x64.h>
-#include <intrinsics/x86/common/fence_x64.h>
-#include <intrinsics/x86/common/gdt_x64.h>
-#include <intrinsics/x86/common/idt_x64.h>
-#include <intrinsics/x86/common/pdpte_x64.h>
-#include <intrinsics/x86/common/pm_x64.h>
-#include <intrinsics/x86/common/portio_x64.h>
-#include <intrinsics/x86/common/rdtsc_x64.h>
-#include <intrinsics/x86/common/rflags_x64.h>
-#include <intrinsics/x86/common/srs_x64.h>
-#include <intrinsics/x86/common/thread_context_x64.h>
-#include <intrinsics/x86/common/tlb_x64.h>
-#include <intrinsics/x86/common/tss_x64.h>
-#include <intrinsics/x86/common/x64.h>
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+#include <bfexports.h>
+
+#ifndef STATIC_INTRINSICS
+#ifdef SHARED_INTRINSICS
+#define EXPORT_INTRINSICS EXPORT_SYM
+#else
+#define EXPORT_INTRINSICS IMPORT_SYM
+#endif
+#else
+#define EXPORT_INTRINSICS
+#endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
+extern "C" EXPORT_INTRINSICS void _sfence(void) noexcept;
+
+// *INDENT-OFF*
+
+namespace x64
+{
+namespace fence
+{
+    inline void sfence() noexcept
+    {
+        asm volatile("sfence" : : : "memory");
+    }
+}
+}
+
+// *INDENT-ON*
 
 #endif

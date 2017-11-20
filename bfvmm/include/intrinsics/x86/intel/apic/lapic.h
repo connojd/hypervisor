@@ -256,13 +256,13 @@ namespace lapic
 {
     struct reg_info {
         uint32_t offset;
-        bool read;
-        bool write;
+        bool readable;
+        bool writeable;
 
         reg_info(const uint32_t& off)
             : offset(off) {}
         reg_info(const uint32_t& off, const bool& r, const bool& w)
-            : offset(off), read(r), write(w) {}
+            : offset(off), readable(r), writeable(w) {}
 
         bool operator<(const reg_info& rhs) const
         { return offset < rhs.offset; }
@@ -293,6 +293,7 @@ struct EXPORT_LAPIC lapic_control
 {
     using value_type = uint64_t;
     using vector_type = uint64_t;
+    using gpa_type = uintptr_t;
 
     enum index : uint32_t { idx0, idx1, idx2, idx3, idx4, idx5, idx6, idx7 };
     enum lvt_reg : uint32_t { cmci, timer, thermal, perf, lint0, lint1, error };
@@ -311,7 +312,7 @@ struct EXPORT_LAPIC lapic_control
     // @param addr - guest physical address of desired register
     // @param op - the desired operation (read / write)
     //
-    virtual int validate_gpa_op(uintptr_t addr, reg_op op) = 0;
+    virtual int validate_gpa_op(const gpa_type addr, const reg_op op) = 0;
 
     //
     // Check if MSR address is an APIC register and the desired read / write
@@ -325,10 +326,10 @@ struct EXPORT_LAPIC lapic_control
     // @param addr - MSR address of desired register
     // @param op - the desired operation (read / write)
     //
-    virtual int validate_msr_op(msrs::field_type msr, reg_op op) = 0;
+    virtual int validate_msr_op(const msrs::field_type msr, const reg_op op) = 0;
 
-    virtual value_type read_register(uint32_t offset) = 0;
-    virtual void write_register(uint32_t offset, value_type val) = 0;
+    virtual value_type read_register(const uint32_t offset) = 0;
+    virtual void write_register(const uint32_t offset, const value_type val) = 0;
 
     //
     // Register reads
@@ -339,25 +340,23 @@ struct EXPORT_LAPIC lapic_control
     virtual value_type read_ldr() = 0;
     virtual value_type read_svr() = 0;
     virtual value_type read_icr() = 0;
-    virtual value_type read_isr(index idx) = 0;
-    virtual value_type read_tmr(index idx) = 0;
-    virtual value_type read_irr(index idx) = 0;
-    virtual value_type read_lvt(lvt_reg reg) = 0;
-    virtual value_type read_count(count_reg reg) = 0;
+    virtual value_type read_isr(const index idx) = 0;
+    virtual value_type read_tmr(const index idx) = 0;
+    virtual value_type read_irr(const index idx) = 0;
+    virtual value_type read_lvt(const lvt_reg reg) = 0;
+    virtual value_type read_count(const count_reg reg) = 0;
     virtual value_type read_div_config() = 0;
 
     //
     // Register writes
     //
     virtual void write_eoi() = 0;
-    virtual void write_tpr(value_type tpr) = 0;
-    virtual void write_svr(value_type svr) = 0;
-    virtual void write_icr(value_type icr) = 0;
-    virtual void write_icr_low(value_type icr_low) = 0;
-    virtual void write_icr_high(value_type icr_high) = 0;
-    virtual void write_lvt(lvt_reg reg, value_type val) = 0;
-    virtual void write_init_count(value_type count) = 0;
-    virtual void write_div_config(value_type config) = 0;
+    virtual void write_tpr(const value_type tpr) = 0;
+    virtual void write_svr(const value_type svr) = 0;
+    virtual void write_icr(const value_type icr) = 0;
+    virtual void write_lvt(const lvt_reg reg, const value_type val) = 0;
+    virtual void write_init_count(const value_type count) = 0;
+    virtual void write_div_config(const value_type config) = 0;
 
     //
     // Send a self-ipi
@@ -367,7 +366,7 @@ struct EXPORT_LAPIC lapic_control
     //
     // @param vec - the vector of the self-ipi
     //
-    virtual void write_self_ipi(vector_type vec) = 0;
+    virtual void write_self_ipi(const vector_type vec) = 0;
 
     //
     // Check trigger-mode
@@ -380,7 +379,7 @@ struct EXPORT_LAPIC lapic_control
     // @note to ensure an accurate result, the caller should mask
     // the vector prior to the call
     //
-    virtual bool level_triggered(vector_type vec) = 0;
+    virtual bool level_triggered(const vector_type vec) = 0;
 
     //
     // Check if in-service
@@ -393,7 +392,7 @@ struct EXPORT_LAPIC lapic_control
     // @note to ensure an accurate result, the caller should mask
     // the vector prior to the call
     //
-    virtual bool in_service(vector_type vec) = 0;
+    virtual bool in_service(const vector_type vec) = 0;
 
     //
     // Default operations

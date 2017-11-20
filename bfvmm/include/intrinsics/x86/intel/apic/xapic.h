@@ -48,7 +48,7 @@ namespace intel_x64
 {
 namespace xapic
 {
-    namespace registers
+    namespace regs
     {
         const lapic::reg_info id = { (0x020U >> 4), true, true };
         const lapic::reg_info version = { (0x030U >> 4), true, false };
@@ -101,53 +101,53 @@ namespace xapic
 
     using reg_info_set_type = const std::set<intel_x64::lapic::reg_info>;
     reg_info_set_type reg_set = {
-        registers::id,
-        registers::version,
-        registers::tpr,
-        registers::apr,
-        registers::ppr,
-        registers::eoi,
-        registers::rrd,
-        registers::ldr,
-        registers::dfr,
-        registers::sivr,
-        registers::isr0,
-        registers::isr1,
-        registers::isr2,
-        registers::isr3,
-        registers::isr4,
-        registers::isr5,
-        registers::isr6,
-        registers::isr7,
-        registers::tmr0,
-        registers::tmr1,
-        registers::tmr2,
-        registers::tmr3,
-        registers::tmr4,
-        registers::tmr5,
-        registers::tmr6,
-        registers::tmr7,
-        registers::irr0,
-        registers::irr1,
-        registers::irr2,
-        registers::irr3,
-        registers::irr4,
-        registers::irr5,
-        registers::irr6,
-        registers::irr7,
-        registers::esr,
-        registers::lvt_cmci,
-        registers::icr_low,
-        registers::icr_high,
-        registers::lvt_timer,
-        registers::lvt_thermal,
-        registers::lvt_perf,
-        registers::lvt_lint0,
-        registers::lvt_lint1,
-        registers::lvt_error,
-        registers::init_count,
-        registers::cur_count,
-        registers::div_conf
+        regs::id,
+        regs::version,
+        regs::tpr,
+        regs::apr,
+        regs::ppr,
+        regs::eoi,
+        regs::rrd,
+        regs::ldr,
+        regs::dfr,
+        regs::sivr,
+        regs::isr0,
+        regs::isr1,
+        regs::isr2,
+        regs::isr3,
+        regs::isr4,
+        regs::isr5,
+        regs::isr6,
+        regs::isr7,
+        regs::tmr0,
+        regs::tmr1,
+        regs::tmr2,
+        regs::tmr3,
+        regs::tmr4,
+        regs::tmr5,
+        regs::tmr6,
+        regs::tmr7,
+        regs::irr0,
+        regs::irr1,
+        regs::irr2,
+        regs::irr3,
+        regs::irr4,
+        regs::irr5,
+        regs::irr6,
+        regs::irr7,
+        regs::esr,
+        regs::lvt_cmci,
+        regs::icr_low,
+        regs::icr_high,
+        regs::lvt_timer,
+        regs::lvt_thermal,
+        regs::lvt_perf,
+        regs::lvt_lint0,
+        regs::lvt_lint1,
+        regs::lvt_error,
+        regs::init_count,
+        regs::cur_count,
+        regs::div_conf
     };
 
     inline auto supported() noexcept
@@ -178,22 +178,23 @@ struct EXPORT_XAPIC xapic_control final : public lapic_control
     // @param addr - MSR address of desired register
     // @param op - the desired operation (read / write)
     //
-    int validate_gpa_op(uintptr_t addr, reg_op op) noexcept override
+    int validate_gpa_op(const gpa_type addr, const reg_op op) noexcept override
     {
         auto reg_set_iter = xapic::reg_set.find((addr & 0xFF0U) >> 4);
 
         if (reg_set_iter != xapic::reg_set.end()) {
             switch (op) {
                 case read:
-                    if (reg_set_iter->read)
+                    if (reg_set_iter->readable) {
                         return (addr & 0xFF0U) >> 4;
-                    else
-                        return -1;
+                    }
+                    break;
+
                 case write:
-                    if (reg_set_iter->write)
+                    if (reg_set_iter->writeable) {
                         return (addr & 0xFF0U) >> 4;
-                    else
-                        return -1;
+                    }
+                    break;
 
                 default:
                     bferror_info(0, "invalid register operation");
@@ -201,8 +202,7 @@ struct EXPORT_XAPIC xapic_control final : public lapic_control
             }
         }
 
-        else
-            return -1;
+        return -1;
     }
 
     //
@@ -217,24 +217,26 @@ struct EXPORT_XAPIC xapic_control final : public lapic_control
     // @param addr - guest physical address of desired register
     // @param op - the desired operation (read / write)
     //
-    int validate_msr_op(msrs::field_type msr, reg_op op) noexcept override
+    int validate_msr_op(const msrs::field_type msr, const reg_op op) noexcept override
     {
-        if (msr < lapic::msr_start_reg || msr > lapic::msr_end_reg)
+        if (msr < lapic::msr_start_reg || msr > lapic::msr_end_reg) {
             return -1;
+        }
         auto reg_set_iter = xapic::reg_set.find(msr & 0xFFU);
 
         if (reg_set_iter != xapic::reg_set.end()) {
             switch (op) {
                 case read:
-                    if (reg_set_iter->read)
+                    if (reg_set_iter->readable) {
                         return msr & 0xFFU;
-                    else
-                        return -1;
+                    }
+                    break;
+
                 case write:
-                    if (reg_set_iter->write)
+                    if (reg_set_iter->writeable) {
                         return msr & 0xFFU;
-                    else
-                        return -1;
+                    }
+                    break;
 
                 default:
                     bferror_info(0, "invalid register operation");
@@ -242,14 +244,13 @@ struct EXPORT_XAPIC xapic_control final : public lapic_control
             }
         }
 
-        else
-            return -1;
+        return -1;
     }
 
-    value_type read_register(uint32_t offset) noexcept override
+    value_type read_register(const uint32_t offset) noexcept override
     { return m_apic_page[offset << 2]; }
 
-    void write_register(uint32_t offset, value_type val) noexcept override
+    void write_register(const uint32_t offset, const value_type val) noexcept override
     { m_apic_page[offset << 2] = gsl::narrow_cast<uint32_t>(val); }
 
 
@@ -257,62 +258,62 @@ struct EXPORT_XAPIC xapic_control final : public lapic_control
     // Register reads
     //
     value_type read_id() noexcept override
-    { return read_register(xapic::registers::id.offset); }
+    { return read_register(xapic::regs::id.offset); }
 
     value_type read_version() noexcept override
-    { return read_register(xapic::registers::version.offset); }
+    { return read_register(xapic::regs::version.offset); }
 
     value_type read_tpr() noexcept override
-    { return read_register(xapic::registers::tpr.offset); }
+    { return read_register(xapic::regs::tpr.offset); }
 
     value_type read_ldr() noexcept override
-    { return read_register(xapic::registers::ldr.offset); }
+    { return read_register(xapic::regs::ldr.offset); }
 
     value_type read_svr() noexcept override
-    { return read_register(xapic::registers::sivr.offset); }
+    { return read_register(xapic::regs::sivr.offset); }
 
     value_type read_icr() noexcept override
     {
-        value_type low = read_register(xapic::registers::icr_low.offset);
-        value_type high = read_register(xapic::registers::icr_high.offset);
+        value_type low = read_register(xapic::regs::icr_low.offset);
+        value_type high = read_register(xapic::regs::icr_high.offset);
         return (high << 32) | low;
     }
 
-    value_type read_isr(index idx) noexcept override
+    value_type read_isr(const index idx) noexcept override
     {
-        auto offset = xapic::registers::isr0.offset | idx;
+        auto offset = xapic::regs::isr0.offset | idx;
         return read_register(offset);
     }
 
-    value_type read_tmr(index idx) noexcept override
+    value_type read_tmr(const index idx) noexcept override
     {
-        auto offset = xapic::registers::tmr0.offset | idx;
+        auto offset = xapic::regs::tmr0.offset | idx;
         return read_register(offset);
     }
 
-    value_type read_irr(index idx) noexcept override
+    value_type read_irr(const index idx) noexcept override
     {
-        auto offset = xapic::registers::irr0.offset | idx;
+        auto offset = xapic::regs::irr0.offset | idx;
         return read_register(offset);
     }
 
-    value_type read_lvt(lvt_reg reg) noexcept override
+    value_type read_lvt(const lvt_reg reg) noexcept override
     {
         switch (reg) {
             case cmci:
-                return read_register(xapic::registers::lvt_cmci.offset);
+                return read_register(xapic::regs::lvt_cmci.offset);
             case timer:
-                return read_register(xapic::registers::lvt_timer.offset);
+                return read_register(xapic::regs::lvt_timer.offset);
             case thermal:
-                return read_register(xapic::registers::lvt_thermal.offset);
+                return read_register(xapic::regs::lvt_thermal.offset);
             case perf:
-                return read_register(xapic::registers::lvt_perf.offset);
+                return read_register(xapic::regs::lvt_perf.offset);
             case lint0:
-                return read_register(xapic::registers::lvt_lint0.offset);
+                return read_register(xapic::regs::lvt_lint0.offset);
             case lint1:
-                return read_register(xapic::registers::lvt_lint1.offset);
+                return read_register(xapic::regs::lvt_lint1.offset);
             case error:
-                return read_register(xapic::registers::lvt_error.offset);
+                return read_register(xapic::regs::lvt_error.offset);
 
             default:
                 bferror_info(0, "invalid lvt_reg");
@@ -320,13 +321,13 @@ struct EXPORT_XAPIC xapic_control final : public lapic_control
         }
     }
 
-    value_type read_count(count_reg reg) noexcept override
+    value_type read_count(const count_reg reg) noexcept override
     {
         switch (reg) {
             case initial:
-                return read_register(xapic::registers::init_count.offset);
+                return read_register(xapic::regs::init_count.offset);
             case current:
-                return read_register(xapic::registers::cur_count.offset);
+                return read_register(xapic::regs::cur_count.offset);
 
             default:
                 bferror_info(0, "invalid count_reg");
@@ -335,59 +336,53 @@ struct EXPORT_XAPIC xapic_control final : public lapic_control
     }
 
     value_type read_div_config() noexcept override
-    { return read_register(xapic::registers::div_conf.offset); }
+    { return read_register(xapic::regs::div_conf.offset); }
 
 
     //
     // Register writes
     //
     void write_eoi() noexcept override
-    { write_register(xapic::registers::eoi.offset, 0x0ULL); }
+    { write_register(xapic::regs::eoi.offset, 0x0ULL); }
 
-    void write_tpr(value_type tpr) noexcept override
-    { write_register(xapic::registers::tpr.offset, tpr); }
+    void write_tpr(const value_type tpr) noexcept override
+    { write_register(xapic::regs::tpr.offset, tpr); }
 
-    void write_svr(value_type svr) noexcept override
-    { write_register(xapic::registers::sivr.offset, svr); }
+    void write_svr(const value_type svr) noexcept override
+    { write_register(xapic::regs::sivr.offset, svr); }
 
-    void write_icr(value_type icr) noexcept override
+    void write_icr(const value_type icr) noexcept override
     {
         value_type low = icr & 0x00000000FFFFFFFFULL;
         value_type high = (icr & 0xFFFFFFFF00000000ULL) >> 32;
-        write_register(xapic::registers::icr_high.offset, high);
-        std::atomic_thread_fence(std::memory_order_release);
-        write_register(xapic::registers::icr_low.offset, low);
+        write_register(xapic::regs::icr_high.offset, high);
+        x64::fence::sfence();
+        write_register(xapic::regs::icr_low.offset, low);
     }
 
-    void write_icr_low(value_type icr_low) noexcept override
-    { write_register(xapic::registers::icr_low.offset, icr_low); }
-
-    void write_icr_high(value_type icr_high) noexcept override
-    { write_register(xapic::registers::icr_high.offset, icr_high); }
-
-    void write_lvt(lvt_reg reg, value_type val) noexcept override
+    void write_lvt(const lvt_reg reg, const value_type val) noexcept override
     {
         switch (reg) {
             case cmci:
-                write_register(xapic::registers::lvt_cmci.offset, val);
+                write_register(xapic::regs::lvt_cmci.offset, val);
                 return;
             case timer:
-                write_register(xapic::registers::lvt_timer.offset, val);
+                write_register(xapic::regs::lvt_timer.offset, val);
                 return;
             case thermal:
-                write_register(xapic::registers::lvt_thermal.offset, val);
+                write_register(xapic::regs::lvt_thermal.offset, val);
                 return;
             case perf:
-                write_register(xapic::registers::lvt_perf.offset, val);
+                write_register(xapic::regs::lvt_perf.offset, val);
                 return;
             case lint0:
-                write_register(xapic::registers::lvt_lint0.offset, val);
+                write_register(xapic::regs::lvt_lint0.offset, val);
                 return;
             case lint1:
-                write_register(xapic::registers::lvt_lint1.offset, val);
+                write_register(xapic::regs::lvt_lint1.offset, val);
                 return;
             case error:
-                write_register(xapic::registers::lvt_error.offset, val);
+                write_register(xapic::regs::lvt_error.offset, val);
                 return;
 
             default:
@@ -396,11 +391,11 @@ struct EXPORT_XAPIC xapic_control final : public lapic_control
         }
     }
 
-    void write_init_count(value_type count) noexcept override
-    { write_register(xapic::registers::init_count.offset, count); }
+    void write_init_count(const value_type count) noexcept override
+    { write_register(xapic::regs::init_count.offset, count); }
 
-    void write_div_config(value_type config) noexcept override
-    { write_register(xapic::registers::div_conf.offset, config); }
+    void write_div_config(const value_type config) noexcept override
+    { write_register(xapic::regs::div_conf.offset, config); }
 
 
     //
@@ -411,7 +406,7 @@ struct EXPORT_XAPIC xapic_control final : public lapic_control
     //
     // @param vec - the vector of the self-ipi
     //
-    void write_self_ipi(vector_type vec) noexcept override
+    void write_self_ipi(const vector_type vec) noexcept override
     {
         value_type val = 0x0ULL | (vec & 0xFFULL) | 0x44000ULL;
         write_icr(val);
@@ -428,27 +423,27 @@ struct EXPORT_XAPIC xapic_control final : public lapic_control
     // @note to ensure an accurate result, the caller should mask
     // the vector prior to the call
     //
-    bool level_triggered(vector_type vec) noexcept override
+    bool level_triggered(const vector_type vec) noexcept override
     {
         auto reg = (vec & 0xE0) >> 5;
         auto bit = 1ULL << (vec & 0x1F);
         switch (reg) {
             case 0:
-                return read_register(xapic::registers::tmr0.offset) & bit;
+                return read_register(xapic::regs::tmr0.offset) & bit;
             case 1:
-                return read_register(xapic::registers::tmr1.offset) & bit;
+                return read_register(xapic::regs::tmr1.offset) & bit;
             case 2:
-                return read_register(xapic::registers::tmr2.offset) & bit;
+                return read_register(xapic::regs::tmr2.offset) & bit;
             case 3:
-                return read_register(xapic::registers::tmr3.offset) & bit;
+                return read_register(xapic::regs::tmr3.offset) & bit;
             case 4:
-                return read_register(xapic::registers::tmr4.offset) & bit;
+                return read_register(xapic::regs::tmr4.offset) & bit;
             case 5:
-                return read_register(xapic::registers::tmr5.offset) & bit;
+                return read_register(xapic::regs::tmr5.offset) & bit;
             case 6:
-                return read_register(xapic::registers::tmr6.offset) & bit;
+                return read_register(xapic::regs::tmr6.offset) & bit;
             case 7:
-                return read_register(xapic::registers::tmr7.offset) & bit;
+                return read_register(xapic::regs::tmr7.offset) & bit;
 
             default:
                 bferror_info(0, "invalid vector_type");
@@ -467,27 +462,27 @@ struct EXPORT_XAPIC xapic_control final : public lapic_control
     // @note to ensure an accurate result, the caller should mask
     // the vector prior to the call
     //
-    bool in_service(vector_type vec) noexcept override
+    bool in_service(const vector_type vec) noexcept override
     {
         auto reg = (vec & 0xE0) >> 5;
         auto bit = 1ULL << (vec & 0x1F);
         switch (reg) {
             case 0:
-                return read_register(xapic::registers::isr0.offset) & bit;
+                return read_register(xapic::regs::isr0.offset) & bit;
             case 1:
-                return read_register(xapic::registers::isr1.offset) & bit;
+                return read_register(xapic::regs::isr1.offset) & bit;
             case 2:
-                return read_register(xapic::registers::isr2.offset) & bit;
+                return read_register(xapic::regs::isr2.offset) & bit;
             case 3:
-                return read_register(xapic::registers::isr3.offset) & bit;
+                return read_register(xapic::regs::isr3.offset) & bit;
             case 4:
-                return read_register(xapic::registers::isr4.offset) & bit;
+                return read_register(xapic::regs::isr4.offset) & bit;
             case 5:
-                return read_register(xapic::registers::isr5.offset) & bit;
+                return read_register(xapic::regs::isr5.offset) & bit;
             case 6:
-                return read_register(xapic::registers::isr6.offset) & bit;
+                return read_register(xapic::regs::isr6.offset) & bit;
             case 7:
-                return read_register(xapic::registers::isr7.offset) & bit;
+                return read_register(xapic::regs::isr7.offset) & bit;
 
             default:
                 bferror_info(0, "invalid vector_type");
