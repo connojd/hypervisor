@@ -16,44 +16,13 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#ifndef FENCE_X64_H
-#define FENCE_X64_H
+#include <bfgsl.h>
+#include <bfdebug.h>
 
-// -----------------------------------------------------------------------------
-// Exports
-// -----------------------------------------------------------------------------
+#include <intrinsics/x86/common_x64.h>
 
-#include <bfexports.h>
-
-#ifndef STATIC_INTRINSICS
-#ifdef SHARED_INTRINSICS
-#define EXPORT_INTRINSICS EXPORT_SYM
-#else
-#define EXPORT_INTRINSICS IMPORT_SYM
-#endif
-#else
-#define EXPORT_INTRINSICS
-#endif
-
-// -----------------------------------------------------------------------------
-// Definitions
-// -----------------------------------------------------------------------------
-
-extern "C" EXPORT_INTRINSICS void _sfence(void) noexcept;
-
-// *INDENT-OFF*
-
-namespace x64
+extern "C" void
+_sfence(void) noexcept
 {
-namespace fence
-{
-    inline void sfence() noexcept
-    {
-        asm volatile("sfence" : : : "memory");
-    }
+    std::cerr << __BFFUNC__ << " called" << '\n';
 }
-}
-
-// *INDENT-ON*
-
-#endif

@@ -23,7 +23,6 @@
 #include <intrinsics/x86/common/cpuid_x64.h>
 #include <intrinsics/x86/common/cache_x64.h>
 #include <intrinsics/x86/common/debug_x64.h>
-#include <intrinsics/x86/common/fence_x64.h>
 #include <intrinsics/x86/common/gdt_x64.h>
 #include <intrinsics/x86/common/idt_x64.h>
 #include <intrinsics/x86/common/pdpte_x64.h>

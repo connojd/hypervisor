@@ -81,10 +81,25 @@ TEST_CASE("xapic_control_validate_gpa_op")
     setup_intrinsics(mocks);
     xapic_control ctrl;
 
-    CHECK(ctrl.validate_gpa_op(0xFEE00000ULL, lapic_control::read) == -1);
-    CHECK(ctrl.validate_gpa_op(0xFEE00030ULL, lapic_control::write) == -1);
-    CHECK(ctrl.validate_gpa_op(0xFEE000B0ULL, lapic_control::read) == -1);
-    CHECK(ctrl.validate_gpa_op(0xFEE00020ULL, lapic_control::read) == 0x2U);
+    CHECK(ctrl.validate_gpa_op(0xFEE00000ULL, lapic_control::read) == -1);      // Non-existent Register
+    CHECK(ctrl.validate_gpa_op(0xFEE00030ULL, lapic_control::write) == -1);     // Unwritable Register (version)
+    CHECK(ctrl.validate_gpa_op(0xFEE000B0ULL, lapic_control::read) == -1);      // Unreadable Register (eoi)
+    CHECK(ctrl.validate_gpa_op(0xFEE00020ULL, lapic_control::read) == 0x2U);    // Successful Operation
+
+    // x2apic vs xapic register conflicts
+    CHECK(ctrl.validate_gpa_op(0xFEE00020ULL, lapic_control::write) == 0x2U);   // ID Write
+    CHECK(ctrl.validate_gpa_op(0xFEE00090ULL, lapic_control::read) == 0x9U);    // APR Read
+    CHECK(ctrl.validate_gpa_op(0xFEE00090ULL, lapic_control::write) == -1);     // APR Write
+    CHECK(ctrl.validate_gpa_op(0xFEE000C0ULL, lapic_control::read) == 0xCU);    // RRD Read
+    CHECK(ctrl.validate_gpa_op(0xFEE000C0ULL, lapic_control::write) == -1);     // RRD Write
+    CHECK(ctrl.validate_gpa_op(0xFEE000D0ULL, lapic_control::write) == 0xDU);   // LDR Write
+    CHECK(ctrl.validate_gpa_op(0xFEE000E0ULL, lapic_control::read) == 0xEU);    // DFR Read
+    CHECK(ctrl.validate_gpa_op(0xFEE000E0ULL, lapic_control::write) == 0xEU);   // DFR Write
+    CHECK(ctrl.validate_gpa_op(0xFEE00280ULL, lapic_control::write) == -1);     // ESR Write
+    CHECK(ctrl.validate_gpa_op(0xFEE00310ULL, lapic_control::read) == 0x31U);   // ICR High Read
+    CHECK(ctrl.validate_gpa_op(0xFEE00310ULL, lapic_control::write) == 0x31U);  // ICR High Write
+    CHECK(ctrl.validate_gpa_op(0xFEE003F0ULL, lapic_control::read) == -1);      // Self IPI Read
+    CHECK(ctrl.validate_gpa_op(0xFEE003F0ULL, lapic_control::write) == -1);     // Self IPI Write
 }
 
 TEST_CASE("xapic_control_validate_msr_op")
@@ -93,12 +108,27 @@ TEST_CASE("xapic_control_validate_msr_op")
     setup_intrinsics(mocks);
     xapic_control ctrl;
 
-    CHECK(ctrl.validate_msr_op(0x00000000ULL, lapic_control::read) == -1);
-    CHECK(ctrl.validate_msr_op(0xFFFFFFFFULL, lapic_control::read) == -1);
-    CHECK(ctrl.validate_msr_op(0x00000800ULL, lapic_control::read) == -1);
-    CHECK(ctrl.validate_msr_op(0x00000803ULL, lapic_control::write) == -1);
-    CHECK(ctrl.validate_msr_op(0x0000080BULL, lapic_control::read) == -1);
-    CHECK(ctrl.validate_msr_op(0x00000802ULL, lapic_control::read) == 0x2U);
+    CHECK(ctrl.validate_msr_op(0x00000000ULL, lapic_control::read) == -1);      // Out of Lower Bound Register
+    CHECK(ctrl.validate_msr_op(0xFFFFFFFFULL, lapic_control::read) == -1);      // Out of Upper Bound Register
+    CHECK(ctrl.validate_msr_op(0x00000800ULL, lapic_control::read) == -1);      // Non-existent Register
+    CHECK(ctrl.validate_msr_op(0x00000803ULL, lapic_control::write) == -1);     // Unwritable Register (version)
+    CHECK(ctrl.validate_msr_op(0x0000080BULL, lapic_control::read) == -1);      // Unreadable Register (eoi)
+    CHECK(ctrl.validate_msr_op(0x00000802ULL, lapic_control::read) == 0x2U);    // Successful Operation
+
+    // x2apic vs xapic register conflicts
+    CHECK(ctrl.validate_msr_op(0x00000802ULL, lapic_control::write) == 0x2U);   // ID Write
+    CHECK(ctrl.validate_msr_op(0x00000809ULL, lapic_control::read) == 0x9U);    // APR Read
+    CHECK(ctrl.validate_msr_op(0x00000809ULL, lapic_control::write) == -1);     // APR Write
+    CHECK(ctrl.validate_msr_op(0x0000080CULL, lapic_control::read) == 0xCU);    // RRD Read
+    CHECK(ctrl.validate_msr_op(0x0000080CULL, lapic_control::write) == -1);     // RRD Write
+    CHECK(ctrl.validate_msr_op(0x0000080DULL, lapic_control::write) == 0xDU);   // LDR Write
+    CHECK(ctrl.validate_msr_op(0x0000080EULL, lapic_control::read) == 0xEU);    // DFR Read
+    CHECK(ctrl.validate_msr_op(0x0000080EULL, lapic_control::write) == 0xEU);   // DFR Write
+    CHECK(ctrl.validate_msr_op(0x00000828ULL, lapic_control::write) == -1);     // ESR Write
+    CHECK(ctrl.validate_msr_op(0x00000831ULL, lapic_control::read) == 0x31U);   // ICR High Read
+    CHECK(ctrl.validate_msr_op(0x00000831ULL, lapic_control::write) == 0x31U);  // ICR High Write
+    CHECK(ctrl.validate_msr_op(0x0000083FULL, lapic_control::read) == -1);      // Self IPI Read
+    CHECK(ctrl.validate_msr_op(0x0000083FULL, lapic_control::write) == -1);     // Self IPI Write
 }
 
 TEST_CASE("xapic_control_read_register")

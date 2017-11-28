@@ -29,6 +29,7 @@ if(NOT CMAKE_TOOLCHAIN_FILE)
         cpuid_x64_mock.cpp
         crs_intel_x64_mock.cpp
         debug_x64_mock.cpp
+        fence_x64_mock.cpp
         gdt_x64_mock.cpp
         idt_x64_mock.cpp
         msrs_x64_mock.cpp
@@ -49,6 +50,7 @@ else()
         cpuid_x64.asm
         crs_intel_x64.asm
         debug_x64.asm
+        fence_x64.asm
         gdt_x64.asm
         idt_x64.asm
         msrs_x64.asm

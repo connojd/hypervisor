@@ -29,6 +29,16 @@
 
 #include <bfexports.h>
 
+#ifndef STATIC_INTRINSICS
+#ifdef SHARED_INTRINSICS
+#define EXPORT_INTRINSICS EXPORT_SYM
+#else
+#define EXPORT_INTRINSICS IMPORT_SYM
+#endif
+#else
+#define EXPORT_INTRINSICS
+#endif
+
 #ifndef STATIC_XAPIC
 #ifdef SHARED_XAPIC
 #define EXPORT_XAPIC EXPORT_SYM
@@ -43,6 +53,14 @@
 #pragma warning(push)
 #pragma warning(disable : 4251)
 #endif
+
+// -----------------------------------------------------------------------------
+// Definitions
+// -----------------------------------------------------------------------------
+
+extern "C" EXPORT_INTRINSICS void _sfence(void) noexcept;
+
+// *INDENT-OFF*
 
 namespace intel_x64
 {
@@ -356,7 +374,7 @@ struct EXPORT_XAPIC xapic_control final : public lapic_control
         value_type low = icr & 0x00000000FFFFFFFFULL;
         value_type high = (icr & 0xFFFFFFFF00000000ULL) >> 32;
         write_register(xapic::regs::icr_high.offset, high);
-        x64::fence::sfence();
+        _sfence();
         write_register(xapic::regs::icr_low.offset, low);
     }
 
@@ -511,5 +529,7 @@ private:
 };
 
 }
+
+// *INDENT-ON*
 
 #endif
