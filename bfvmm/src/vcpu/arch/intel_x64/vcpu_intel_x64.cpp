@@ -98,6 +98,7 @@ vcpu_intel_x64::run(user_data *data)
 {
     expects(this->is_initialized());
 
+#ifndef VMXON_ONLY
     if (!m_vmcs_launched) {
         m_vmcs_launched = true;
 
@@ -132,6 +133,11 @@ vcpu_intel_x64::run(user_data *data)
         m_vmcs->load();
         m_vmcs->resume();
     }
+#else
+    m_vmcs_launched = true;
+    vcpu::run(data);
+    m_vmxon->start();
+#endif
 }
 
 void

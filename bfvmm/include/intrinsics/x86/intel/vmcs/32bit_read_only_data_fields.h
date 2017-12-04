@@ -413,6 +413,11 @@ namespace exit_reason
             return basic_exit_reason_description(field);
         }
 
+        inline auto to_string(field_type reason)
+        {
+            return basic_exit_reason_description(reason);
+        }
+
         inline void dump(int level, std::string *msg = nullptr)
         { dump_vmcs_text(level, msg); }
     }

@@ -496,13 +496,37 @@ exit_handler_intel_x64::handle_vmcall_data(vmcall_registers_t &regs)
     }
 }
 
+#define MSR_PLATFORM_INFO 0xCEU
+#define TSC_RATIO_MASK 0xFF00U
+#define TSC_FREQ 100000000U
+
 void
 exit_handler_intel_x64::handle_vmcall_event(vmcall_registers_t &regs)
 {
-    bfdebug_transaction(0, [&](std::string * msg) {
-        bfdebug_info(0, "vmcall event", msg);
-        bfdebug_subnhex(0, "r02", regs.r02, msg);
-    });
+	namespace reason = intel_x64::vmcs::exit_reason::basic_exit_reason;
+	namespace msrs = intel_x64::msrs;
+
+	/* vmcall to start the bench, so we count exits */
+	if (regs.r02 == 0x6000U) {
+		count_exits = true;
+    		//m_cpuid_access_log_enabled = true;
+		return;
+	}
+
+	count_exits = false;	
+        bfdebug_info(0, "exit counts:");
+	uint64_t total = 0;
+        for (int i = 0; i < 64; ++i) {
+            if (exit_count[i]) {
+                bfdebug_subndec(0, reason::to_string(i), exit_count[i]);
+		total += exit_count[i];
+                exit_count[i] = 0;
+            }
+        }
+	regs.r01 = total;
+
+	auto ratio = (msrs::get(MSR_PLATFORM_INFO) & TSC_RATIO_MASK) >> 8;
+	regs.r02 = ratio * TSC_FREQ;
 }
 
 void

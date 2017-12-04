@@ -69,10 +69,16 @@ namespace vmx
         if (!_vmxon(ptr)) {
             throw std::runtime_error("vmx::on failed");
         }
+#ifdef VMXON_ONLY
+        bfdebug_info(0, "called vmxon");
+#endif
     }
 
     inline void off()
     {
+#ifdef VMXON_ONLY
+        bfdebug_info(0, "calling vmxoff");
+#endif
         if (!_vmxoff()) {
             throw std::runtime_error("vmx::off failed");
         }

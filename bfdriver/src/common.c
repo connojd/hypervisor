@@ -434,13 +434,14 @@ common_start_vmm(void)
         }
 
         g_num_cpus_started++;
-
+#ifndef VMXON_ONLY
         _vmcall(&regs);
         if (regs.r01 != 0) {
             return ENTRY_ERROR_VMM_START_FAILED;
         }
 
         platform_start();
+#endif
         platform_restore_affinity(caller_affinity);
 
         g_vmm_status = VMM_RUNNING;
@@ -485,12 +486,13 @@ common_stop_vmm(void)
             goto corrupted;
         }
 
+#ifndef VMXON_ONLY
         _vmcall(&regs);
         if (regs.r01 != 0) {
             ret = ENTRY_ERROR_VMM_STOP_FAILED;
             goto corrupted;
         }
-
+#endif
         ret = call_vmm(BF_REQUEST_VMM_FINI, (uint64_t)cpuid, 0, 0);
         if (ret != BFELF_SUCCESS) {
             goto corrupted;
@@ -498,7 +500,9 @@ common_stop_vmm(void)
 
         g_num_cpus_started--;
 
+#ifndef VMXON_ONLY
         platform_stop();
+#endif
         platform_restore_affinity(caller_affinity);
     }
 

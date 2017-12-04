@@ -20,6 +20,7 @@
 #define EXIT_HANDLER_INTEL_X64_H
 
 #include <memory>
+#include <array>
 
 #include <vmcs/vmcs_intel_x64.h>
 #include <memory_manager/map_ptr_x64.h>
@@ -196,6 +197,9 @@ public:
     /// @endcond
 
 public:
+
+    std::array<uint64_t, 64> exit_count;
+    bool count_exits;
 
     /// @cond
 
