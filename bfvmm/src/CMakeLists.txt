@@ -27,7 +27,7 @@ add_subdirectory(vcpu)
 add_subdirectory(vcpu_factory)
 add_subdirectory(vcpu_manager)
 
-if(CMAKE_TOOLCHAIN_FILE)
+if(NOT ${PROJECT_NAME} STREQUAL bfvmm_test)
     add_subdirectory(support)
     add_subdirectory(main)
 endif()
