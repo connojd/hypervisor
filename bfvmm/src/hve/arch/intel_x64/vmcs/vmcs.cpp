@@ -381,6 +381,8 @@ vmcs_intel_x64::write_32bit_host_state(gsl::not_null<vmcs_intel_x64_state *> sta
 void
 vmcs_intel_x64::write_natural_host_state(gsl::not_null<vmcs_intel_x64_state *> state)
 {
+    static bool debug = true;
+
     auto cr0 = state->cr0();
     auto cr3 = state->cr3();
     auto cr4 = state->cr4();
@@ -388,6 +390,11 @@ vmcs_intel_x64::write_natural_host_state(gsl::not_null<vmcs_intel_x64_state *> s
     vmcs::host_cr0::set(cr0);
     vmcs::host_cr3::set(cr3);
     vmcs::host_cr4::set(cr4);
+    if (debug) {
+        vmcs::host_cr4::dump(0);
+        intel_x64::cr4::dump(0);
+        debug = false;
+    }
 
     auto fs_base = state->ia32_fs_base_msr();
     auto gs_base = reinterpret_cast<uintptr_t>(m_state_save);
@@ -586,6 +593,11 @@ vmcs_intel_x64::write_natural_guest_state(gsl::not_null<vmcs_intel_x64_state *> 
     vmcs::guest_cr0::set(cr0);
     vmcs::guest_cr3::set(cr3);
     vmcs::guest_cr4::set(cr4);
+    static bool debug = true;
+    if (debug) {
+        vmcs::guest_cr4::dump(0);
+        debug = false;
+    }
 
     auto es_base = state->es_base();
     auto cs_base = state->cs_base();

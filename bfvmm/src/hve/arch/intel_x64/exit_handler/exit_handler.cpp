@@ -226,6 +226,8 @@ exit_handler_intel_x64::handle_vmxoff()
             vmcs::guest_ia32_pat::get()
         );
 
+    vmcs::guest_cr4::dump(0);
+    intel_x64::cr4::dump(0);
     this->promote(gdt_map.get());
 }
 

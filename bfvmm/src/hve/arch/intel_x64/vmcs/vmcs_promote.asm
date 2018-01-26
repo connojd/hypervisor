@@ -84,6 +84,24 @@ extern _cpuid_eax
 
 section .text
 
+debug_write:
+    push rdi
+    push rdx
+    push rcx
+    push rax
+    mov dx, 0x03f8
+    mov al, 0x30
+    out dx, al
+    mov al, 0x0a
+    out dx, al
+    xor edi, edi
+    call _cpuid_eax wrt ..plt
+    pop rax
+    pop rcx
+    pop rdx
+    pop rdi
+    ret
+
 ; Promote VMCS
 ;
 ; Continues execution using the Guest state. Once this function executes,
@@ -175,16 +193,25 @@ vmcs_promote:
     call _write_cr0 wrt ..plt
 
     mov rsi, VMCS_GUEST_CR3
+    call debug_write
     vmread rdi, rsi
+    call debug_write
     call _write_cr3 wrt ..plt
+    call debug_write
 
     mov rsi, VMCS_GUEST_CR4
+    call debug_write
     vmread rdi, rsi
+    call debug_write
     call _write_cr4 wrt ..plt
+    call debug_write
 
     mov rsi, VMCS_GUEST_DR7
+    call debug_write
     vmread rdi, rsi
+    call debug_write
     call _write_dr7 wrt ..plt
+    call debug_write
 
     ;
     ; Restore the guest's actual GDT
