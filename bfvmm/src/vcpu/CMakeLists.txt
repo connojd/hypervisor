@@ -59,4 +59,4 @@ add_static_library(
 # Install
 # ------------------------------------------------------------------------------
 
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/../include/vcpu DESTINATION include/bfvmm/vcpu)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/../../include/bfvmm/vcpu DESTINATION include/bfvmm)

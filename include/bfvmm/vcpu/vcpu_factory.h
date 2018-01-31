@@ -20,7 +20,7 @@
 #define VCPU_FACTORY_H
 
 #include <memory>
-#include <vcpu/vcpu.h>
+#include <bfvmm/vcpu/vcpu.h>
 
 // -----------------------------------------------------------------------------
 // Exports

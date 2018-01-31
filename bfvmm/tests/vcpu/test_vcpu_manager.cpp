@@ -21,9 +21,9 @@
 #include <catch/catch.hpp>
 #include <hippomocks.h>
 
-#include <vcpu/vcpu.h>
-#include <vcpu/vcpu_factory.h>
-#include <vcpu/vcpu_manager.h>
+#include <bfvmm/vcpu/vcpu.h>
+#include <bfvmm/vcpu/vcpu_factory.h>
+#include <bfvmm/vcpu/vcpu_manager.h>
 
 bool make_vcpu_throws = false;
 vcpu *g_vcpu = nullptr;

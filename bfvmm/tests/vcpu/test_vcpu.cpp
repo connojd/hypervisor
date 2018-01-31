@@ -17,7 +17,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <catch/catch.hpp>
-#include <vcpu/vcpu.h>
+#include <bfvmm/vcpu/vcpu.h>
 
 TEST_CASE("vcpu: invalid_id")
 {

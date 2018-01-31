@@ -19,7 +19,7 @@
 #include <bftypes.h>
 
 #include <catch/catch.hpp>
-#include <vcpu/vcpu_factory.h>
+#include <bfvmm/vcpu/vcpu_factory.h>
 
 WEAK_SYM std::unique_ptr<vcpu>
 vcpu_factory::make_vcpu(vcpuid::type vcpuid, user_data *data)

@@ -22,7 +22,7 @@
 #include <map>
 #include <memory>
 
-#include <vcpu/vcpu_factory.h>
+#include <bfvmm/vcpu/vcpu_factory.h>
 
 // -----------------------------------------------------------------------------
 // Exports

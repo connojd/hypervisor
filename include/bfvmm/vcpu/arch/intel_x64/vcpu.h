@@ -19,7 +19,7 @@
 #ifndef VCPU_INTEL_X64_H
 #define VCPU_INTEL_X64_H
 
-#include <vcpu/vcpu.h>
+#include <bfvmm/vcpu/vcpu.h>
 #include <hve/arch/intel_x64/vmxon/vmxon.h>
 #include <hve/arch/intel_x64/vmcs/vmcs.h>
 #include <hve/arch/intel_x64/vmcs/vmcs_state_vmm.h>

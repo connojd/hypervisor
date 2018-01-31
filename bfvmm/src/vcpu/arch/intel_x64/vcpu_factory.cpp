@@ -19,8 +19,8 @@
 #include <bftypes.h>
 #include <bfexports.h>
 
-#include <vcpu/vcpu_factory.h>
-#include <vcpu/arch/intel_x64/vcpu.h>
+#include <bfvmm/vcpu/vcpu_factory.h>
+#include <bfvmm/vcpu/arch/intel_x64/vcpu.h>
 
 WEAK_SYM std::unique_ptr<vcpu>
 vcpu_factory::make_vcpu(vcpuid::type vcpuid, user_data *data)

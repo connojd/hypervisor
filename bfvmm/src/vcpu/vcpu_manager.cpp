@@ -17,7 +17,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <bfgsl.h>
-#include <vcpu/vcpu_manager.h>
+#include <bfvmm/vcpu/vcpu_manager.h>
 
 // -----------------------------------------------------------------------------
 // Mutex

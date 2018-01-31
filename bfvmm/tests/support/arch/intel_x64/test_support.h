@@ -37,7 +37,7 @@
 #include <hve/arch/x64/gdt.h>
 #include <hve/arch/x64/idt.h>
 
-#include <vcpu/arch/intel_x64/vcpu.h>
+#include <bfvmm/vcpu/arch/intel_x64/vcpu.h>
 
 #include <intrinsics.h>
 #include <bfnewdelete.h>
