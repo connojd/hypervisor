@@ -37,7 +37,6 @@
 #endif
 
 #ifdef BF_INTEL_X64
-#include <arch/intel_x64/acpi.h>
 #include <arch/intel_x64/apic/lapic.h>
 #include <arch/intel_x64/apic/x2apic.h>
 #include <arch/intel_x64/apic/xapic.h>
@@ -64,6 +63,8 @@
 #include <arch/intel_x64/vmcs/natural_width_host_state_fields.h>
 #include <arch/intel_x64/vmcs/natural_width_read_only_data_fields.h>
 #endif
+
+#include <acpi/acpi.h>
 
 #ifdef BF_AARCH64
 #error "unimplemented"
