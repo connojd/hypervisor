@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 
-#include <support/arch/intel_x64/test_support.h>
+#include "test_support.h"
 
 #ifdef _HIPPOMOCKS__ENABLE_CFUNC_MOCKING_SUPPORT
 
