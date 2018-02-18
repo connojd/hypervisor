@@ -29,6 +29,8 @@
 #include <memory_manager/memory_manager.h>
 #include <memory_manager/arch/x64/root_page_table.h>
 
+bool g_guest_perf_glbl_ctrl_field_exists;
+
 // -----------------------------------------------------------------------------
 // C Prototypes
 // -----------------------------------------------------------------------------
@@ -318,6 +320,8 @@ exit_handler::exit_handler(
             s_cr4 |= ::intel_x64::cr4::smap_enable_bit::mask;
         }
     }
+
+    g_guest_perf_glbl_ctrl_field_exists = ::intel_x64::vmcs::guest_ia32_perf_global_ctrl::exists();
 
     this->write_host_state();
     this->write_control_state();
