@@ -27,14 +27,14 @@
 #include <arch/intel_x64/msrs.h>
 #include <arch/intel_x64/cpuid.h>
 
-#ifndef STATIC_LAPIC
-#ifdef SHARED_LAPIC
-#define EXPORT_LAPIC EXPORT_SYM
+#ifndef STATIC_INTRINSICS
+#ifdef SHARED_INTRINSICS
+#define EXPORT_INTRINSICS EXPORT_SYM
 #else
-#define EXPORT_LAPIC IMPORT_SYM
+#define EXPORT_INTRINSICS IMPORT_SYM
 #endif
 #else
-#define EXPORT_LAPIC
+#define EXPORT_INTRINSICS
 #endif
 
 #ifdef _MSC_VER
@@ -291,7 +291,7 @@ namespace lapic
 /// This abstract class provides an interface to lapic control operations
 /// that are common to both xAPIC and x2APIC modes.
 ///
-struct EXPORT_LAPIC lapic_control
+struct EXPORT_INTRINSICS lapic_control
 {
     using value_type = uint64_t;
     using vector_type = uint64_t;

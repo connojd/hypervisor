@@ -39,16 +39,6 @@
 #define EXPORT_INTRINSICS
 #endif
 
-#ifndef STATIC_XAPIC
-#ifdef SHARED_XAPIC
-#define EXPORT_XAPIC EXPORT_SYM
-#else
-#define EXPORT_XAPIC IMPORT_SYM
-#endif
-#else
-#define EXPORT_XAPIC
-#endif
-
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4251)
@@ -180,9 +170,16 @@ namespace xapic
 /// mode. It is marked final because it is intended to interact
 /// directly with xapic hardware.
 ///
-struct EXPORT_XAPIC xapic_control final : public lapic_control
+struct EXPORT_INTRINSICS xapic_control final : public lapic_control
 {
     using apic_base_type = uintptr_t;
+
+    /// Default Constructor
+    ///
+    /// @expects
+    /// @ensures
+    ///
+    xapic_control() = default;
 
     //
     // Check if guest physical address is an APIC register and the desired
@@ -512,9 +509,6 @@ struct EXPORT_XAPIC xapic_control final : public lapic_control
     // Default operations
     //
     ~xapic_control() = default;
-    xapic_control() = default;
-    xapic_control(uint32_t* base)
-    { m_apic_page = base; }
     xapic_control(xapic_control &&) = default;
     xapic_control &operator=(xapic_control &&) = default;
 
@@ -523,9 +517,7 @@ struct EXPORT_XAPIC xapic_control final : public lapic_control
 
 
 private:
-
-    uint32_t* m_apic_page;
-
+    std::array<uint32_t, 128> m_apic_page;
 };
 
 }
