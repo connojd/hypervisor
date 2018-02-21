@@ -239,7 +239,7 @@ TEST_CASE("exit_handler: vm_exit_reason_rdmsr_perf_doesnt_exist")
     g_msrs[intel_x64::msrs::ia32_vmx_true_entry_ctls::addr] = 0;
     g_guest_perf_glbl_ctrl_field_exists = false;
 
-    CHECK_NOTHROW(ehlr.dispatch(&ehlr));
+    CHECK_NOTHROW(ehlr.handle(&ehlr));
 
     CHECK(g_save_state.rax == 0x3);
     CHECK(g_save_state.rdx == 0x4);
@@ -429,7 +429,7 @@ TEST_CASE("exit_handler: vm_exit_reason_wrmsr_perf_doesnt_exist")
     g_msrs[intel_x64::msrs::ia32_vmx_true_entry_ctls::addr] = 0;
     g_guest_perf_glbl_ctrl_field_exists = false;
 
-    CHECK_NOTHROW(ehlr.dispatch(&ehlr));
+    CHECK_NOTHROW(ehlr.handle(&ehlr));
 
     CHECK(g_msrs[::intel_x64::msrs::ia32_perf_global_ctrl::addr] == 0x0000000400000003);
 }

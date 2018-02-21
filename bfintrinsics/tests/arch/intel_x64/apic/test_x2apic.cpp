@@ -24,13 +24,7 @@
 
 using namespace intel_x64;
 
-TEST_CASE("test name goes here")
-{
-    CHECK(true);
-}
-
 std::map<msrs::field_type, msrs::value_type> g_msrs;
-
 std::map<cpuid::field_type, cpuid::value_type> g_ecx_cpuid;
 
 extern "C" uint64_t
@@ -1218,105 +1212,6 @@ TEST_CASE("x2apic_supported")
 
     g_ecx_cpuid[cpuid::feature_information::addr] = 0x0;
     CHECK_FALSE(x2apic::supported());
-}
-
-TEST_CASE("x2apic_control_validate_gpa_op")
-{
-    x2apic_control ctrl;
-
-    CHECK(ctrl.validate_gpa_op(0xFEE00000ULL, lapic_control::read) == -1);      // Non-existent Register
-    CHECK(ctrl.validate_gpa_op(0xFEE00030ULL, lapic_control::write) == -1);     // Unwritable Register (version)
-    CHECK(ctrl.validate_gpa_op(0xFEE000B0ULL, lapic_control::read) == -1);      // Unreadable Register (eoi)
-    CHECK(ctrl.validate_gpa_op(0xFEE00020ULL, lapic_control::read) == 0x2U);    // Successful Operation
-
-    // x2apic vs xapic register conflicts
-    CHECK(ctrl.validate_gpa_op(0xFEE00020ULL, lapic_control::write) == -1);     // ID Write
-    CHECK(ctrl.validate_gpa_op(0xFEE00090ULL, lapic_control::read) == -1);      // APR Read
-    CHECK(ctrl.validate_gpa_op(0xFEE00090ULL, lapic_control::write) == -1);     // APR Write
-    CHECK(ctrl.validate_gpa_op(0xFEE000C0ULL, lapic_control::read) == -1);      // RRD Read
-    CHECK(ctrl.validate_gpa_op(0xFEE000C0ULL, lapic_control::write) == -1);     // RRD Write
-    CHECK(ctrl.validate_gpa_op(0xFEE000D0ULL, lapic_control::write) == -1);     // LDR Write
-    CHECK(ctrl.validate_gpa_op(0xFEE000E0ULL, lapic_control::read) == -1);      // DFR Read
-    CHECK(ctrl.validate_gpa_op(0xFEE000E0ULL, lapic_control::write) == -1);     // DFR Write
-    CHECK(ctrl.validate_gpa_op(0xFEE00280ULL, lapic_control::write) == 0x28U);  // ESR Write
-    CHECK(ctrl.validate_gpa_op(0xFEE00310ULL, lapic_control::read) == -1);      // ICR High Read
-    CHECK(ctrl.validate_gpa_op(0xFEE00310ULL, lapic_control::write) == -1);     // ICR High Write
-    CHECK(ctrl.validate_gpa_op(0xFEE003F0ULL, lapic_control::read) == -1);      // Self IPI Read
-    CHECK(ctrl.validate_gpa_op(0xFEE003F0ULL, lapic_control::write) == 0x3FU);  // Self IPI Write
-}
-
-TEST_CASE("x2apic_control_validate_msr_op")
-{
-    x2apic_control ctrl;
-
-    CHECK(ctrl.validate_msr_op(0x00000000ULL, lapic_control::read) == -1);      // Out of Lower Bound Register
-    CHECK(ctrl.validate_msr_op(0xFFFFFFFFULL, lapic_control::read) == -1);      // Out of Upper Bound Register
-    CHECK(ctrl.validate_msr_op(0x00000800ULL, lapic_control::read) == -1);      // Non-existent Register
-    CHECK(ctrl.validate_msr_op(0x00000803ULL, lapic_control::write) == -1);     // Unwritable Register (version)
-    CHECK(ctrl.validate_msr_op(0x0000080BULL, lapic_control::read) == -1);      // Unreadable Register (eoi)
-    CHECK(ctrl.validate_msr_op(0x00000802ULL, lapic_control::read) == 0x2U);    // Successful Operation
-
-    // x2apic vs xapic register conflicts
-    CHECK(ctrl.validate_msr_op(0x00000802ULL, lapic_control::write) == -1);     // ID Write
-    CHECK(ctrl.validate_msr_op(0x00000809ULL, lapic_control::read) == -1);      // APR Read
-    CHECK(ctrl.validate_msr_op(0x00000809ULL, lapic_control::write) == -1);     // APR Write
-    CHECK(ctrl.validate_msr_op(0x0000080CULL, lapic_control::read) == -1);      // RRD Read
-    CHECK(ctrl.validate_msr_op(0x0000080CULL, lapic_control::write) == -1);     // RRD Write
-    CHECK(ctrl.validate_msr_op(0x0000080DULL, lapic_control::write) == -1);     // LDR Write
-    CHECK(ctrl.validate_msr_op(0x0000080EULL, lapic_control::read) == -1);      // DFR Read
-    CHECK(ctrl.validate_msr_op(0x0000080EULL, lapic_control::write) == -1);     // DFR Write
-    CHECK(ctrl.validate_msr_op(0x00000828ULL, lapic_control::write) == 0x28U);  // ESR Write
-    CHECK(ctrl.validate_msr_op(0x00000831ULL, lapic_control::read) == -1);      // ICR High Read
-    CHECK(ctrl.validate_msr_op(0x00000831ULL, lapic_control::write) == -1);     // ICR High Write
-    CHECK(ctrl.validate_msr_op(0x0000083FULL, lapic_control::read) == -1);      // Self IPI Read
-    CHECK(ctrl.validate_msr_op(0x0000083FULL, lapic_control::write) == 0x3FU);  // Self IPI Write
-}
-
-TEST_CASE("x2apic_control_read_register")
-{
-    x2apic_control ctrl;
-
-    g_msrs[msrs::ia32_x2apic_apicid::addr] = 0xFFFFFFFFFFFFFFFFULL;
-    CHECK(ctrl.read_register(0x02U) == 0xFFFFFFFFFFFFFFFFULL);
-
-    g_msrs[msrs::ia32_x2apic_apicid::addr] = 0x0ULL;
-    CHECK(ctrl.read_register(0x02U) == 0x0ULL);
-}
-
-TEST_CASE("x2apic_control_write_register")
-{
-    x2apic_control ctrl;
-
-    ctrl.write_register(0x02U, 0xFFFFFFFFFFFFFFFFULL);
-    CHECK(ctrl.read_id() == 0xFFFFFFFFFFFFFFFFULL);
-
-    ctrl.write_register(0x02U, 0x0ULL);
-    CHECK(ctrl.read_id() == 0x0ULL);
-}
-
-TEST_CASE("x2apic_control_read_id")
-{
-    x2apic_control ctrl;
-
-    CHECK(ctrl.validate_gpa_op(0xFEE00000ULL, lapic_control::read) == -1);      // Non-existent Register
-    CHECK(ctrl.validate_gpa_op(0xFEE00030ULL, lapic_control::write) == -1);     // Unwritable Register (version)
-    CHECK(ctrl.validate_gpa_op(0xFEE000B0ULL, lapic_control::read) == -1);      // Unreadable Register (eoi)
-    CHECK(ctrl.validate_gpa_op(0xFEE00020ULL, lapic_control::read) == 0x2U);    // Successful Operation
-
-    // x2apic vs xapic register conflicts
-    CHECK(ctrl.validate_gpa_op(0xFEE00020ULL, lapic_control::write) == -1);     // ID Write
-    CHECK(ctrl.validate_gpa_op(0xFEE00090ULL, lapic_control::read) == -1);      // APR Read
-    CHECK(ctrl.validate_gpa_op(0xFEE00090ULL, lapic_control::write) == -1);     // APR Write
-    CHECK(ctrl.validate_gpa_op(0xFEE000C0ULL, lapic_control::read) == -1);      // RRD Read
-    CHECK(ctrl.validate_gpa_op(0xFEE000C0ULL, lapic_control::write) == -1);     // RRD Write
-    CHECK(ctrl.validate_gpa_op(0xFEE000D0ULL, lapic_control::write) == -1);     // LDR Write
-    CHECK(ctrl.validate_gpa_op(0xFEE000E0ULL, lapic_control::read) == -1);      // DFR Read
-    CHECK(ctrl.validate_gpa_op(0xFEE000E0ULL, lapic_control::write) == -1);     // DFR Write
-    CHECK(ctrl.validate_gpa_op(0xFEE00280ULL, lapic_control::write) == 0x28U);  // ESR Write
-    CHECK(ctrl.validate_gpa_op(0xFEE00310ULL, lapic_control::read) == -1);      // ICR High Read
-    CHECK(ctrl.validate_gpa_op(0xFEE00310ULL, lapic_control::write) == -1);     // ICR High Write
-    CHECK(ctrl.validate_gpa_op(0xFEE003F0ULL, lapic_control::read) == -1);      // Self IPI Read
-    CHECK(ctrl.validate_gpa_op(0xFEE003F0ULL, lapic_control::write) == 0x3FU);  // Self IPI Write
 }
 
 #endif
