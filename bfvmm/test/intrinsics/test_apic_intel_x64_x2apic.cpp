@@ -24,12 +24,8 @@
 
 using namespace intel_x64;
 
-TEST_CASE("test name goes here")
-{
-    CHECK(true);
-}
-
 std::map<msrs::field_type, msrs::value_type> g_msrs;
+std::map<cpuid::field_type, cpuid::value_type> g_ecx_cpuid;
 
 extern "C" uint64_t
 test_read_msr(uint32_t addr) noexcept
@@ -1508,6 +1504,7 @@ TEST_CASE("x2apic_supported")
     CHECK_FALSE(x2apic::supported());
 }
 
+<<<<<<< HEAD:bfvmm/test/intrinsics/test_apic_intel_x64_x2apic.cpp
 TEST_CASE("x2apic_control_validate_gpa_op")
 {
     MockRepository mocks;
@@ -1617,4 +1614,6 @@ TEST_CASE("x2apic_control_read_id")
     CHECK(ctrl.validate_gpa_op(0xFEE003F0ULL, lapic_control::write) == 0x3FU);  // Self IPI Write
 }
 
+=======
+>>>>>>> intrinsics: Move apic classes to extended apis:bfintrinsics/tests/arch/intel_x64/apic/test_x2apic.cpp
 #endif
