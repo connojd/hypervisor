@@ -43,6 +43,7 @@
 #include <arch/intel_x64/cpuid.h>
 #include <arch/intel_x64/crs.h>
 #include <arch/intel_x64/drs.h>
+#include <arch/intel_x64/fence.h>
 #include <arch/intel_x64/msrs.h>
 #include <arch/intel_x64/vmx.h>
 #include <arch/intel_x64/vmcs/16bit_control_fields.h>
