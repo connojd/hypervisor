@@ -16,6 +16,7 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+#include <intrinsics.h>
 #include <bfgsl.h>
 #include <vcpu/vcpu_manager.h>
 
@@ -70,7 +71,9 @@ void
 vcpu_manager::run_vcpu(vcpuid::type vcpuid, bfobject *obj)
 {
     if (auto &&vcpu = get_vcpu(vcpuid)) {
+        ::intel_x64::cr8::set(0xf);
         vcpu->run(obj);
+        ::intel_x64::cr8::set(0x0);
     }
 }
 
