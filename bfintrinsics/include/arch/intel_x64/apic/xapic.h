@@ -21,7 +21,7 @@
 
 #include <set>
 #include <atomic>
-#include <intrinsics/x86/intel/apic/lapic.h>
+#include <arch/intel_x64/apic/lapic.h>
 
 // -----------------------------------------------------------------------------
 // Exports

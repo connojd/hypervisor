@@ -20,6 +20,8 @@
 #define INTRINSICS_X2APIC_INTEL_X64_H
 
 #include <set>
+#include <array>
+
 #include <arch/intel_x64/cpuid.h>
 #include <arch/intel_x64/apic/lapic.h>
 

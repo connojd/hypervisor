@@ -76,9 +76,6 @@ TEST_CASE("intrinsics: cpuid_feature_information")
 
 TEST_CASE("intrinsics: cpuid_feature_information_eax")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_eax_cpuid[addr] = 0xFFFFFFFF;
@@ -87,9 +84,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_eax")
 
 TEST_CASE("intrinsics: cpuid_feature_information_eax_stepping_id")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_eax_cpuid[addr] = 0xFFFFFFFFULL;
@@ -101,9 +95,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_eax_stepping_id")
 
 TEST_CASE("intrinsics: cpuid_feature_information_eax_model")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_eax_cpuid[addr] = 0xFFFFFFFFULL;
@@ -115,9 +106,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_eax_model")
 
 TEST_CASE("intrinsics: cpuid_feature_information_eax_family_id")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_eax_cpuid[addr] = 0xFFFFFFFFULL;
@@ -129,9 +117,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_eax_family_id")
 
 TEST_CASE("intrinsics: cpuid_feature_information_eax_processor_type")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_eax_cpuid[addr] = 0xFFFFFFFFULL;
@@ -143,9 +128,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_eax_processor_type")
 
 TEST_CASE("intrinsics: cpuid_feature_information_eax_extended_model_id")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_eax_cpuid[addr] = 0xFFFFFFFFULL;
@@ -157,9 +139,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_eax_extended_model_id")
 
 TEST_CASE("intrinsics: cpuid_feature_information_eax_extended_family_id")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_eax_cpuid[addr] = 0xFFFFFFFFULL;
@@ -171,9 +150,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_eax_extended_family_id")
 
 TEST_CASE("intrinsics: cpuid_feature_information_ebx")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_ebx_cpuid[addr] = 0xFFFFFFFF;
@@ -182,9 +158,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_ebx")
 
 TEST_CASE("intrinsics: cpuid_feature_information_ebx_brand_index")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_ebx_cpuid[addr] = 0xFFFFFFFFULL;
@@ -196,9 +169,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_ebx_brand_index")
 
 TEST_CASE("intrinsics: cpuid_feature_information_ebx_clflush_line_size")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_ebx_cpuid[addr] = 0xFFFFFFFFULL;
@@ -210,9 +180,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_ebx_clflush_line_size")
 
 TEST_CASE("intrinsics: cpuid_feature_information_ebx_max_addressable_ids")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_ebx_cpuid[addr] = 0xFFFFFFFFULL;
@@ -224,9 +191,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_ebx_max_addressable_ids")
 
 TEST_CASE("intrinsics: cpuid_feature_information_ebx_initial_apic_id")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_ebx_cpuid[addr] = 0xFFFFFFFFULL;
@@ -696,9 +660,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_ecx_rdrand")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = 0xFFFFFFFF;
@@ -707,9 +668,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_fpu")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::fpu::mask;
@@ -725,9 +683,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_fpu")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_vme")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::vme::mask;
@@ -743,9 +698,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_vme")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_de")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::de::mask;
@@ -761,9 +713,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_de")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_pse")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::pse::mask;
@@ -779,9 +728,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_pse")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_tsc")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::tsc::mask;
@@ -797,9 +743,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_tsc")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_msr")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::msr::mask;
@@ -815,9 +758,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_msr")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_pae")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::pae::mask;
@@ -833,9 +773,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_pae")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_mce")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::mce::mask;
@@ -851,9 +788,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_mce")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_cx8")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::cx8::mask;
@@ -869,9 +803,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_cx8")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_apic")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::apic::mask;
@@ -887,9 +818,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_apic")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_sep")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::sep::mask;
@@ -905,9 +833,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_sep")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_mtrr")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::mtrr::mask;
@@ -923,9 +848,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_mtrr")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_pge")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::pge::mask;
@@ -941,9 +863,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_pge")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_mca")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::mca::mask;
@@ -959,9 +878,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_mca")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_cmov")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::cmov::mask;
@@ -977,9 +893,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_cmov")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_pat")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::pat::mask;
@@ -995,9 +908,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_pat")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_pse_36")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::pse_36::mask;
@@ -1013,9 +923,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_pse_36")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_psn")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::psn::mask;
@@ -1031,9 +938,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_psn")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_clfsh")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::clfsh::mask;
@@ -1049,9 +953,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_clfsh")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_ds")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::ds::mask;
@@ -1067,9 +968,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_ds")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_acpi")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::acpi::mask;
@@ -1085,9 +983,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_acpi")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_mmx")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::mmx::mask;
@@ -1103,9 +998,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_mmx")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_fxsr")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::fxsr::mask;
@@ -1121,9 +1013,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_fxsr")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_sse")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::sse::mask;
@@ -1139,9 +1028,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_sse")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_sse2")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::sse2::mask;
@@ -1157,9 +1043,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_sse2")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_ss")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::ss::mask;
@@ -1175,9 +1058,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_ss")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_htt")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::htt::mask;
@@ -1193,9 +1073,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_htt")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_tm")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::tm::mask;
@@ -1211,9 +1088,6 @@ TEST_CASE("intrinsics: cpuid_feature_information_edx_tm")
 
 TEST_CASE("intrinsics: cpuid_feature_information_edx_pbe")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     using namespace cpuid::feature_information;
 
     g_edx_cpuid[addr] = edx::pbe::mask;

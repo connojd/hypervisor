@@ -17,7 +17,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <catch/catch.hpp>
-#include <intrinsics/x86/intel_x64.h>
+#include <intrinsics.h>
 #include <hippomocks.h>
 
 #ifdef _HIPPOMOCKS__ENABLE_CFUNC_MOCKING_SUPPORT
@@ -31,14 +31,11 @@ struct cpuid_regs {
 };
 
 extern "C" uint32_t
-test_cpuid_edx(uint32_t val) noexcept
+_cpuid_edx(uint32_t val) noexcept
 { return g_edx_cpuid[val]; }
 
 TEST_CASE("xapic_supported")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
     g_edx_cpuid[cpuid::feature_information::addr] =
         cpuid::feature_information::edx::apic::mask;
     CHECK(xapic::supported());

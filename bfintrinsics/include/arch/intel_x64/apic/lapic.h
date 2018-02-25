@@ -24,6 +24,8 @@
 // -----------------------------------------------------------------------------
 
 #include <bfexports.h>
+#include <arch/intel_x64/msrs.h>
+#include <arch/intel_x64/cpuid.h>
 
 #ifndef STATIC_INTRINSICS
 #ifdef SHARED_INTRINSICS
@@ -44,6 +46,9 @@ namespace intel_x64
 {
 namespace msrs
 {
+
+using value_type = ::x64::msrs::value_type;
+
 namespace ia32_apic_base
 {
     constexpr const auto addr = 0x0000001BU;
@@ -271,7 +276,7 @@ namespace lapic
         { return offset == rhs.offset; }
     };
 
-    using addr_type = const intel_x64::msrs::field_type;
+    using addr_type = const ::x64::msrs::field_type;
     using size_type = const std::size_t;
 
     addr_type msr_start_reg = 0x800U;
@@ -280,7 +285,7 @@ namespace lapic
 
     inline auto is_present() noexcept
     {
-        return cpuid::feature_information::edx::apic::is_enabled();
+        return ::intel_x64::cpuid::feature_information::edx::apic::is_enabled();
     }
 }
 }

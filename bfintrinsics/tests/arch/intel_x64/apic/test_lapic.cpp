@@ -17,42 +17,26 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <catch/catch.hpp>
-#include <intrinsics/x86/common_x64.h>
-#include <intrinsics/x86/intel_x64.h>
+#include <intrinsics.h>
 #include <hippomocks.h>
 
 #ifdef _HIPPOMOCKS__ENABLE_CFUNC_MOCKING_SUPPORT
 
 using namespace intel_x64;
 
-TEST_CASE("test name goes here")
-{
-    CHECK(true);
-}
-
 std::map<msrs::field_type, msrs::value_type> g_msrs;
 
 extern "C" uint64_t
-test_read_msr(uint32_t addr) noexcept
+_read_msr(uint32_t addr) noexcept
 { return g_msrs[addr]; }
 
 extern "C" void
-test_write_msr(uint32_t addr, uint64_t val) noexcept
+_write_msr(uint32_t addr, uint64_t val) noexcept
 { g_msrs[addr] = val; }
-
-static void
-setup_intrinsics(MockRepository &mocks)
-{
-    mocks.OnCallFunc(_read_msr).Do(test_read_msr);
-    mocks.OnCallFunc(_write_msr).Do(test_write_msr);
-}
 
 TEST_CASE("ia32_apic_base")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
-    using namespace msrs::ia32_apic_base;
+    using namespace ::intel_x64::msrs::ia32_apic_base;
 
     set(0xFFFFFFFFFFFFFFFFULL);
     CHECK(get() == 0xFFFFFFFFFFFFFFFFULL);
@@ -61,10 +45,7 @@ TEST_CASE("ia32_apic_base")
 
 TEST_CASE("ia32_apic_base_bsp")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
-    using namespace msrs::ia32_apic_base;
+    using namespace ::intel_x64::msrs::ia32_apic_base;
 
     bsp::enable();
     CHECK(bsp::is_enabled());
@@ -79,10 +60,7 @@ TEST_CASE("ia32_apic_base_bsp")
 
 TEST_CASE("ia32_apic_base_extd")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
-    using namespace msrs::ia32_apic_base;
+    using namespace ::intel_x64::msrs::ia32_apic_base;
 
     extd::enable();
     CHECK(extd::is_enabled());
@@ -97,10 +75,7 @@ TEST_CASE("ia32_apic_base_extd")
 
 TEST_CASE("ia32_apic_base_en")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
-    using namespace msrs::ia32_apic_base;
+    using namespace ::intel_x64::msrs::ia32_apic_base;
 
     en::enable();
     CHECK(en::is_enabled());
@@ -115,10 +90,7 @@ TEST_CASE("ia32_apic_base_en")
 
 TEST_CASE("ia32_apic_base_state")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
-    using namespace msrs::ia32_apic_base;
+    using namespace ::intel_x64::msrs::ia32_apic_base;
 
     state::set(0xFFFFFFFFFFFFFFFFULL);
     CHECK(state::get() == (state::mask >> state::from));
@@ -151,10 +123,7 @@ TEST_CASE("ia32_apic_base_state")
 
 TEST_CASE("ia32_apic_base_apic_base")
 {
-    MockRepository mocks;
-    setup_intrinsics(mocks);
-
-    using namespace msrs::ia32_apic_base;
+    using namespace ::intel_x64::msrs::ia32_apic_base;
 
     apic_base::set(0xFFFFFFFFFFFFFFFFULL);
     CHECK(apic_base::get() == (apic_base::mask));
