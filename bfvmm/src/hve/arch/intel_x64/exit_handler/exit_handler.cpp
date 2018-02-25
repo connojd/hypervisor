@@ -335,6 +335,7 @@ exit_handler::exit_handler(
 
     if (vcpuid::is_hvm_vcpu(id)) {
         this->write_guest_state();
+        ::x64::rflags::interrupt_enable_flag::disable();
     }
 
     add_handler(
@@ -569,6 +570,8 @@ exit_handler::handle(
                 0, "exit_reason",
                 ::intel_x64::vmcs::exit_reason::basic_exit_reason::description(), msg
             );
+
+            bferror_subnhex(0, "number of handlers", handlers.size(), msg);
         });
 
         if (::intel_x64::vmcs::exit_reason::vm_entry_failure::is_enabled()) {
