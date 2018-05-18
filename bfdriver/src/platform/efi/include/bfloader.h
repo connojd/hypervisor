@@ -27,11 +27,53 @@
 #include "bfefi.h"
 
 /**
- * EFI_HANDLE this_image_h
- *
- * Globally accessible handle to this image, passed in by firmware
+ * Extendable boot data
  */
-extern EFI_HANDLE this_image_h;
+struct boot_data {
+    /**
+     * Handle for this image received from firmware
+     */
+    EFI_HANDLE this_image;
+
+    /**
+     * System table pointer received from firmware
+     */
+    EFI_SYSTEM_TABLE *sys_table;
+
+    /**
+     * Opaque data for downstream users
+     */
+    void *data;
+};
+
+extern struct boot_data g_boot_data;
+
+/**
+ * Prestart functions
+ */
+#ifndef NR_PRESTART_FNS
+#define NR_PRESTART_FNS 1U
+#endif
+typedef void (*prestart_fn_t)(struct boot_data *);
+extern prestart_fn_t prestart_fns[NR_PRESTART_FNS];
+
+/**
+ * Start functions
+ */
+#ifndef NR_START_FNS
+#define NR_START_FNS 1U
+#endif
+typedef void (*start_fn_t)(struct boot_data *);
+extern start_fn_t start_fns[NR_START_FNS];
+
+/**
+ * Poststart functions
+ */
+#ifndef NR_POSTSTART_FNS
+#define NR_POSTSTART_FNS 1U
+#endif
+typedef void (*poststart_fn_t)(struct boot_data *);
+extern poststart_fn_t poststart_fns[NR_POSTSTART_FNS];
 
 /**
  * EFI_MP_SERVICES_PROTOCOL *g_mp_services;
@@ -69,5 +111,46 @@ EFI_STATUS bf_boot_next_by_order();
  * @return EFI_STATUS EFI_SUCCESS on success
  */
 EFI_STATUS bf_start_by_startupallaps();
+
+/**
+ * add_boot_prestart_fn()
+ *
+ * Register a prestart function. A prestart function is run
+ * in UEFI context, before VMX is enabled.
+ *
+ * @param fn the prestart function to add
+ * @return EFI_STATUS EFI_SUCCESS on success
+ */
+EFI_STATUS add_boot_prestart_fn(prestart_fn_t fn);
+
+/**
+ * add_boot_start_fn()
+ *
+ * Register a start function. On success, the start function
+ * will return with VMX enabled, and hence any subsequent callers
+ * will execute in VMX-nonroot mode.
+ *
+ * @param fn the start function to add
+ * @return EFI_STATUS EFI_SUCCESS on success
+ */
+EFI_STATUS add_boot_start_fn(start_fn_t fn);
+
+/**
+ * add_boot_poststart_fn()
+ *
+ * Register a poststart function. The poststart function runs
+ * after the start_fn returns, and will execute in VMX-nonroot mode.
+ *
+ * @param fn the poststart function to add
+ * @return EFI_STATUS EFI_SUCCESS on success
+ */
+EFI_STATUS add_boot_poststart_fn(poststart_fn_t fn);
+
+/**
+ * register_modules()
+ *
+ * Call the register_module() function defined by each user extension.
+ */
+void register_modules();
 
 #endif
