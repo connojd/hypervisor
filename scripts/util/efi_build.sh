@@ -17,14 +17,15 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-# $1 == CMAKE_SOURCE_DIR
-# $2 == CMAKE_INSTALL_PREFIX
+# $1 == bfdriver source root
+# $2 == userspace sysroot (for gnuefi)
+# $3 == the vmm's static lib
 
 case $(uname -s) in
 Linux)
-    #echo $1 $2
-    make SYSROOT="$2" MODULES="$3" -C $1/src/platform/efi/ modules
-    make SYSROOT="$2" MODULES="$3" -C $1/src/platform/efi/ all
+    echo $1 $2 $3
+    make SYSROOT="$2" MODULE="$3" -C $1/src/platform/efi/ modules
+    make SYSROOT="$2" MODULE="$3" -C $1/src/platform/efi/ all
     ;;
 *)
     >&2 echo "OS not supported"

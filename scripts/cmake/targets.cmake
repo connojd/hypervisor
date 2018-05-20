@@ -116,7 +116,7 @@ endif()
 if(NOT WIN32 AND ENABLE_BUILD_EFI)
 
     add_custom_target(efi_build
-        DEPENDS eapis_efi_${VMM_PREFIX}
+        DEPENDS efi_main_${VMM_PREFIX}
         DEPENDS gnuefi_${USERSPACE_PREFIX}
         COMMAND ${SOURCE_UTIL_DIR}/efi_build.sh ${SOURCE_BFDRIVER_DIR} ${USERSPACE_PREFIX_PATH} ${VMM_PREFIX_PATH}/bin/eapis_efi_static
         USES_TERMINAL
