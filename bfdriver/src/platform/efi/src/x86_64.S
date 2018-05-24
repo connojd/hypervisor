@@ -99,3 +99,22 @@ _set_ne:
     movq %rax, %cr0
 
     ret
+
+.global _rdmsr
+_rdmsr:
+    movq %rdi, %rcx
+    rdmsr
+    shlq $32, %rdx
+    orq %rdx, %rax
+
+    ret
+
+.global _wrmsr
+_wrmsr:
+    movq %rsi, %rax
+    movq %rsi, %rdx
+    shrq $32, %rdx
+    movq %rdi, %rcx
+    wrmsr
+
+    ret

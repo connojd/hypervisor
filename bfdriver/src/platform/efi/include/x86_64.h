@@ -91,6 +91,8 @@ uint16_t _str();
 void _set_vmxe();
 void _unset_vmxe();
 void _set_ne();
+uint64_t _rdmsr(uint64_t addr);
+void _wrmsr(uint64_t addr, uint64_t val);
 
 
 EFI_STATUS PrepareProcessor();

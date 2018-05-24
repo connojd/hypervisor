@@ -23,9 +23,11 @@
 
 #include <stdint.h>
 #include <bfplatform.h>
+#include <bferrorcodes.h>
 
 #include "bfefi.h"
 #include "bfloader.h"
+#include "x86_64.h"
 
 /**
  * Allocate Memory
@@ -304,11 +306,30 @@ platform_populate_info(struct platform_info_t *info)
         platform_memset(info, 0, sizeof(struct platform_info_t));
     }
 
+    const uint64_t IA32_APIC_BASE = 0x1BU;
+    const uint64_t msr = _rdmsr(IA32_APIC_BASE);
+    const uint64_t mode = (msr & 0xC00U) >> 10U;
+    const uint64_t mode_xapic = 0x2U;
+    const uint64_t mode_x2apic = 0x3U;
+
+    switch (mode) {
+    case mode_xapic:
+        break;
+    default:
+        Print(L"Local APIC mode: %lu\n", mode);
+        return (mode == mode_x2apic) ? BF_SUCCESS : BF_ERROR_VMM_INVALID_STATE;
+    }
+
+    const uint64_t addr = (msr & 0x0000000FFFFFF000ULL) >> 0U;
+    info->xapic_virt = addr;
+
     return BF_SUCCESS;
 }
 
 void
 platform_unload_info(struct platform_info_t *info)
 {
-    (void) info;
+    if (info) {
+        platform_memset(info, 0, sizeof(struct platform_info_t));
+    }
 }
