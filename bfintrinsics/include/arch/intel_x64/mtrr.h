@@ -37,6 +37,28 @@ constexpr const auto write_through = 0x04ULL;
 constexpr const auto write_protected = 0x05ULL;
 constexpr const auto write_back = 0x06ULL;
 
+constexpr const auto uncacheable_mask = 1ULL << uncacheable;
+constexpr const auto write_combining_mask = 1ULL << write_combining;
+constexpr const auto write_through_mask = 1ULL << write_through;
+constexpr const auto write_protected_mask = 1ULL << write_protected;
+constexpr const auto write_back_mask = 1ULL << write_back;
+
+constexpr const auto valid_type_mask = uncacheable_mask |
+    write_combining_mask | write_through_mask |
+    write_protected_mask | write_back_mask;
+
+inline const char *type_to_str(uint64_t type)
+{
+    switch (type) {
+        case uncacheable: return "uncacheable";
+        case write_combining: return "write_combining";
+        case write_through: return "write_through";
+        case write_protected: return "write_protected";
+        case write_back: return "write_back";
+        default: return "invalid";
+    }
+}
+
 inline bool is_supported()
 { return cpuid::feature_information::edx::mtrr::is_enabled(); }
 
@@ -248,78 +270,56 @@ namespace ia32_mtrr_def_type
     }
 }
 
-namespace physbase0
+namespace physbase
 {
-    constexpr const auto addr = 0x00000200U;
-    constexpr const auto name = "physbase0";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
+    constexpr const auto start_addr = 0x00000200U;
 
     namespace type
     {
-        constexpr const auto mask = 0x00000000000000FFULL;
-        constexpr const auto from = 0ULL;
+        constexpr const uint64_t mask = 0x00000000000000FFULL;
+        constexpr const uint64_t from = 0ULL;
         constexpr const auto name = "type";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
 
         inline auto get(value_type msr) noexcept
         { return get_bits(msr, mask) >> from; }
 
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
+        inline auto set(value_type &msr, value_type val) noexcept
         { msr = set_bits(msr, mask, val << from); }
 
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subndec(level, name, get(), msg); }
+        inline void dump(int level, value_type msr, std::string *msg = nullptr)
+        { bfdebug_subndec(level, name, get(msr), msg); }
     }
 
+    /// The 'mask' variable of this namespace depends on the physical address
+    /// size (pas) returned by cpuid.
     namespace physbase
     {
-        constexpr const auto mask = 0x0000000FFFFFF000ULL;
         constexpr const auto from = 12ULL;
         constexpr const auto name = "physbase";
 
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
+        inline auto mask(value_type pas) noexcept
+        { return ((1ULL << pas) - 1U) & ~(0x1000ULL - 1U); }
 
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
+        inline auto get(value_type msr, value_type pas) noexcept
+        { return get_bits(msr, mask(pas)) >> from; }
 
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+        inline auto set(value_type &msr, value_type val, value_type pas) noexcept
+        { msr = set_bits(msr, mask(pas), val << from); }
 
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
+        inline void dump(int level, value_type msr, value_type pas, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(msr, pas), msg); }
     }
 
-    inline void dump(int level, std::string *msg = nullptr)
+    inline void dump(int level, value_type msr, value_type pas, std::string *msg = nullptr)
     {
-        type::dump(level, msg);
-        physbase::dump(level, msg);
+        type::dump(level, msr, msg);
+        physbase::dump(level, msr, pas, msg);
     }
 }
 
-namespace physmask0
+namespace physmask
 {
-    constexpr const auto addr = 0x00000201U;
-    constexpr const auto name = "physmask0";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
+    constexpr const auto start_addr = 0x00000201U;
 
     namespace valid
     {
@@ -327,1294 +327,47 @@ namespace physmask0
         constexpr const auto from = 11ULL;
         constexpr const auto name = "valid";
 
-        inline auto is_enabled()
-        { return is_bit_set(_read_msr(addr), from); }
-
         inline auto is_enabled(value_type msr)
         { return is_bit_set(msr, from); }
-
-        inline auto is_disabled()
-        { return is_bit_cleared(_read_msr(addr), from); }
 
         inline auto is_disabled(value_type msr)
         { return is_bit_cleared(msr, from); }
 
-        inline void enable()
-        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
-
-        inline void enable(value_type &msr)
+        inline auto enable(value_type &msr)
         { msr = set_bit(msr, from); }
 
-        inline void disable()
-        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
-
-        inline void disable(value_type &msr)
+        inline auto disable(value_type &msr)
         { msr = clear_bit(msr, from); }
 
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subbool(level, name, is_enabled(), msg); }
+        inline void dump(int level, value_type msr, std::string *msg = nullptr)
+        { bfdebug_subbool(level, name, is_enabled(msr), msg); }
 
     }
 
+    /// The 'mask' variable of this namespace depends on the physical address
+    /// size (pas) returned by cpuid.
     namespace physmask
     {
-        constexpr const auto mask = 0x000000FFFFFFF000ULL;
         constexpr const auto from = 12ULL;
         constexpr const auto name = "physmask";
 
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
+        inline auto mask(value_type pas) noexcept
+        { return ((1ULL << pas) - 1U) & ~(0x1000ULL - 1U); }
 
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
+        inline auto get(value_type msr, value_type pas) noexcept
+        { return get_bits(msr, mask(pas)) >> from; }
 
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
+        inline auto set(value_type &msr, value_type val, value_type pas) noexcept
+        { msr = set_bits(msr, mask(pas), val << from); }
 
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
+        inline void dump(int level, value_type msr, value_type pas, std::string *msg = nullptr)
+        { bfdebug_subnhex(level, name, get(msr, pas), msg); }
     }
 
-    inline void dump(int level, std::string *msg = nullptr)
+    inline void dump(int level, value_type msr, value_type pas, std::string *msg = nullptr)
     {
-        valid::dump(level, msg);
-        physmask::dump(level, msg);
-    }
-}
-
-namespace physbase1
-{
-    constexpr const auto addr = 0x00000202U;
-    constexpr const auto name = "physbase1";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace type
-    {
-        constexpr const auto mask = 0x00000000000000FFULL;
-        constexpr const auto from = 0ULL;
-        constexpr const auto name = "type";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subndec(level, name, get(), msg); }
-    }
-
-    namespace physbase
-    {
-        constexpr const auto mask = 0x0000000FFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physbase";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        type::dump(level, msg);
-        physbase::dump(level, msg);
-    }
-}
-
-namespace physmask1
-{
-    constexpr const auto addr = 0x00000203U;
-    constexpr const auto name = "physmask1";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace valid
-    {
-        constexpr const auto mask = 0x0000000000000800ULL;
-        constexpr const auto from = 11ULL;
-        constexpr const auto name = "valid";
-
-        inline auto is_enabled()
-        { return is_bit_set(_read_msr(addr), from); }
-
-        inline auto is_enabled(value_type msr)
-        { return is_bit_set(msr, from); }
-
-        inline auto is_disabled()
-        { return is_bit_cleared(_read_msr(addr), from); }
-
-        inline auto is_disabled(value_type msr)
-        { return is_bit_cleared(msr, from); }
-
-        inline void enable()
-        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
-
-        inline void enable(value_type &msr)
-        { msr = set_bit(msr, from); }
-
-        inline void disable()
-        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
-
-        inline void disable(value_type &msr)
-        { msr = clear_bit(msr, from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subbool(level, name, is_enabled(), msg); }
-
-    }
-
-    namespace physmask
-    {
-        constexpr const auto mask = 0x000000FFFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physmask";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        valid::dump(level, msg);
-        physmask::dump(level, msg);
-    }
-}
-
-namespace physbase2
-{
-    constexpr const auto addr = 0x00000204U;
-    constexpr const auto name = "physbase2";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace type
-    {
-        constexpr const auto mask = 0x00000000000000FFULL;
-        constexpr const auto from = 0ULL;
-        constexpr const auto name = "type";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subndec(level, name, get(), msg); }
-    }
-
-    namespace physbase
-    {
-        constexpr const auto mask = 0x0000000FFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physbase";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        type::dump(level, msg);
-        physbase::dump(level, msg);
-    }
-}
-
-namespace physmask2
-{
-    constexpr const auto addr = 0x00000205U;
-    constexpr const auto name = "physmask2";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace valid
-    {
-        constexpr const auto mask = 0x0000000000000800ULL;
-        constexpr const auto from = 11ULL;
-        constexpr const auto name = "valid";
-
-        inline auto is_enabled()
-        { return is_bit_set(_read_msr(addr), from); }
-
-        inline auto is_enabled(value_type msr)
-        { return is_bit_set(msr, from); }
-
-        inline auto is_disabled()
-        { return is_bit_cleared(_read_msr(addr), from); }
-
-        inline auto is_disabled(value_type msr)
-        { return is_bit_cleared(msr, from); }
-
-        inline void enable()
-        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
-
-        inline void enable(value_type &msr)
-        { msr = set_bit(msr, from); }
-
-        inline void disable()
-        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
-
-        inline void disable(value_type &msr)
-        { msr = clear_bit(msr, from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subbool(level, name, is_enabled(), msg); }
-
-    }
-
-    namespace physmask
-    {
-        constexpr const auto mask = 0x000000FFFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physmask";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        valid::dump(level, msg);
-        physmask::dump(level, msg);
-    }
-}
-
-namespace physbase3
-{
-    constexpr const auto addr = 0x00000206U;
-    constexpr const auto name = "physbase3";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace type
-    {
-        constexpr const auto mask = 0x00000000000000FFULL;
-        constexpr const auto from = 0ULL;
-        constexpr const auto name = "type";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subndec(level, name, get(), msg); }
-    }
-
-    namespace physbase
-    {
-        constexpr const auto mask = 0x0000000FFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physbase";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        type::dump(level, msg);
-        physbase::dump(level, msg);
-    }
-}
-
-namespace physmask3
-{
-    constexpr const auto addr = 0x00000207U;
-    constexpr const auto name = "physmask3";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace valid
-    {
-        constexpr const auto mask = 0x0000000000000800ULL;
-        constexpr const auto from = 11ULL;
-        constexpr const auto name = "valid";
-
-        inline auto is_enabled()
-        { return is_bit_set(_read_msr(addr), from); }
-
-        inline auto is_enabled(value_type msr)
-        { return is_bit_set(msr, from); }
-
-        inline auto is_disabled()
-        { return is_bit_cleared(_read_msr(addr), from); }
-
-        inline auto is_disabled(value_type msr)
-        { return is_bit_cleared(msr, from); }
-
-        inline void enable()
-        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
-
-        inline void enable(value_type &msr)
-        { msr = set_bit(msr, from); }
-
-        inline void disable()
-        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
-
-        inline void disable(value_type &msr)
-        { msr = clear_bit(msr, from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subbool(level, name, is_enabled(), msg); }
-
-    }
-
-    namespace physmask
-    {
-        constexpr const auto mask = 0x000000FFFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physmask";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        valid::dump(level, msg);
-        physmask::dump(level, msg);
-    }
-}
-
-namespace physbase4
-{
-    constexpr const auto addr = 0x00000208U;
-    constexpr const auto name = "physbase4";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace type
-    {
-        constexpr const auto mask = 0x00000000000000FFULL;
-        constexpr const auto from = 0ULL;
-        constexpr const auto name = "type";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subndec(level, name, get(), msg); }
-    }
-
-    namespace physbase
-    {
-        constexpr const auto mask = 0x0000000FFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physbase";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        type::dump(level, msg);
-        physbase::dump(level, msg);
-    }
-}
-
-namespace physmask4
-{
-    constexpr const auto addr = 0x00000209U;
-    constexpr const auto name = "physmask4";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace valid
-    {
-        constexpr const auto mask = 0x0000000000000800ULL;
-        constexpr const auto from = 11ULL;
-        constexpr const auto name = "valid";
-
-        inline auto is_enabled()
-        { return is_bit_set(_read_msr(addr), from); }
-
-        inline auto is_enabled(value_type msr)
-        { return is_bit_set(msr, from); }
-
-        inline auto is_disabled()
-        { return is_bit_cleared(_read_msr(addr), from); }
-
-        inline auto is_disabled(value_type msr)
-        { return is_bit_cleared(msr, from); }
-
-        inline void enable()
-        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
-
-        inline void enable(value_type &msr)
-        { msr = set_bit(msr, from); }
-
-        inline void disable()
-        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
-
-        inline void disable(value_type &msr)
-        { msr = clear_bit(msr, from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subbool(level, name, is_enabled(), msg); }
-
-    }
-
-    namespace physmask
-    {
-        constexpr const auto mask = 0x000000FFFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physmask";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        valid::dump(level, msg);
-        physmask::dump(level, msg);
-    }
-}
-
-namespace physbase5
-{
-    constexpr const auto addr = 0x0000020AU;
-    constexpr const auto name = "physbase5";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace type
-    {
-        constexpr const auto mask = 0x00000000000000FFULL;
-        constexpr const auto from = 0ULL;
-        constexpr const auto name = "type";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subndec(level, name, get(), msg); }
-    }
-
-    namespace physbase
-    {
-        constexpr const auto mask = 0x0000000FFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physbase";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        type::dump(level, msg);
-        physbase::dump(level, msg);
-    }
-}
-
-namespace physmask5
-{
-    constexpr const auto addr = 0x0000020BU;
-    constexpr const auto name = "physmask5";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace valid
-    {
-        constexpr const auto mask = 0x0000000000000800ULL;
-        constexpr const auto from = 11ULL;
-        constexpr const auto name = "valid";
-
-        inline auto is_enabled()
-        { return is_bit_set(_read_msr(addr), from); }
-
-        inline auto is_enabled(value_type msr)
-        { return is_bit_set(msr, from); }
-
-        inline auto is_disabled()
-        { return is_bit_cleared(_read_msr(addr), from); }
-
-        inline auto is_disabled(value_type msr)
-        { return is_bit_cleared(msr, from); }
-
-        inline void enable()
-        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
-
-        inline void enable(value_type &msr)
-        { msr = set_bit(msr, from); }
-
-        inline void disable()
-        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
-
-        inline void disable(value_type &msr)
-        { msr = clear_bit(msr, from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subbool(level, name, is_enabled(), msg); }
-
-    }
-
-    namespace physmask
-    {
-        constexpr const auto mask = 0x000000FFFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physmask";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        valid::dump(level, msg);
-        physmask::dump(level, msg);
-    }
-}
-
-namespace physbase6
-{
-    constexpr const auto addr = 0x0000020CU;
-    constexpr const auto name = "physbase6";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace type
-    {
-        constexpr const auto mask = 0x00000000000000FFULL;
-        constexpr const auto from = 0ULL;
-        constexpr const auto name = "type";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subndec(level, name, get(), msg); }
-    }
-
-    namespace physbase
-    {
-        constexpr const auto mask = 0x0000000FFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physbase";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        type::dump(level, msg);
-        physbase::dump(level, msg);
-    }
-}
-
-namespace physmask6
-{
-    constexpr const auto addr = 0x0000020DU;
-    constexpr const auto name = "physmask6";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace valid
-    {
-        constexpr const auto mask = 0x0000000000000800ULL;
-        constexpr const auto from = 11ULL;
-        constexpr const auto name = "valid";
-
-        inline auto is_enabled()
-        { return is_bit_set(_read_msr(addr), from); }
-
-        inline auto is_enabled(value_type msr)
-        { return is_bit_set(msr, from); }
-
-        inline auto is_disabled()
-        { return is_bit_cleared(_read_msr(addr), from); }
-
-        inline auto is_disabled(value_type msr)
-        { return is_bit_cleared(msr, from); }
-
-        inline void enable()
-        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
-
-        inline void enable(value_type &msr)
-        { msr = set_bit(msr, from); }
-
-        inline void disable()
-        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
-
-        inline void disable(value_type &msr)
-        { msr = clear_bit(msr, from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subbool(level, name, is_enabled(), msg); }
-
-    }
-
-    namespace physmask
-    {
-        constexpr const auto mask = 0x000000FFFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physmask";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        valid::dump(level, msg);
-        physmask::dump(level, msg);
-    }
-}
-
-namespace physbase7
-{
-    constexpr const auto addr = 0x0000020EU;
-    constexpr const auto name = "physbase7";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace type
-    {
-        constexpr const auto mask = 0x00000000000000FFULL;
-        constexpr const auto from = 0ULL;
-        constexpr const auto name = "type";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subndec(level, name, get(), msg); }
-    }
-
-    namespace physbase
-    {
-        constexpr const auto mask = 0x0000000FFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physbase";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        type::dump(level, msg);
-        physbase::dump(level, msg);
-    }
-}
-
-namespace physmask7
-{
-    constexpr const auto addr = 0x0000020FU;
-    constexpr const auto name = "physmask7";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace valid
-    {
-        constexpr const auto mask = 0x0000000000000800ULL;
-        constexpr const auto from = 11ULL;
-        constexpr const auto name = "valid";
-
-        inline auto is_enabled()
-        { return is_bit_set(_read_msr(addr), from); }
-
-        inline auto is_enabled(value_type msr)
-        { return is_bit_set(msr, from); }
-
-        inline auto is_disabled()
-        { return is_bit_cleared(_read_msr(addr), from); }
-
-        inline auto is_disabled(value_type msr)
-        { return is_bit_cleared(msr, from); }
-
-        inline void enable()
-        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
-
-        inline void enable(value_type &msr)
-        { msr = set_bit(msr, from); }
-
-        inline void disable()
-        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
-
-        inline void disable(value_type &msr)
-        { msr = clear_bit(msr, from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subbool(level, name, is_enabled(), msg); }
-
-    }
-
-    namespace physmask
-    {
-        constexpr const auto mask = 0x000000FFFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physmask";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        valid::dump(level, msg);
-        physmask::dump(level, msg);
-    }
-}
-
-namespace physbase8
-{
-    constexpr const auto addr = 0x00000210U;
-    constexpr const auto name = "physbase8";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace type
-    {
-        constexpr const auto mask = 0x00000000000000FFULL;
-        constexpr const auto from = 0ULL;
-        constexpr const auto name = "type";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subndec(level, name, get(), msg); }
-    }
-
-    namespace physbase
-    {
-        constexpr const auto mask = 0x0000000FFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physbase";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        type::dump(level, msg);
-        physbase::dump(level, msg);
-    }
-}
-
-namespace physmask8
-{
-    constexpr const auto addr = 0x00000211U;
-    constexpr const auto name = "physmask8";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace valid
-    {
-        constexpr const auto mask = 0x0000000000000800ULL;
-        constexpr const auto from = 11ULL;
-        constexpr const auto name = "valid";
-
-        inline auto is_enabled()
-        { return is_bit_set(_read_msr(addr), from); }
-
-        inline auto is_enabled(value_type msr)
-        { return is_bit_set(msr, from); }
-
-        inline auto is_disabled()
-        { return is_bit_cleared(_read_msr(addr), from); }
-
-        inline auto is_disabled(value_type msr)
-        { return is_bit_cleared(msr, from); }
-
-        inline void enable()
-        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
-
-        inline void enable(value_type &msr)
-        { msr = set_bit(msr, from); }
-
-        inline void disable()
-        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
-
-        inline void disable(value_type &msr)
-        { msr = clear_bit(msr, from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subbool(level, name, is_enabled(), msg); }
-
-    }
-
-    namespace physmask
-    {
-        constexpr const auto mask = 0x000000FFFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physmask";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        valid::dump(level, msg);
-        physmask::dump(level, msg);
-    }
-}
-
-namespace physbase9
-{
-    constexpr const auto addr = 0x00000212U;
-    constexpr const auto name = "physbase9";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace type
-    {
-        constexpr const auto mask = 0x00000000000000FFULL;
-        constexpr const auto from = 0ULL;
-        constexpr const auto name = "type";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subndec(level, name, get(), msg); }
-    }
-
-    namespace physbase
-    {
-        constexpr const auto mask = 0x0000000FFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physbase";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        type::dump(level, msg);
-        physbase::dump(level, msg);
-    }
-}
-
-namespace physmask9
-{
-    constexpr const auto addr = 0x00000213U;
-    constexpr const auto name = "physmask9";
-
-    inline auto get() noexcept
-    { return _read_msr(addr); }
-
-    inline void set(value_type &val) noexcept
-    { _write_msr(addr, val); }
-
-    namespace valid
-    {
-        constexpr const auto mask = 0x0000000000000800ULL;
-        constexpr const auto from = 11ULL;
-        constexpr const auto name = "valid";
-
-        inline auto is_enabled()
-        { return is_bit_set(_read_msr(addr), from); }
-
-        inline auto is_enabled(value_type msr)
-        { return is_bit_set(msr, from); }
-
-        inline auto is_disabled()
-        { return is_bit_cleared(_read_msr(addr), from); }
-
-        inline auto is_disabled(value_type msr)
-        { return is_bit_cleared(msr, from); }
-
-        inline void enable()
-        { _write_msr(addr, set_bit(_read_msr(addr), from)); }
-
-        inline void enable(value_type &msr)
-        { msr = set_bit(msr, from); }
-
-        inline void disable()
-        { _write_msr(addr, clear_bit(_read_msr(addr), from)); }
-
-        inline void disable(value_type &msr)
-        { msr = clear_bit(msr, from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subbool(level, name, is_enabled(), msg); }
-
-    }
-
-    namespace physmask
-    {
-        constexpr const auto mask = 0x000000FFFFFFF000ULL;
-        constexpr const auto from = 12ULL;
-        constexpr const auto name = "physmask";
-
-        inline auto get() noexcept
-        { return get_bits(_read_msr(addr), mask) >> from; }
-
-        inline auto get(value_type msr) noexcept
-        { return get_bits(msr, mask) >> from; }
-
-        inline void set(value_type val) noexcept
-        { _write_msr(addr, set_bits(_read_msr(addr), mask, val << from)); }
-
-        inline void set(value_type &msr, value_type val) noexcept
-        { msr = set_bits(msr, mask, val << from); }
-
-        inline void dump(int level, std::string *msg = nullptr)
-        { bfdebug_subnhex(level, name, get(), msg); }
-    }
-
-    inline void dump(int level, std::string *msg = nullptr)
-    {
-        valid::dump(level, msg);
-        physmask::dump(level, msg);
+        valid::dump(level, msr, msg);
+        physmask::dump(level, msr, pas, msg);
     }
 }
 
@@ -3816,6 +2569,134 @@ namespace fix4k_F8000
         range6::dump(level, msg);
         range7::dump(level, msg);
     }
+}
+
+inline bool valid_mem_type(uint64_t type)
+{
+    switch (type) {
+        case uncacheable:
+        case write_combining:
+        case write_through:
+        case write_protected:
+        case write_back:
+            return true;
+        default:
+            return false;
+    }
+}
+
+struct variable_range
+{
+    /// The minimum size required of a variable MTRR range.
+    static constexpr uint64_t min_size = 0x1000U;
+
+    /// size_to_mask
+    ///
+    /// @param pas the number of bits in a physical address
+    /// @return the mask that determines the set of addresses that
+    ///         lie in the range
+    ///
+    static uint64_t size_to_mask(uint64_t size, uint64_t pas);
+
+    /// mask_to_size
+    ///
+    /// @param pas the number of bits in a physical address
+    /// @return the size of the range
+    ///
+    static uint64_t mask_to_size(uint64_t mask, uint64_t pas);
+
+    /// Constructor
+    ///
+    /// Create a variable MTRR range. The range has @param type memory type. Note
+    /// that the @param mask must be chosen so that for any address addr, the
+    /// following equation holds
+    ///
+    ///     (base & mask) == (base & addr)
+    ///
+    /// if and only if addr is in the range being constructed.
+    ///
+    /// @param base the base address of the range
+    /// @param mask the mask of the range
+    /// @param type the memory type of the range
+    /// @param pas the number of bits in a physical address
+    ///
+    explicit variable_range(
+        uintptr_t base, uint64_t mask, uint64_t type, uint64_t pas)
+    {
+        expects(valid_mem_type(type));
+        expects(pas >= 36U && pas <= 52U);
+        expects(x64::is_physical_address_valid(base, pas));
+
+        auto size = variable_range::mask_to_size(mask, pas);
+
+        expects(size >= min_size);
+        expects(base >= size);
+        expects((size & (size - 1U)) == 0U);
+        expects((base & (base - 1U)) == 0U);
+        expects((base + size) > base);
+
+        m_base = base;
+        m_mask = mask;
+        m_size = size;
+        m_type = type;
+    }
+
+    /// contains
+    ///
+    /// @param addr the address to check
+    /// @return true iff the range contains the given address
+    ///
+    bool contains(uintptr_t addr) const
+    { return (m_mask & m_base) == (m_mask & addr); }
+
+    /// @return the base address
+    uintptr_t base() const
+    { return m_base; }
+
+    /// @return the size of the range
+    uintptr_t size() const
+    { return m_size; }
+
+    /// @return the mask of the range
+    uintptr_t mask() const
+    { return m_mask; }
+
+    /// @return the memory type of the range
+    uint64_t type() const
+    { return m_type; }
+
+private:
+
+    uintptr_t m_base;
+    uint64_t m_size;
+    uint64_t m_mask;
+    uint64_t m_type;
+
+public:
+
+    /// @cond
+
+    variable_range() noexcept = delete;
+
+    variable_range(variable_range &&) noexcept = default;
+    variable_range &operator=(variable_range &&) noexcept = default;
+
+    variable_range(const variable_range &) = delete;
+    variable_range &operator=(const variable_range &) = delete;
+
+    /// @endcond
+};
+
+inline uint64_t variable_range::size_to_mask(uint64_t size, uint64_t pas)
+{
+    const uint64_t bits = (0x1ULL << pas) - 1U;
+    return ~(size - 1U) & bits;
+}
+
+inline uint64_t variable_range::mask_to_size(uint64_t mask, uint64_t pas)
+{
+    const uint64_t bits = (0x1ULL << pas) - 1U;
+    return (~mask & bits) + 1U;
 }
 
 }
