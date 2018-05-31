@@ -154,6 +154,11 @@ emulate_wrmsr(::x64::msrs::field_type msr, ::x64::msrs::value_type val)
             return;
 
         case ::intel_x64::msrs::ia32_perf_global_ctrl::addr:
+            if ((val & 0xFFFFFFF8FFFFFFFC) != 0U) {
+                bfdebug_nhex(0, "attempt to set perf_global_ctrl reserved bits", val);
+                ::intel_x64::vmcs::guest_ia32_perf_global_ctrl::set_if_exists(val & 0x3U);
+                return;
+            }
             ::intel_x64::vmcs::guest_ia32_perf_global_ctrl::set_if_exists(val);
             return;
 
@@ -465,7 +470,7 @@ exit_handler::write_guest_state()
     guest_ldtr_access_rights::set(
         ldtr_index != 0 ? guest_gdt.access_rights(ldtr_index) : ::x64::access_rights::unusable);
     guest_tr_access_rights::set(
-        tr_index != 0 ? guest_gdt.access_rights(tr_index) : ::x64::access_rights::unusable);
+        tr_index != 0 ? guest_gdt.access_rights(tr_index) : ::x64::access_rights::type::tss_busy | 0x80U);
 
     guest_es_base::set(es_index != 0 ? guest_gdt.base(es_index) : 0);
     guest_cs_base::set(cs_index != 0 ? guest_gdt.base(cs_index) : 0);

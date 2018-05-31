@@ -98,6 +98,104 @@ vmx::check_vmx_capabilities_msr()
     bfdebug_pass(1, "check vmx capabilities true based controls supported");
 }
 
+static void dump_cr0(uint64_t level, uint64_t diff)
+{
+    if (::intel_x64::cr0::protection_enable::is_enabled(diff)) {
+        bfalert_info(level, "    - protection_enable");
+    }
+    if (::intel_x64::cr0::monitor_coprocessor::is_enabled(diff)) {
+        bfalert_info(level, "    - monitor_coprocessor");
+    }
+    if (::intel_x64::cr0::emulation::is_enabled(diff)) {
+        bfalert_info(level, "    - emulation");
+    }
+    if (::intel_x64::cr0::task_switched::is_enabled(diff)) {
+        bfalert_info(level, "    - task_switched");
+    }
+    if (::intel_x64::cr0::extension_type::is_enabled(diff)) {
+        bfalert_info(level, "    - extension_type");
+    }
+    if (::intel_x64::cr0::numeric_error::is_enabled(diff)) {
+        bfalert_info(level, "    - numeric_error");
+    }
+    if (::intel_x64::cr0::write_protect::is_enabled(diff)) {
+        bfalert_info(level, "    - write_protect");
+    }
+    if (::intel_x64::cr0::alignment_mask::is_enabled(diff)) {
+        bfalert_info(level, "    - alignment_mask");
+    }
+    if (::intel_x64::cr0::not_write_through::is_enabled(diff)) {
+        bfalert_info(level, "    - not_write_through");
+    }
+    if (::intel_x64::cr0::cache_disable::is_enabled(diff)) {
+        bfalert_info(level, "    - cache_disable");
+    }
+    if (::intel_x64::cr0::paging::is_enabled(diff)) {
+        bfalert_info(level, "    - paging");
+    }
+}
+
+static void dump_cr4(uint64_t level, uint64_t diff)
+{
+    if (::intel_x64::cr4::v8086_mode_extensions::is_enabled(diff)) {
+        bfalert_info(level, "    - v8086_mode_extensions");
+    }
+    if (::intel_x64::cr4::protected_mode_virtual_interrupts::is_enabled(diff)) {
+        bfalert_info(level, "    - protected_mode_virtual_interrupts");
+    }
+    if (::intel_x64::cr4::time_stamp_disable::is_enabled(diff)) {
+        bfalert_info(level, "    - time_stamp_disable");
+    }
+    if (::intel_x64::cr4::debugging_extensions::is_enabled(diff)) {
+        bfalert_info(level, "    - debugging_extensions");
+    }
+    if (::intel_x64::cr4::page_size_extensions::is_enabled(diff)) {
+        bfalert_info(level, "    - page_size_extensions");
+    }
+    if (::intel_x64::cr4::physical_address_extensions::is_enabled(diff)) {
+        bfalert_info(level, "    - physical_address_extensions");
+    }
+    if (::intel_x64::cr4::machine_check_enable::is_enabled(diff)) {
+        bfalert_info(level, "    - machine_check_enable");
+    }
+    if (::intel_x64::cr4::page_global_enable::is_enabled(diff)) {
+        bfalert_info(level, "    - page_global_enable");
+    }
+    if (::intel_x64::cr4::performance_monitor_counter_enable::is_enabled(diff)) {
+        bfalert_info(level, "    - performance_monitor_counter_enable");
+    }
+    if (::intel_x64::cr4::osfxsr::is_enabled(diff)) {
+        bfalert_info(level, "    - osfxsr");
+    }
+    if (::intel_x64::cr4::osxmmexcpt::is_enabled(diff)) {
+        bfalert_info(level, "    - osxmmexcpt");
+    }
+    if (::intel_x64::cr4::vmx_enable_bit::is_enabled(diff)) {
+        bfalert_info(level, "    - vmx_enable_bit");
+    }
+    if (::intel_x64::cr4::smx_enable_bit::is_enabled(diff)) {
+        bfalert_info(level, "    - smx_enable_bit");
+    }
+    if (::intel_x64::cr4::fsgsbase_enable_bit::is_enabled(diff)) {
+        bfalert_info(level, "    - fsgsbase_enable_bit");
+    }
+    if (::intel_x64::cr4::pcid_enable_bit::is_enabled(diff)) {
+        bfalert_info(level, "    - pcid_enable_bit");
+    }
+    if (::intel_x64::cr4::osxsave::is_enabled(diff)) {
+        bfalert_info(level, "    - osxsave");
+    }
+    if (::intel_x64::cr4::smep_enable_bit::is_enabled(diff)) {
+        bfalert_info(level, "    - smep_enable_bit");
+    }
+    if (::intel_x64::cr4::smap_enable_bit::is_enabled(diff)) {
+        bfalert_info(level, "    - smap_enable_bit");
+    }
+    if (::intel_x64::cr4::protection_key_enable_bit::is_enabled(diff)) {
+        bfalert_info(level, "    - protection_key_enable_bit");
+    }
+}
+
 void
 vmx::check_ia32_vmx_cr0_fixed_msr()
 {
@@ -105,16 +203,21 @@ vmx::check_ia32_vmx_cr0_fixed_msr()
     auto ia32_vmx_cr0_fixed0 = ::intel_x64::msrs::ia32_vmx_cr0_fixed0::get();
     auto ia32_vmx_cr0_fixed1 = ::intel_x64::msrs::ia32_vmx_cr0_fixed1::get();
 
-    if (0 != ((~cr0 & ia32_vmx_cr0_fixed0) | (cr0 & ~ia32_vmx_cr0_fixed1))) {
-        throw std::runtime_error("invalid cr0");
+    auto need1 = ~cr0 & ia32_vmx_cr0_fixed0;
+    if (0 != need1) {
+        bfalert_info(0, "vmx: setting clear cr0 bits that must be 1:");
+        dump_cr0(0, need1);
+        cr0 |= need1;
     }
 
-    bfdebug_transaction(1, [&](std::string * msg) {
-        bfdebug_pass(1, "check cr0 is valid", msg);
-        bfdebug_subnhex(1, "cr0", cr0, msg);
-        bfdebug_subnhex(1, "ia32_vmx_cr0_fixed0", ia32_vmx_cr0_fixed0, msg);
-        bfdebug_subnhex(1, "ia32_vmx_cr0_fixed1", ia32_vmx_cr0_fixed1, msg);
-    });
+    auto need0 = cr0 & ~ia32_vmx_cr0_fixed1;
+    if (0 != need0) {
+        bfalert_info(0, "vmx: clearing set cr0 bits that must be 0:");
+        dump_cr0(0, need0);
+        cr0 &= ~need0;
+    }
+
+    ::intel_x64::cr0::set(cr0);
 }
 
 void
@@ -124,16 +227,21 @@ vmx::check_ia32_vmx_cr4_fixed_msr()
     auto ia32_vmx_cr4_fixed0 = ::intel_x64::msrs::ia32_vmx_cr4_fixed0::get();
     auto ia32_vmx_cr4_fixed1 = ::intel_x64::msrs::ia32_vmx_cr4_fixed1::get();
 
-    if (0 != ((~cr4 & ia32_vmx_cr4_fixed0) | (cr4 & ~ia32_vmx_cr4_fixed1))) {
-        throw std::runtime_error("invalid cr4");
+    auto need1 = ~cr4 & ia32_vmx_cr4_fixed0;
+    if (0 != need1) {
+        bfalert_info(0, "vmx: setting clear cr4 bits that must be 1:");
+        dump_cr4(0, need1);
+        cr4 |= need1;
     }
 
-    bfdebug_transaction(1, [&](std::string * msg) {
-        bfdebug_pass(1, "check cr4 is valid", msg);
-        bfdebug_subnhex(1, "cr4", cr4, msg);
-        bfdebug_subnhex(1, "ia32_vmx_cr4_fixed0", ia32_vmx_cr4_fixed0, msg);
-        bfdebug_subnhex(1, "ia32_vmx_cr4_fixed1", ia32_vmx_cr4_fixed1, msg);
-    });
+    auto need0 = cr4 & ~ia32_vmx_cr4_fixed1;
+    if (0 != need0) {
+        bfalert_info(0, "vmx: clearing set cr4 bits that must be 0:");
+        dump_cr4(0, need0);
+        cr4 &= ~need0;
+    }
+
+    ::intel_x64::cr4::set(cr4);
 }
 
 void

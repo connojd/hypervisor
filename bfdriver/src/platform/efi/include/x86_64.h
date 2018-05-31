@@ -69,9 +69,10 @@ typedef struct _KTSS64 {
     UINT64 Rsp0;
     UINT64 Rsp1;
     UINT64 Rsp2;
-    UINT64 Ist[8];
     UINT64 Reserved1;
-    UINT16 Reserved2;
+    UINT64 Ist[7];
+    UINT64 Reserved2;
+    UINT16 Reserved3;
     UINT16 IoMapBase;
 } KTSS64, *PKTSS64;
 #pragma pack(pop)
