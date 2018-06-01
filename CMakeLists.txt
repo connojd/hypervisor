@@ -52,6 +52,14 @@ include_dependency(hippomocks)
 include_dependency(python)
 
 # ------------------------------------------------------------------------------
+# EFI Cleanup
+# ------------------------------------------------------------------------------
+
+file(MAKE_DIRECTORY ${EFI_OUTPUT_DIR})
+file(REMOVE ${EFI_MODULE_H})
+file(REMOVE ${EFI_SOURCES_CMAKE})
+
+# ------------------------------------------------------------------------------
 # No Build Components
 # ------------------------------------------------------------------------------
 
@@ -147,10 +155,6 @@ if(ENABLE_BUILD_VMM)
     )
 endif()
 
-if (ENABLE_BUILD_EFI)
-    include_dependency(gnuefi)
-endif()
-
 # ------------------------------------------------------------------------------
 # Unit Tests
 # ------------------------------------------------------------------------------
@@ -226,6 +230,27 @@ endif()
 # ------------------------------------------------------------------------------
 
 include_external_extensions()
+
+# ------------------------------------------------------------------------------
+# EFI Build
+# ------------------------------------------------------------------------------
+
+if (ENABLE_BUILD_EFI)
+    include_dependency(gnuefi)
+
+    include(${CMAKE_SOURCE_DIR}/bfdriver/efi/src/arch/intel_x64/efi_base/CMakeLists.txt)
+
+    add_subproject(
+        efi_main userspace
+        DEPENDS gnuefi
+        SOURCE_DIR ${CMAKE_SOURCE_DIR}/bfdriver/efi
+        TOOLCHAIN ${EFI_TOOLCHAIN_PATH}
+        LIST_SEPARATOR |
+        CMAKE_ARGS -DEXTERNAL_SOURCES=${EFI_SOURCES_SEPARATED}
+    )
+    add_dependencies(efi_main_${USERSPACE_PREFIX} bfvmm_main_${VMM_PREFIX})
+    add_dependencies(efi_main_${USERSPACE_PREFIX} ${VMM_EXTENSIONS})
+endif()
 
 # ------------------------------------------------------------------------------
 # Force Rebuild

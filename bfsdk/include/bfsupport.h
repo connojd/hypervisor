@@ -107,6 +107,22 @@ struct section_info_t {
 };
 
 /**
+ * @struct efi_data_t
+ *
+ * Binary interface for relaying EFI-related information and desired behavior
+ *
+ * 16 bytes long
+ *
+ */
+#pragma pack(push,8)
+struct efi_data_t {
+    /// Enable EFI exit handlers
+    uint8_t enabled;
+    /// Padding for alignment
+    uint8_t padding[15];
+};
+
+/**
  * @struct platform_info_t
  *
  * Provides platform-specific information to be passed into the VMM from
@@ -116,16 +132,30 @@ struct section_info_t {
  *      dummy member to avoid an empty struct on platforms not needing platform info
  */
 struct platform_info_t {
+
+    /// Signature
+    uint8_t signature[4];
+    /// Struct ABI version
+    uint8_t version[4];
+
     int _dummy;
 
     /// Driver's virtual address of the xAPIC
     uintptr_t xapic_virt;
 
+    /// Data relating to EFI booting behavior
+    struct efi_data_t efi;
+
+    /// Pointer to possible extension-defined struct
+    void *extension_data;
+
 #if defined(BF_AARCH64)
     /// Address of serial peripheral within kernel space
     uintptr_t serial_address;
 #endif
+
 };
+#pragma pack(pop)
 
 /**
  * @struct crt_info_t

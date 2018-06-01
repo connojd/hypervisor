@@ -25,13 +25,20 @@ if(ENABLE_BUILD_EFI AND NOT WIN32)
         URL_MD5     ${GNUEFI_URL_MD5}
     )
 
+    list (APPEND GNUEFI_LIBC_INCLUDES
+        include/stdint.h
+        include/_newlib_version.h
+        include/c++/v1/stddef.h
+        include/machine/_default_types.h
+        include/sys/features.h
+        include/sys/_intsup.h
+        include/sys/_stdint.h
+    )
+
     add_dependency(
         gnuefi userspace
         DEPENDS libcxx_${VMM_PREFIX}
         CONFIGURE_COMMAND   ${CMAKE_COMMAND} -E copy_directory ${CACHE_DIR}/gnuefi/ ${DEPENDS_DIR}/gnuefi/${USERSPACE_PREFIX}/build
-        COMMAND ${CMAKE_COMMAND} -E copy "${PREFIXES_DIR}/${VMM_PREFIX}/include/stdint.h" "${PREFIXES_DIR}/${USERSPACE_PREFIX}/include/stdint.h"
-        COMMAND ${CMAKE_COMMAND} -E copy "${PREFIXES_DIR}/${VMM_PREFIX}/include/c++/v1/stddef.h" "${PREFIXES_DIR}/${USERSPACE_PREFIX}/include/c++/v1/stddef.h"
-        COMMAND ${CMAKE_COMMAND} -E copy "${PREFIXES_DIR}/${VMM_PREFIX}/include/machine/_default_types.h" "${PREFIXES_DIR}/${USERSPACE_PREFIX}/include/"
         BUILD_COMMAND       make
         COMMAND             make -C lib
         COMMAND             make -C gnuefi
@@ -39,5 +46,14 @@ if(ENABLE_BUILD_EFI AND NOT WIN32)
         COMMAND             make INSTALLROOT=${PREFIXES_DIR}/ PREFIX=${USERSPACE_PREFIX} -C lib install
         COMMAND             make INSTALLROOT=${PREFIXES_DIR}/ PREFIX=${USERSPACE_PREFIX} -C gnuefi install
     )
+
+    foreach(inc ${GNUEFI_LIBC_INCLUDES})
+        add_custom_command(
+            TARGET gnuefi_${USERSPACE_PREFIX}
+            POST_BUILD
+            COMMAND ${CMAKE_COMMAND}
+            ARGS -E copy ${PREFIXES_DIR}/${VMM_PREFIX}/${inc} ${PREFIXES_DIR}/${USERSPACE_PREFIX}/${inc}
+        )
+    endforeach()
 
 endif()
