@@ -891,17 +891,18 @@ endfunction(add_subproject)
 
 function(add_efi_module)
     cmake_parse_arguments(ARG "" "NAME" "SOURCES" ${ARGV})
-    set(EFI_MODULES_LIST "${EFI_MODULES_LIST} ${NAME}" PARENT_SCOPE)
-    set(MODULE_NAME ${ARG_NAME})
-    message(STATUS "Adding EFI module ${MODULE_NAME}")
-    foreach(arg ${ARG_SOURCES})
-        set(tmp ${arg})
-        if (NOT IS_ABSOLUTE ${arg})
-            get_filename_component(tmp ${CMAKE_CURRENT_LIST_DIR}/${arg} ABSOLUTE)
+
+    message(STATUS "Adding EFI module: ${ARG_NAME}")
+
+    foreach(SOURCE ${ARG_SOURCES})
+        set(SOURCE_PATH ${SOURCE})
+        if (NOT IS_ABSOLUTE ${SOURCE})
+            get_filename_component(SOURCE_PATH ${CMAKE_CURRENT_LIST_DIR}/${SOURCE} ABSOLUTE)
         endif()
-        file(APPEND ${EFI_SOURCES_CMAKE} "${tmp};")
+        file(APPEND ${EFI_SOURCES_CMAKE} "${SOURCE_PATH};")
     endforeach()
-    file(APPEND ${EFI_MODULE_H} "EFI_MODULE(${MODULE_NAME})\n")
+
+    file(APPEND ${EFI_MODULE_H} "EFI_MODULE(${ARG_NAME})\n")
 endfunction(add_efi_module)
 
 # ------------------------------------------------------------------------------
@@ -918,7 +919,10 @@ function(vmm_extension NAME)
         ${ARGN}
     )
 
-    set(VMM_EXTENSIONS "${VMM_EXTENSIONS};${NAME}_${VMM_PREFIX}" PARENT_SCOPE)
+    if(ENABLE_BUILD_EFI)
+        add_dependencies(efi_main_${VMM_PREFIX} ${NAME}_${VMM_PREFIX})
+    endif()
+
 endfunction(vmm_extension)
 
 function(userspace_extension NAME)

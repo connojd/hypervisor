@@ -220,6 +220,11 @@ set(BUILD_BFVMM_MAIN_DIR ${CMAKE_BINARY_DIR}/bfvmm_main
     "bfvmm main build dir"
 )
 
+set(BUILD_EFI_MAIN_DIR ${CMAKE_BINARY_DIR}/efi_main
+    CACHE INTERNAL
+    "efi main build dir"
+)
+
 # ------------------------------------------------------------------------------
 # Includes
 # ------------------------------------------------------------------------------
@@ -436,10 +441,6 @@ add_config(
     DESCRIPTION "Build unit test components"
 )
 
-# ------------------------------------------------------------------------------
-# EFI Build
-# ------------------------------------------------------------------------------
-
 add_config(
     CONFIG_NAME ENABLE_BUILD_EFI
     CONFIG_TYPE BOOL
@@ -447,24 +448,21 @@ add_config(
     DESCRIPTION "Build efi boot-time loader components"
 )
 
+# ------------------------------------------------------------------------------
+# EFI Configs
+# ------------------------------------------------------------------------------
+
 add_config(
     CONFIG_NAME EFI_VMM_NAME
     CONFIG_TYPE STRING
-    DEFAULT_VAL ${BFM_VMM}
+    DEFAULT_VAL bfvmm_static
     DESCRIPTION "Name of VMM to include in EFI loader"
-)
-
-add_config(
-    CONFIG_NAME EFI_TARGET_NAME
-    CONFIG_TYPE STRING
-    DEFAULT_VAL bfloader
-    DESCRIPTION "File name of generated EFI image, without .efi extension"
 )
 
 add_config(
     CONFIG_NAME EFI_OUTPUT_DIR
     CONFIG_TYPE STRING
-    DEFAULT_VAL ${CMAKE_BINARY_DIR}/efi_main/x86_64-userspace-elf/build/output
+    DEFAULT_VAL ${BUILD_EFI_MAIN_DIR}/${VMM_PREFIX}/build/output
     DESCRIPTION "Directory for intermediary EFI files to communicate between EFI extensions"
 )
 

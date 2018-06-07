@@ -16,6 +16,10 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+set(EFI_VMM ${VMM_PREFIX_PATH}/bin/${EFI_VMM_NAME})
+set(EFI_VMM_OBJ ${EFI_OUTPUT_DIR}/${EFI_VMM_NAME}.o)
+set(EFI_TARGET_NAME bfloader)
+
 add_custom_command(
     OUTPUT ${EFI_VMM_OBJ}
     COMMAND ${CMAKE_COMMAND} -E copy ${EFI_VMM} ${EFI_VMM_NAME}
@@ -29,20 +33,8 @@ add_custom_command(
     COMMENT "Using ${EFI_VMM_NAME}"
 )
 
-get_filename_component(moddir ${EFI_MODULE_H} DIRECTORY)
-include_directories(${moddir})
-include_directories(${CMAKE_CURRENT_LIST_DIR}/../../include)
-include_directories(${CMAKE_SOURCE_DIR}/bfdriver/include)
-include_directories(${CMAKE_SOURCE_DIR}/bfsdk/include)
-include_directories(${CMAKE_SOURCE_DIR}/bfelf_loader/include)
-include_directories(${USERSPACE_PREFIX_PATH}/include)
-include_directories(${USERSPACE_PREFIX_PATH}/include/efi)
-include_directories(${USERSPACE_PREFIX_PATH}/include/efi/${BUILD_TARGET_ARCH})
-
-set(CRT_OBJ ${USERSPACE_PREFIX_PATH}/lib/crt0-efi-${BUILD_TARGET_ARCH}.o)
-
 list(APPEND SOURCES
-    ${CRT_OBJ}
+    ${VMM_PREFIX_PATH}/lib/crt0-efi-${BUILD_TARGET_ARCH}.o
     efi_main.c
     boot.c
     ${EFI_VMM_OBJ}
@@ -53,25 +45,25 @@ set_property(TARGET ${EFI_TARGET_NAME} PROPERTY SKIP_BUILD_RPATH TRUE)
 
 add_library(libgnuefi STATIC IMPORTED)
 set_target_properties(libgnuefi PROPERTIES IMPORTED_LOCATION
-    ${USERSPACE_PREFIX_PATH}/lib/libgnuefi.a
+    ${VMM_PREFIX_PATH}/lib/libgnuefi.a
 )
 add_dependencies(libgnuefi gnuefi)
 
 add_library(libefi STATIC IMPORTED)
 set_target_properties(libefi PROPERTIES IMPORTED_LOCATION
-    ${USERSPACE_PREFIX_PATH}/lib/libefi.a
+    ${VMM_PREFIX_PATH}/lib/libefi.a
 )
 add_dependencies(libefi gnuefi)
 
 target_link_libraries(${EFI_TARGET_NAME} libgnuefi libefi)
 
-set(EFI_LINKER_SCRIPT ${USERSPACE_PREFIX_PATH}/lib/elf_${BUILD_TARGET_ARCH}_efi.lds)
+set(EFI_LINKER_SCRIPT ${VMM_PREFIX_PATH}/lib/elf_${BUILD_TARGET_ARCH}_efi.lds)
 target_link_libraries(${EFI_TARGET_NAME} -T ${EFI_LINKER_SCRIPT})
 
 file(READ ${EFI_SOURCES_CMAKE} EXTERNAL_SOURCES)
 
 foreach(src ${EXTERNAL_SOURCES})
-    message(STATUS "adding EFI external source ${src}")
+    message(STATUS "Adding EFI external source: ${src}")
     target_sources(${EFI_TARGET_NAME} PRIVATE ${src})
 endforeach()
 
@@ -84,3 +76,5 @@ add_custom_command(
     MAIN_DEPENDENCY lib${EFI_TARGET_NAME}.so
     COMMENT "Linking bfloader.efi"
 )
+
+install(FILES ${EFI_OUTPUT_DIR}/${EFI_TARGET_NAME}.efi DESTINATION bin)

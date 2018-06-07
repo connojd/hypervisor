@@ -226,31 +226,33 @@ if(ENABLE_BUILD_USERSPACE)
 endif()
 
 # ------------------------------------------------------------------------------
-# External Components
-# ------------------------------------------------------------------------------
-
-include_external_extensions()
-
-# ------------------------------------------------------------------------------
-# EFI Build
+# EFI Components
 # ------------------------------------------------------------------------------
 
 if (ENABLE_BUILD_EFI)
     include_dependency(gnuefi)
 
-    include(${CMAKE_SOURCE_DIR}/bfdriver/efi/src/arch/intel_x64/efi_base/CMakeLists.txt)
-
     add_subproject(
-        efi_main userspace
-        DEPENDS gnuefi
-        SOURCE_DIR ${CMAKE_SOURCE_DIR}/bfdriver/efi
+        efi_main vmm
+        DEPENDS gnuefi bfvmm_main
+        SOURCE_DIR ${SOURCE_BFDRIVER_DIR}/src/platform/efi
         TOOLCHAIN ${EFI_TOOLCHAIN_PATH}
-        LIST_SEPARATOR |
-        CMAKE_ARGS -DEXTERNAL_SOURCES=${EFI_SOURCES_SEPARATED}
     )
-    add_dependencies(efi_main_${USERSPACE_PREFIX} bfvmm_main_${VMM_PREFIX})
-    add_dependencies(efi_main_${USERSPACE_PREFIX} ${VMM_EXTENSIONS})
+
+    add_efi_module(
+        NAME base
+        SOURCES ${SOURCE_BFDRIVER_DIR}/src/platform/efi/efi_base/base.c
+        SOURCES ${SOURCE_BFDRIVER_DIR}/src/platform/efi/efi_base/platform.c
+        SOURCES ${SOURCE_BFDRIVER_DIR}/src/common.c
+    )
+
 endif()
+
+# ------------------------------------------------------------------------------
+# External Components
+# ------------------------------------------------------------------------------
+
+include_external_extensions()
 
 # ------------------------------------------------------------------------------
 # Force Rebuild

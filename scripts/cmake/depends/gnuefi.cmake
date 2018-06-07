@@ -36,23 +36,23 @@ if(ENABLE_BUILD_EFI AND NOT WIN32)
     )
 
     add_dependency(
-        gnuefi userspace
+        gnuefi vmm
         DEPENDS libcxx_${VMM_PREFIX}
-        CONFIGURE_COMMAND   ${CMAKE_COMMAND} -E copy_directory ${CACHE_DIR}/gnuefi/ ${DEPENDS_DIR}/gnuefi/${USERSPACE_PREFIX}/build
+        CONFIGURE_COMMAND   ${CMAKE_COMMAND} -E copy_directory ${CACHE_DIR}/gnuefi/ ${DEPENDS_DIR}/gnuefi/${VMM_PREFIX}/build
         BUILD_COMMAND       make
         COMMAND             make -C lib
         COMMAND             make -C gnuefi
-        INSTALL_COMMAND     make INSTALLROOT=${PREFIXES_DIR}/ PREFIX=${USERSPACE_PREFIX} install
-        COMMAND             make INSTALLROOT=${PREFIXES_DIR}/ PREFIX=${USERSPACE_PREFIX} -C lib install
-        COMMAND             make INSTALLROOT=${PREFIXES_DIR}/ PREFIX=${USERSPACE_PREFIX} -C gnuefi install
+        INSTALL_COMMAND     make INSTALLROOT=${PREFIXES_DIR}/ PREFIX=${VMM_PREFIX} install
+        COMMAND             make INSTALLROOT=${PREFIXES_DIR}/ PREFIX=${VMM_PREFIX} -C lib install
+        COMMAND             make INSTALLROOT=${PREFIXES_DIR}/ PREFIX=${VMM_PREFIX} -C gnuefi install
     )
 
     foreach(inc ${GNUEFI_LIBC_INCLUDES})
         add_custom_command(
-            TARGET gnuefi_${USERSPACE_PREFIX}
+            TARGET gnuefi_${VMM_PREFIX}
             POST_BUILD
             COMMAND ${CMAKE_COMMAND}
-            ARGS -E copy ${PREFIXES_DIR}/${VMM_PREFIX}/${inc} ${PREFIXES_DIR}/${USERSPACE_PREFIX}/${inc}
+            ARGS -E copy ${PREFIXES_DIR}/${VMM_PREFIX}/${inc} ${PREFIXES_DIR}/${VMM_PREFIX}/${inc}
         )
     endforeach()
 
