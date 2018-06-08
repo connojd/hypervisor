@@ -43,6 +43,11 @@ list(APPEND SOURCES
 add_library(${EFI_TARGET_NAME} SHARED ${SOURCES})
 set_property(TARGET ${EFI_TARGET_NAME} PROPERTY SKIP_BUILD_RPATH TRUE)
 
+#add_library(libos STATIC IMPORTED)
+#set_target_properties(libos PROPERTIES IMPORTED_LOCATION
+#    /home/dev/includeos/build_x86_64/src/libos.a
+#)
+
 add_library(libgnuefi STATIC IMPORTED)
 set_target_properties(libgnuefi PROPERTIES IMPORTED_LOCATION
     ${VMM_PREFIX_PATH}/lib/libgnuefi.a

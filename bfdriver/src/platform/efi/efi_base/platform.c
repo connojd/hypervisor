@@ -28,6 +28,25 @@
 #include "mp_service.h"
 
 
+static inline uint64_t rdmsr(uint64_t addr)
+{
+    uint64_t rax = 0;
+    uint64_t rdx = 0;
+
+    __asm volatile(
+        "mov %2, %%rcx\n\t"
+        "rdmsr\n\t"
+        "mov %%rax, %0\n\t"
+        "mov %%rdx, %1\n\t"
+        : "=g"(rax), "=g"(rdx)
+        : "g"(addr)
+        : "rax", "rdx"
+    );
+
+    return (rdx << 32U) | rax;
+}
+
+
 void *platform_alloc(uint64_t len, EFI_MEMORY_TYPE type)
 {
     EFI_STATUS status;
@@ -169,21 +188,23 @@ platform_populate_info(struct platform_info_t *info)
     info->efi.enabled = 1;
 
     const uint64_t IA32_APIC_BASE = 0x1BU;
-    const uint64_t msr = _rdmsr(IA32_APIC_BASE);
+    const uint64_t msr = rdmsr(IA32_APIC_BASE);
     const uint64_t mode = (msr & 0xC00U) >> 10U;
     const uint64_t mode_xapic = 0x2U;
     const uint64_t mode_x2apic = 0x3U;
 
     switch (mode) {
-    case mode_xapic:
-        break;
-    default:
-        Print(L"Local APIC mode: %lu\n", mode);
-        return (mode == mode_x2apic) ? BF_SUCCESS : BF_ERROR_VMM_INVALID_STATE;
+        case mode_xapic:
+            break;
+        default:
+            Print(L"Local APIC mode: %lu\n", mode);
+            if (mode == mode_x2apic) {
+                return BF_SUCCESS;
+            }
+            return BF_ERROR_VMM_INVALID_STATE;
     }
 
-    const uint64_t addr = (msr & 0x0000000FFFFFF000ULL) >> 0U;
-    info->xapic_virt = addr;
+    info->xapic_virt = msr & 0x0000000FFFFFF000ULL;
     return BF_SUCCESS;
 }
 
