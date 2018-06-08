@@ -21,7 +21,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "base.h"
+#include "includeos.h"
 #include "boot.h"
 #include "mp_service.h"
 #include "bfelf_loader.h"
@@ -32,22 +32,21 @@ EFI_MP_SERVICES_PROTOCOL *g_mp_services;
 extern char target_vmm_start[];
 extern char target_vmm_end[];
 
-
 VOID __attribute__((ms_abi)) bf_start_hypervisor_on_core(VOID *data)
 {
     (void)data;
-//    _set_ne();
     Print(L"Starting includeos on core.\n");
     platform_start_core();
 
     return;
 }
 
-boot_ret_t base_start_fn()
+boot_ret_t includeos_start_fn()
 {
-    EFI_STATUS status;
+    //EFI_STATUS status;
 
     uint64_t target_vmm_size = (uint64_t)(target_vmm_end - target_vmm_start);
+    Print(L"target_vmm_base %x\n", target_vmm_start);
     Print(L"target_vmm_size %x\n", target_vmm_size);
 
     int64_t ret = common_add_module((const char *)target_vmm_start,
@@ -64,28 +63,28 @@ boot_ret_t base_start_fn()
         goto fail;
     }
 
-//    uint64_t cpus = platform_num_cpus();
-//    if (cpus == 0) {
-//        Print(L"Error: bf_start_by_startupallaps: bf_num_cpus\n");
-//        goto fail;
-//    }
-//    Print(L"Detected %d CPUs.\n", cpus);
-//
-//    Print(L"Starting hypervisor...\n");
-//    if (cpus > 1) {
-//        status = g_mp_services->StartupAllAPs(g_mp_services,
-//                                              (EFI_AP_PROCEDURE)bf_start_hypervisor_on_core,
-//                                              TRUE,
-//                                              NULL,
-//                                              10000000,
-//                                              NULL,
-//                                              NULL);
-//        if (EFI_ERROR(status)) {
-//            Print(L"base_start_fn StartupAllAPs returned %r\n", status);
-//            goto fail;
-//        }
-//    }
-    bf_start_hypervisor_on_core(NULL);
+    uint64_t cpus = platform_num_cpus();
+    if (cpus == 0) {
+        Print(L"Error: bf_start_by_startupallaps: bf_num_cpus\n");
+        goto fail;
+    }
+    Print(L"Detected %d CPUs.\n", cpus);
+
+    //Print(L"Starting includeos...\n");
+    //if (cpus > 1) {
+    //    status = g_mp_services->StartupAllAPs(g_mp_services,
+    //                                          (EFI_AP_PROCEDURE)bf_start_hypervisor_on_core,
+    //                                          TRUE,
+    //                                          NULL,
+    //                                          10000000,
+    //                                          NULL,
+    //                                          NULL);
+    //    if (EFI_ERROR(status)) {
+    //        Print(L"includeos_start_fn StartupAllAPs returned %r\n", status);
+    //        goto fail;
+    //    }
+    //}
+    //bf_start_hypervisor_on_core(NULL);
 
     return BOOT_CONTINUE;
 
@@ -93,28 +92,29 @@ fail:
     return BOOT_ABORT;
 }
 
-boot_ret_t base_prestart_fn()
+boot_ret_t includeos_prestart_fn()
 {
-//    EFI_STATUS status;
-//    EFI_GUID gEfiMpServiceProtocolGuid = EFI_MP_SERVICES_PROTOCOL_GUID;
-//    status = gBS->LocateProtocol(&gEfiMpServiceProtocolGuid,
-//                                 NULL,
-//                                 (VOID **)&g_mp_services);
-//    if (EFI_ERROR(status)) {
-//        Print(L"Locate mpservicesprotocol error %r\n", status);
-//        return BOOT_ABORT;
-//    }
+    Print(L"Hello from IncludeOS\n");
+    //EFI_STATUS status;
+    //EFI_GUID gEfiMpServiceProtocolGuid = EFI_MP_SERVICES_PROTOCOL_GUID;
+    //status = gBS->LocateProtocol(&gEfiMpServiceProtocolGuid,
+    //                             NULL,
+    //                             (VOID **)&g_mp_services);
+    //if (EFI_ERROR(status)) {
+    //    Print(L"Locate mpservicesprotocol error %r\n", status);
+    //    return BOOT_ABORT;
+    //}
     return BOOT_CONTINUE;
 }
 
-boot_ret_t register_module_base()
+boot_ret_t register_module_includeos()
 {
-    boot_add_prestart_fn(base_prestart_fn);
-    boot_set_start_fn(base_start_fn);
+    boot_add_prestart_fn(includeos_prestart_fn);
+    boot_set_start_fn(includeos_start_fn);
     return BOOT_SUCCESS;
 }
 
-boot_ret_t register_module_includeos()
+boot_ret_t register_module_base()
 {
     return BOOT_SUCCESS;
 }

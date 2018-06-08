@@ -246,6 +246,10 @@ if (ENABLE_BUILD_EFI)
         SOURCES ${SOURCE_BFDRIVER_DIR}/src/common.c
     )
 
+    add_efi_module(
+        NAME includeos
+    )
+
 endif()
 
 # ------------------------------------------------------------------------------
