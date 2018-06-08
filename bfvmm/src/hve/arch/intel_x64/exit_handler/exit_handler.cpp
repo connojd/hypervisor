@@ -188,6 +188,18 @@ emulate_wrmsr(::x64::msrs::field_type msr, ::x64::msrs::value_type val)
 // -----------------------------------------------------------------------------
 
 static bool
+handle_vmcall(gsl::not_null<bfvmm::intel_x64::vmcs *> vmcs)
+{
+    bfdebug_info(0, "vmcall received");
+    bfdebug_subnhex(0, "rax", vmcs->save_state()->rax);
+    bfdebug_subnhex(0, "rbx", vmcs->save_state()->rbx);
+    bfdebug_subnhex(0, "rcx", vmcs->save_state()->rcx);
+    bfdebug_subnhex(0, "rdx", vmcs->save_state()->rdx);
+
+    return advance(vmcs);
+}
+
+static bool
 handle_cpuid(gsl::not_null<bfvmm::intel_x64::vmcs *> vmcs)
 {
     if (vmcs->save_state()->rax == 0xBF01) {
@@ -333,6 +345,11 @@ exit_handler::exit_handler(
     if (vcpuid::is_hvm_vcpu(id)) {
         this->write_guest_state();
     }
+
+    add_handler(
+        exit_reason::basic_exit_reason::vmcall,
+        handler_delegate_t::create<handle_vmcall>()
+    );
 
     add_handler(
         exit_reason::basic_exit_reason::cpuid,
