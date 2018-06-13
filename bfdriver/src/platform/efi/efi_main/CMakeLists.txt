@@ -16,53 +16,31 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#macro(embed_elf_into_efi)
-#    set(oneVal OBJ NAME DEPEND)
-#    cmake_parse_arguments(ARG "" "${oneVal}" "" ${ARGN})
-
+set(EFI_VMM ${VMM_PREFIX_PATH}/bin/${EFI_VMM_NAME})
 set(EFI_VMM_OBJ ${EFI_OUTPUT_DIR}/${EFI_VMM_NAME}.o)
-set(EFI_VMM_ELF ${VMM_PREFIX_PATH}/bin/${EFI_VMM_NAME})
-
-set(EFI_OS_NAME includeos)
-set(EFI_OS_OBJ ${EFI_OUTPUT_DIR}/${EFI_OS_NAME}.o)
-set(EFI_OS_ELF ${VMM_PREFIX_PATH}/bin/${EFI_OS_NAME})
+set(EFI_TARGET_NAME bfloader)
 
 add_custom_command(
     OUTPUT ${EFI_VMM_OBJ}
-    COMMAND ${CMAKE_COMMAND} -E copy ${EFI_VMM_ELF} ${EFI_VMM_NAME}
+    COMMAND ${CMAKE_COMMAND} -E copy ${EFI_VMM} ${EFI_VMM_NAME}
     COMMAND ${CMAKE_OBJCOPY}
     ARGS -I binary -O elf64-x86-64 -B i386
-    ARGS --redefine-sym _binary_${EFI_VMM_NAME}_start=target_${EFI_VMM_NAME}_start
-    ARGS --redefine-sym _binary_${EFI_VMM_NAME}_end=target_${EFI_VMM_NAME}_end
+    ARGS --redefine-sym _binary_${EFI_VMM_NAME}_start=target_vmm_start
+    ARGS --redefine-sym _binary_${EFI_VMM_NAME}_end=target_vmm_end
     ARGS ${EFI_VMM_NAME} ${EFI_VMM_OBJ}
-    DEPENDS ${EFI_VMM_ELF}
+    DEPENDS ${EFI_VMM}
     WORKING_DIRECTORY ${EFI_OUTPUT_DIR}
-    COMMENT "Embedding EFI target: ${EFI_VMM_NAME}"
+    COMMENT "Using ${EFI_VMM_NAME}"
 )
 
-add_custom_command(
-    OUTPUT ${EFI_OS_OBJ}
-    COMMAND ${CMAKE_COMMAND} -E copy ${EFI_OS_ELF} ${EFI_OS_NAME}
-    COMMAND ${CMAKE_OBJCOPY}
-    ARGS -I binary -O elf64-x86-64 -B i386
-    ARGS --redefine-sym _binary_${EFI_OS_NAME}_start=target_${EFI_OS_NAME}_start
-    ARGS --redefine-sym _binary_${EFI_OS_NAME}_end=target_${EFI_OS_NAME}_end
-    ARGS ${EFI_OS_NAME} ${EFI_OS_OBJ}
-    DEPENDS ${EFI_OS_ELF}
-    WORKING_DIRECTORY ${EFI_OUTPUT_DIR}
-    COMMENT "Embedding EFI target: ${EFI_OS_NAME}"
-)
-
-list(APPEND VMM_SOURCES
+list(APPEND SOURCES
     ${VMM_PREFIX_PATH}/lib/crt0-efi-${BUILD_TARGET_ARCH}.o
     efi_main.c
     boot.c
     ${EFI_VMM_OBJ}
-    ${EFI_OS_OBJ}
 )
 
-set(EFI_TARGET_NAME bfloader)
-add_library(${EFI_TARGET_NAME} SHARED ${VMM_SOURCES})
+add_library(${EFI_TARGET_NAME} SHARED ${SOURCES})
 set_property(TARGET ${EFI_TARGET_NAME} PROPERTY SKIP_BUILD_RPATH TRUE)
 
 add_library(libgnuefi STATIC IMPORTED)
@@ -96,7 +74,7 @@ add_custom_command(
     ARGS -j .text -j .sdata -j .data -j .dynamic -j .dynsym -j .rel -j .rela -j .rel.* -j .rela.* -j .rel*
     ARGS -j .rela* -j .reloc --target=efi-app-${BUILD_TARGET_ARCH} lib${EFI_TARGET_NAME}.so ${EFI_OUTPUT_DIR}/${EFI_TARGET_NAME}.efi
     MAIN_DEPENDENCY lib${EFI_TARGET_NAME}.so
-    COMMENT "Linking ${EFI_TARGET_NAME}.efi"
+    COMMENT "Linking bfloader.efi"
 )
 
 install(FILES ${EFI_OUTPUT_DIR}/${EFI_TARGET_NAME}.efi DESTINATION bin)

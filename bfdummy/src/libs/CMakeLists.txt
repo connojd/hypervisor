@@ -29,3 +29,17 @@ add_shared_library(
     DEFINES SHARED_DUMMY
     ALWAYS
 )
+
+add_static_library(
+    dummy_lib1
+    SOURCES dummy_lib1.cpp
+    DEFINES STATIC_DUMMY
+    ALWAYS
+)
+
+add_static_library(
+    dummy_lib2
+    SOURCES dummy_lib2.cpp
+    DEFINES STATIC_DUMMY
+    ALWAYS
+)

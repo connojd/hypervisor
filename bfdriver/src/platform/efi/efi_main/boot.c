@@ -28,7 +28,10 @@ static boot_fn_t _prestart_fns[NR_START_FNS] = {0};
 static boot_fn_t _start_fn;
 static boot_fn_t _poststart_fns[NR_START_FNS] = {0};
 
-static boot_ret_t inline run_function_list(boot_fn_t fnlist[])
+struct platform_info_t boot_platform_info;
+
+static boot_ret_t inline
+run_function_list(boot_fn_t fnlist[])
 {
     uint64_t i;
     for (i = 0U; i < NR_START_FNS; ++i) {
@@ -52,7 +55,8 @@ static boot_ret_t inline run_function_list(boot_fn_t fnlist[])
     return BOOT_CONTINUE;
 }
 
-boot_ret_t boot_add_prestart_fn(boot_fn_t fn)
+boot_ret_t
+boot_add_prestart_fn(boot_fn_t fn)
 {
     static uint64_t nr_added = 0U;
     if (nr_added == NR_START_FNS) {
@@ -63,13 +67,15 @@ boot_ret_t boot_add_prestart_fn(boot_fn_t fn)
     return BOOT_SUCCESS;
 }
 
-boot_ret_t boot_set_start_fn(boot_fn_t fn)
+boot_ret_t
+boot_set_start_fn(boot_fn_t fn)
 {
     _start_fn = fn;
     return BOOT_SUCCESS;
 }
 
-boot_ret_t boot_add_poststart_fn(boot_fn_t fn)
+boot_ret_t
+boot_add_poststart_fn(boot_fn_t fn)
 {
     static uint64_t nr_added = 0U;
     if (nr_added == NR_START_FNS) {
@@ -80,7 +86,8 @@ boot_ret_t boot_add_poststart_fn(boot_fn_t fn)
     return BOOT_SUCCESS;
 }
 
-boot_ret_t boot_start()
+boot_ret_t
+boot_start()
 {
     boot_ret_t ret = BOOT_CONTINUE;
     ret = run_function_list(_prestart_fns);

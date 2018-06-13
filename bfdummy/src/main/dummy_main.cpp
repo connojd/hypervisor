@@ -67,6 +67,11 @@ derived2 g_derived2;
 
 EXPORT_SYM int global_var = 0;
 
+extern "C" int *__errno(void)
+{
+    return &errno;
+}
+
 int
 main(int argc, char *argv[])
 {
