@@ -154,7 +154,7 @@ emulate_wrmsr(::x64::msrs::field_type msr, ::x64::msrs::value_type val)
             return;
 
         case ::intel_x64::msrs::ia32_perf_global_ctrl::addr:
-            ::intel_x64::vmcs::guest_ia32_perf_global_ctrl::set_if_exists(val);
+            ::intel_x64::vmcs::guest_ia32_perf_global_ctrl::set_if_exists(val & ~::intel_x64::vmcs::guest_ia32_perf_global_ctrl::reserved::mask);
             return;
 
         case ::intel_x64::msrs::ia32_sysenter_cs::addr:
@@ -449,7 +449,7 @@ exit_handler::write_guest_state()
     guest_ia32_efer::set(::intel_x64::msrs::ia32_efer::get());
 
     if (::intel_x64::cpuid::arch_perf_monitoring::eax::version_id::get() >= 2) {
-        guest_ia32_perf_global_ctrl::set_if_exists(::intel_x64::msrs::ia32_perf_global_ctrl::get());
+        guest_ia32_perf_global_ctrl::set_if_exists(::intel_x64::msrs::ia32_perf_global_ctrl::get() & ~::intel_x64::vmcs::guest_ia32_perf_global_ctrl::reserved::mask);
     }
 
     guest_gdtr_limit::set(guest_gdt.limit());

@@ -168,11 +168,11 @@ host_verify_load_ia32_efer()
     auto lme = ::intel_x64::vmcs::host_ia32_efer::lme::is_enabled();
 
     if (::intel_x64::vmcs::vm_exit_controls::host_address_space_size::is_disabled() && lma) {
-        throw std::logic_error("host addr space is 0, but efer.lma is 1");
+        throw std::logic_error("host_verify_load_ia32_efer: host addr space is 0, but efer.lma is 1");
     }
 
     if (::intel_x64::vmcs::vm_exit_controls::host_address_space_size::is_enabled() && !lma) {
-        throw std::logic_error("host addr space is 1, but efer.lma is 0");
+        throw std::logic_error("host_verify_load_ia32_efer: host addr space is 1, but efer.lma is 0");
     }
 
     if (::intel_x64::vmcs::host_cr0::paging::is_disabled()) {
@@ -180,11 +180,11 @@ host_verify_load_ia32_efer()
     }
 
     if (!lme && lma) {
-        throw std::logic_error("efer.lme is 0, but efer.lma is 1");
+        throw std::logic_error("host_verify_load_ia32_efer: efer.lme is 0, but efer.lma is 1");
     }
 
     if (lme && !lma) {
-        throw std::logic_error("efer.lme is 1, but efer.lma is 0");
+        throw std::logic_error("host_verify_load_ia32_efer: efer.lme is 1, but efer.lma is 0");
     }
 }
 

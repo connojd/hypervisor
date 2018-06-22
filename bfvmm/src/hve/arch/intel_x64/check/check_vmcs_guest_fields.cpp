@@ -249,11 +249,11 @@ guest_verify_load_ia32_efer()
     }
 
     if (!lme && lma) {
-        throw std::logic_error("efer.lme is 0, but efer.lma is 1");
+        throw std::logic_error("guest_verify_load_ia32_efer: efer.lme is 0, but efer.lma is 1");
     }
 
     if (lme && !lma) {
-        throw std::logic_error("efer.lme is 1, but efer.lma is 0");
+        throw std::logic_error("guest_verify_load_ia32_efer: efer.lme is 1, but efer.lma is 0");
     }
 }
 

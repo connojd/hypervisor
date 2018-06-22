@@ -16,6 +16,7 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+set(EFI_VMM_NAME eapis_vmm_static)
 set(EFI_VMM ${VMM_PREFIX_PATH}/bin/${EFI_VMM_NAME})
 set(EFI_VMM_OBJ ${EFI_OUTPUT_DIR}/${EFI_VMM_NAME}.o)
 set(EFI_TARGET_NAME bfloader)
