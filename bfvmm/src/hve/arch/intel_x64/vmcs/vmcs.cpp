@@ -107,6 +107,10 @@ void
 vmcs::resume()
 {
     vmcs_resume(m_save_state.get());
+
+    ::intel_x64::vmcs::debug::dump(0);
+    check::all();
+    //::intel_x64::vmcs::vm_instruction_error::description();
     throw std::runtime_error("vmcs resume failed");
 }
 

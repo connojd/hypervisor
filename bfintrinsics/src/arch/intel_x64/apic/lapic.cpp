@@ -23,8 +23,66 @@ namespace intel_x64
 namespace lapic
 {
 
-/// Lapic register attributes
-std::array<attr_t, count> attributes;
+std::unordered_map<uint32_t, attr_t> attributes;
 
+namespace offset
+{
+
+/// Lapic register offsets
+std::array<uint32_t, 47> list = {
+    id,
+    version,
+    tpr,
+    apr,
+    ppr,
+    eoi,
+    ldr,
+    dfr,
+    svr,
+
+    isr0,
+    isr1,
+    isr2,
+    isr3,
+    isr4,
+    isr5,
+    isr6,
+    isr7,
+
+    tmr0,
+    tmr1,
+    tmr2,
+    tmr3,
+    tmr4,
+    tmr5,
+    tmr6,
+    tmr7,
+
+    irr0,
+    irr1,
+    irr2,
+    irr3,
+    irr4,
+    irr5,
+    irr6,
+    irr7,
+
+    esr,
+    lvt_cmci,
+    icr0,
+    icr1,
+    lvt_timer,
+    lvt_thermal,
+    lvt_pmi,
+    lvt_lint0,
+    lvt_lint1,
+    lvt_error,
+    init_count,
+    cur_count,
+    dcr,
+    self_ipi
+};
+
+}
 }
 }
