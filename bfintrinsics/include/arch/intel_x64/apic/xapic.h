@@ -1,6 +1,6 @@
 //
 // Bareflank Hypervisor
-// Copyright (C) 2018 Assured Information Security, Inc.
+// Copyright (C) 2017 Assured Information Security, Inc.
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -16,8 +16,11 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#ifndef BARRIER_INTEL_X64_H
-#define BARRIER_INTEL_X64_H
+#ifndef INTRINSICS_XAPIC_INTEL_X64_H
+#define INTRINSICS_XAPIC_INTEL_X64_H
+
+#include <bfgsl.h>
+#include <arch/intel_x64/barrier.h>
 
 // -----------------------------------------------------------------------------
 // Exports
@@ -35,26 +38,36 @@
 #define EXPORT_INTRINSICS
 #endif
 
-// -----------------------------------------------------------------------------
-// Definitions
-// -----------------------------------------------------------------------------
-
-extern "C" void _sfence(void) noexcept;
-extern "C" void _mfence(void) noexcept;
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
 
 // *INDENT-OFF*
 
+extern "C" uint32_t _read_xapic(uintptr_t addr) noexcept;
+extern "C" void _write_xapic(uintptr_t addr, uint32_t val) noexcept;
+extern "C" void _write_icr(uintptr_t icr_addr, uint64_t icr_val) noexcept;
+
 namespace intel_x64
 {
-namespace barrier
+namespace xapic
 {
-    inline void sfence() noexcept
-    { _sfence(); }
+    inline uint32_t read(uintptr_t addr) noexcept
+    { return _read_xapic(addr); }
 
-    inline void mfence() noexcept
-    { _mfence(); }
+    inline void write(uintptr_t addr, uint32_t val) noexcept
+    { return _write_xapic(addr, val); }
+
+    inline void write_icr(uintptr_t icr_addr, uint64_t icr_val) noexcept
+    {
+        _write_xapic(icr_addr | 0x10, gsl::narrow_cast<uint32_t>(icr_val >> 32));
+        ::intel_x64::barrier::mfence();
+        _write_xapic(icr_addr, gsl::narrow_cast<uint32_t>(icr_val));
+    }
 }
 }
+
 // *INDENT-ON*
 
 #endif

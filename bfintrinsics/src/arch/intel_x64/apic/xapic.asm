@@ -21,12 +21,12 @@ default rel
 
 section .text
 
-global _sfence:function
-_sfence:
-    sfence
+global _read_xapic:function
+_read_xapic:
+    mov eax, [rdi]
     ret
 
-global _mfence:function
-_mfence:
-    mfence
+global _write_xapic:function
+_write_xapic:
+    mov [rdi], esi
     ret
