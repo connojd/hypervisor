@@ -36,6 +36,7 @@ if(NOT WIN32)
         -fno-stack-protector
         -fvisibility=hidden
         -Wno-deprecated-declarations
+        -D_HIPPOMOCKS__ENABLE_CFUNC_MOCKING_SUPPORT
     )
 
     list(APPEND BFFLAGS_TEST_C

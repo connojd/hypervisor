@@ -203,6 +203,7 @@ private:
 
     vmcs *m_vmcs;
     std::unique_ptr<gsl::byte[]> m_stack;
+    std::unique_ptr<gsl::byte[]> m_ist1;
 
     static ::intel_x64::cr0::value_type s_cr0;
     static ::intel_x64::cr3::value_type s_cr3;
