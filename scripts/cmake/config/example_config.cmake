@@ -73,6 +73,14 @@ set(ENABLE_TESTS_ONLY OFF)
 #
 set(ENABLE_EXTENDED_APIS OFF)
 
+# Enable EFI
+#
+# This will enable building EFI targets after the VMM has compiled. Note that
+# this forces static build, disables testing, ASAN, codecov and clang tidy,
+# and requries the VMM be compiled
+#
+set(ENABLE_BUILD_EFI OFF)
+
 # Examples
 #
 # These options enable the examples
@@ -123,7 +131,7 @@ endif()
 # contact AIS, Inc at quinnr@ainfosec.com. Finally, both binary types can be
 # built simultaniously.
 #
-if(ENABLE_DEVELOPER_MODE)
+if(ENABLE_DEVELOPER_MODE AND NOT ENABLE_BUILD_EFI)
     set(BUILD_SHARED_LIBS ON)
     set(BUILD_STATIC_LIBS OFF)
 else()
@@ -154,13 +162,13 @@ else()
     set(ENABLE_BUILD_USERSPACE ON)
 endif()
 
-if(ENABLE_DEVELOPER_MODE)
+if(ENABLE_DEVELOPER_MODE AND NOT ENABLE_BUILD_EFI)
     set(ENABLE_BUILD_TEST ON)
 else()
     set(ENABLE_BUILD_TEST OFF)
 endif()
 
-if(ENABLE_DEVELOPER_MODE AND NOT HOST_SYSTEM_NAME STREQUAL "Windows")
+if(ENABLE_DEVELOPER_MODE AND NOT ENABLE_BUILD_EFI AND NOT WIN32)
     set(ENABLE_ASAN ON)
     set(ENABLE_TIDY ON)
     set(ENABLE_FORMAT ON)
@@ -168,7 +176,7 @@ if(ENABLE_DEVELOPER_MODE AND NOT HOST_SYSTEM_NAME STREQUAL "Windows")
 else()
     set(ENABLE_ASAN OFF)
     set(ENABLE_TIDY OFF)
-    set(ENABLE_FORMAT OFF)
+    set(ENABLE_FORMAT ON)
     set(ENABLE_CODECOV OFF)
 endif()
 

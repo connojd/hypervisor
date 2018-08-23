@@ -134,25 +134,7 @@ TEST_CASE("exit_handler: unhandled exit reason, invalid reason")
     CHECK_NOTHROW(ehlr.handle(&ehlr));
 }
 
-TEST_CASE("exit_handler: handle_nmi, incorrect type")
-{
-    MockRepository mocks;
-    auto &&vmcs = setup_vmcs(mocks, ::intel_x64::vmcs::exit_reason::basic_exit_reason::exception_or_non_maskable_interrupt);
-    auto &&ehlr = bfvmm::intel_x64::exit_handler{vmcs};
-
-    g_save_state.rip = 0;
-    g_vmcs_fields[::intel_x64::vmcs::vm_exit_interruption_information::addr]
-        = ::intel_x64::vmcs::vm_exit_interruption_information::interruption_type::hardware_exception
-          << ::intel_x64::vmcs::vm_exit_interruption_information::interruption_type::from;
-
-    ::intel_x64::vmcs::primary_processor_based_vm_execution_controls::nmi_window_exiting::disable();
-
-    CHECK_NOTHROW(ehlr.handle(&ehlr));
-    CHECK(g_save_state.rip == 0);
-    CHECK(::intel_x64::vmcs::primary_processor_based_vm_execution_controls::nmi_window_exiting::is_disabled());
-}
-
-TEST_CASE("exit_handler: handle_nmi, correct type")
+TEST_CASE("exit_handler: handle_nmi")
 {
     MockRepository mocks;
     auto &&vmcs = setup_vmcs(mocks, ::intel_x64::vmcs::exit_reason::basic_exit_reason::exception_or_non_maskable_interrupt);

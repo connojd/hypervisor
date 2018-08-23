@@ -36,6 +36,24 @@
 #include <debug/debug_ring/debug_ring.h>
 #include <memory_manager/memory_manager.h>
 
+#include <intrinsics.h>
+
+extern "C" int64_t
+private_init(void)
+{
+#ifdef BF_INTEL_X64
+    ::intel_x64::cr0::numeric_error::enable();
+#endif
+
+    return ENTRY_SUCCESS;
+}
+
+extern "C" int64_t
+private_fini(void)
+{
+    return ENTRY_SUCCESS;
+}
+
 extern "C" int64_t
 private_add_md(struct memory_descriptor *md) noexcept
 {
@@ -101,8 +119,10 @@ bfmain(uintptr_t request, uintptr_t arg1, uintptr_t arg2, uintptr_t arg3)
 
     switch (request) {
         case BF_REQUEST_INIT:
+            return private_init();
+
         case BF_REQUEST_FINI:
-            return ENTRY_SUCCESS;
+            return private_fini();
 
         case BF_REQUEST_ADD_MDL:
             return private_add_md(reinterpret_cast<memory_descriptor *>(arg1));
