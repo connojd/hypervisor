@@ -22,11 +22,12 @@
 #include <bfdebug.h>
 #include <bfplatform.h>
 #include <bfelf_loader.h>
+#include <common.h>
 
 #include "mp_service.h"
 EFI_MP_SERVICES_PROTOCOL *g_mp_services = nullptr;
 
-#include <common.h>
+void _set_ne(void);
 
 int64_t
 platform_init(void)
@@ -46,6 +47,7 @@ platform_init(void)
         return -1;
     }
 
+    _set_ne();
     return BF_SUCCESS;
 }
 
@@ -171,6 +173,8 @@ struct call_vmm_args {
 EFI_FUNCTION static void
 call_vmm(struct call_vmm_args *args)
 {
+    _set_ne();
+
     args->ret =
         common_call_vmm(args->cpuid, args->request, args->arg1, args->arg2);
 }

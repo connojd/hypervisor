@@ -28,6 +28,7 @@ init_project(
 list(APPEND SOURCES
     entry.c
     platform.c
+    platform.asm
     ../../../src/common.c
     ${EFI_EXTENSION_SOURCES}
 )
@@ -39,6 +40,7 @@ add_custom_command(
     COMMAND xxd
     ARGS -i vmm > ${CMAKE_BINARY_DIR}/vmm.h
     DEPENDS ${BFM_VMM_BIN_PATH}/${BFM_VMM}
+    COMMENT "  EFI VMM: ${BFM_VMM_BIN_PATH}/${BFM_VMM}"
 )
 
 add_custom_target(

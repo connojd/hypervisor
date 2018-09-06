@@ -474,6 +474,9 @@ handle_invd(gsl::not_null<bfvmm::intel_x64::vmcs *> vmcs)
 static bool
 handle_rdmsr(gsl::not_null<bfvmm::intel_x64::vmcs *> vmcs)
 {
+if (vmcs->save_state()->rcx == 0x00000000000000fe) {
+    bffield_hex(vmcs->save_state()->rcx);
+}
     auto val =
         emulate_rdmsr(
             gsl::narrow_cast<::x64::msrs::field_type>(vmcs->save_state()->rcx)
@@ -492,6 +495,11 @@ handle_wrmsr(gsl::not_null<bfvmm::intel_x64::vmcs *> vmcs)
 
     val |= ((vmcs->save_state()->rax & 0x00000000FFFFFFFF) << 0x00);
     val |= ((vmcs->save_state()->rdx & 0x00000000FFFFFFFF) << 0x20);
+
+// if (vmcs->save_state()->rcx != 0x000000000000080b && vmcs->save_state()->rcx != 0x00000000000006e0 && vmcs->save_state()->rcx != 0x000000000000003b) {
+//     bffield_hex(vmcs->save_state()->rcx);
+//     bffield_hex(val);
+// }
 
     emulate_wrmsr(
         gsl::narrow_cast<::x64::msrs::field_type>(vmcs->save_state()->rcx),
@@ -721,9 +729,9 @@ exit_handler::write_guest_state()
     guest_ldtr_base::set(ldtr_index != 0 ? guest_gdt.base(ldtr_index) : 0);
     guest_tr_base::set(tr_index != 0 ? guest_gdt.base(tr_index) : 0);
 
-    guest_cr0::set(cr0::get());
+    guest_cr0::set(cr0::get() | ::intel_x64::msrs::ia32_vmx_cr0_fixed0::get());
     guest_cr3::set(cr3::get());
-    guest_cr4::set(cr4::get() | cr4::vmx_enable_bit::mask);
+    guest_cr4::set(cr4::get() | ::intel_x64::msrs::ia32_vmx_cr4_fixed0::get());
     guest_dr7::set(dr7::get());
 
     guest_rflags::set(::x64::rflags::get());

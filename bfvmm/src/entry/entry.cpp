@@ -36,23 +36,13 @@
 #include <debug/debug_ring/debug_ring.h>
 #include <memory_manager/memory_manager.h>
 
-#include <intrinsics.h>
-
 extern "C" int64_t
 private_init(void)
-{
-#ifdef BF_INTEL_X64
-    ::intel_x64::cr0::numeric_error::enable();
-#endif
-
-    return ENTRY_SUCCESS;
-}
+{ return ENTRY_SUCCESS; }
 
 extern "C" int64_t
 private_fini(void)
-{
-    return ENTRY_SUCCESS;
-}
+{ return ENTRY_SUCCESS; }
 
 extern "C" int64_t
 private_add_md(struct memory_descriptor *md) noexcept

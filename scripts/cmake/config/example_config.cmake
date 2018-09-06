@@ -94,9 +94,12 @@ set(ENABLE_EXTENDED_APIS_EXAMPLE_HOOK OFF)
 # Override VMM
 #
 # If the override VMM is set, this VMM will be used instead of the default VMM
-# based on the current configuration.
+# based on the current configuration. Note that you can also set the override
+# VMM target to use, which might be needed for EFI so that EFI knows which
+# target to wait for
 #
 # set(OVERRIDE_VMM <name>)
+# set(OVERRIDE_VMM_TARGET <name>)
 
 # Override Compiler Warnings
 #
@@ -196,7 +199,7 @@ endif()
 # ------------------------------------------------------------------------------
 
 if(ENABLE_EXTENDED_APIS)
-    set_bfm_vmm(eapis_vmm)
+    set_bfm_vmm(eapis_bfvmm)
     list(APPEND EXTENSION
         ${CMAKE_CURRENT_LIST_DIR}/extended_apis
     )
@@ -246,5 +249,9 @@ endif()
 # ------------------------------------------------------------------------------
 
 if(OVERRIDE_VMM)
-    set_bfm_vmm(${OVERRIDE_VMM})
+    if(OVERRIDE_VMM_TARGET)
+        set_bfm_vmm(${OVERRIDE_VMM} TARGET ${OVERRIDE_VMM_TARGET})
+    else()
+        set_bfm_vmm(${OVERRIDE_VMM})
+    endif()
 endif()

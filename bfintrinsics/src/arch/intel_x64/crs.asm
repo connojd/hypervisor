@@ -70,3 +70,13 @@ global _write_cr8
 _write_cr8:
     mov cr8, rdi
     ret
+
+global _xsetbv
+_xsetbv:
+    mov rax, rdi
+    mov rdx, rdi
+    shr rdx, 32
+    mov rcx, 0
+    xsetbv
+
+    ret
