@@ -404,7 +404,7 @@ common_start_vmm(void)
 
     for (cpuid = 0, g_num_cpus_started = 0; cpuid < platform_num_cpus(); cpuid++) {
         ret = platform_call_vmm_on_core(
-                  cpuid, BF_REQUEST_VMM_INIT, (uint64_t)cpuid, 0);
+                  (uint64_t)cpuid, BF_REQUEST_VMM_INIT, (uint64_t)cpuid, 0);
 
         if (ret != BF_SUCCESS) {
             goto failure;
@@ -441,7 +441,7 @@ common_stop_vmm(void)
 
     for (cpuid = g_num_cpus_started - 1; cpuid >= 0 ; cpuid--) {
         ret = platform_call_vmm_on_core(
-            cpuid, BF_REQUEST_VMM_FINI, (uint64_t)cpuid, 0);
+            (uint64_t)cpuid, BF_REQUEST_VMM_FINI, (uint64_t)cpuid, 0);
 
         if (ret != BFELF_SUCCESS) {
             goto corrupted;

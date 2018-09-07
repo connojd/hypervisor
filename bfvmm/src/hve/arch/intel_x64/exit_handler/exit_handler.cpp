@@ -40,6 +40,9 @@
 #include <memory_manager/arch/x64/cr3.h>
 #include <memory_manager/memory_manager.h>
 
+volatile bool init_done{false};
+volatile bool sipi_done{false};
+
 // -----------------------------------------------------------------------------
 // C Prototypes
 // -----------------------------------------------------------------------------
@@ -474,13 +477,20 @@ handle_invd(gsl::not_null<bfvmm::intel_x64::vmcs *> vmcs)
 static bool
 handle_rdmsr(gsl::not_null<bfvmm::intel_x64::vmcs *> vmcs)
 {
-if (vmcs->save_state()->rcx == 0x00000000000000fe) {
-    bffield_hex(vmcs->save_state()->rcx);
-}
     auto val =
         emulate_rdmsr(
             gsl::narrow_cast<::x64::msrs::field_type>(vmcs->save_state()->rcx)
         );
+
+// if (vmcs->save_state()->rcx >= 0x800 && vmcs->save_state()->rcx <= 0x900) {
+//     if (vmcs->save_state()->rcx != 0x0000000000000839 && vmcs->save_state()->rcx != 0x000000000000080b) {
+//         bfdebug_transaction(0, [&](std::string * msg) {
+//             bfdebug_info(0, "rdmsr *", msg);
+//             bfdebug_subnhex(0, "msr", vmcs->save_state()->rcx, msg);
+//             bfdebug_subnhex(0, "val", val, msg);
+//         });
+//     }
+// }
 
     vmcs->save_state()->rax = ((val >> 0x00) & 0x00000000FFFFFFFF);
     vmcs->save_state()->rdx = ((val >> 0x20) & 0x00000000FFFFFFFF);
@@ -496,15 +506,50 @@ handle_wrmsr(gsl::not_null<bfvmm::intel_x64::vmcs *> vmcs)
     val |= ((vmcs->save_state()->rax & 0x00000000FFFFFFFF) << 0x00);
     val |= ((vmcs->save_state()->rdx & 0x00000000FFFFFFFF) << 0x20);
 
-// if (vmcs->save_state()->rcx != 0x000000000000080b && vmcs->save_state()->rcx != 0x00000000000006e0 && vmcs->save_state()->rcx != 0x000000000000003b) {
-//     bffield_hex(vmcs->save_state()->rcx);
-//     bffield_hex(val);
+if (vmcs->save_state()->rcx == 0x0000000000000830) {
+
+    // Assert
+    if ((val & 0x000000000000FF00) == 0x000000000000C500) {
+        init_done = false;
+        sipi_done = false;
+    }
+
+    // Startup
+    if ((val & 0x0000000000000F00) == 0x0000000000000600) {
+        if (!sipi_done) {
+            sipi_done = true;
+            return advance(vmcs);
+        }
+    }
+}
+
+// if (vmcs->save_state()->rcx >= 0x800 && vmcs->save_state()->rcx <= 0x900) {
+//     if (vmcs->save_state()->rcx != 0x0000000000000839 && vmcs->save_state()->rcx != 0x000000000000080b) {
+//         bfdebug_transaction(0, [&](std::string * msg) {
+//             bfdebug_info(0, "wrmsr", msg);
+//             bfdebug_subnhex(0, "msr", vmcs->save_state()->rcx, msg);
+//             bfdebug_subnhex(0, "val", val, msg);
+//         });
+//     }
 // }
 
     emulate_wrmsr(
         gsl::narrow_cast<::x64::msrs::field_type>(vmcs->save_state()->rcx),
         val
     );
+
+if (vmcs->save_state()->rcx == 0x0000000000000830) {
+
+    // Assert
+    if ((val & 0x000000000000FF00) == 0x000000000000C500) {
+        while(!init_done);
+    }
+
+    // // Startup
+    // if ((val & 0x0000000000000F00) == 0x0000000000000600) {
+    //     sipi_done = true;
+    // }
+}
 
     return advance(vmcs);
 }

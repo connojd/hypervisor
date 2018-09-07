@@ -24,7 +24,10 @@
 #include <bfelf_loader.h>
 #include <common.h>
 
-#include "mp_service.h"
+#include <efi.h>
+#include <efilib.h>
+#include "MpService.h"
+
 EFI_MP_SERVICES_PROTOCOL *g_mp_services = nullptr;
 
 void _set_ne(void);
@@ -159,7 +162,7 @@ platform_num_cpus(void)
         return 0;
     }
 
-    return NumberOfProcessors;
+    return (int64_t)NumberOfProcessors;
 }
 
 struct call_vmm_args {

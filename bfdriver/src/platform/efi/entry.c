@@ -36,7 +36,7 @@ uint64_t g_vcpuid = 0;
 
 struct pmodule_t {
     const char *data;
-    int64_t size;
+    uint64_t size;
 };
 
 uint64_t g_num_pmodules = 0;
@@ -47,7 +47,7 @@ struct pmodule_t pmodules[MAX_NUM_MODULES] = {{0}};
 /* -------------------------------------------------------------------------- */
 
 static int64_t
-ioctl_add_module(const char *file, int64_t len)
+ioctl_add_module(const char *file, uint64_t len)
 {
     char *buf;
     int64_t ret;
