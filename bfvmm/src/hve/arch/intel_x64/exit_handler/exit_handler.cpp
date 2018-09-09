@@ -40,8 +40,8 @@
 #include <memory_manager/arch/x64/cr3.h>
 #include <memory_manager/memory_manager.h>
 
-volatile bool init_done{false};
-volatile bool sipi_done{false};
+//volatile bool init_done{false};
+//volatile bool sipi_done{false};
 
 // -----------------------------------------------------------------------------
 // C Prototypes
@@ -506,22 +506,22 @@ handle_wrmsr(gsl::not_null<bfvmm::intel_x64::vmcs *> vmcs)
     val |= ((vmcs->save_state()->rax & 0x00000000FFFFFFFF) << 0x00);
     val |= ((vmcs->save_state()->rdx & 0x00000000FFFFFFFF) << 0x20);
 
-if (vmcs->save_state()->rcx == 0x0000000000000830) {
-
-    // Assert
-    if ((val & 0x000000000000FF00) == 0x000000000000C500) {
-        init_done = false;
-        sipi_done = false;
-    }
-
-    // Startup
-    if ((val & 0x0000000000000F00) == 0x0000000000000600) {
-        if (!sipi_done) {
-            sipi_done = true;
-            return advance(vmcs);
-        }
-    }
-}
+// if (vmcs->save_state()->rcx == 0x0000000000000830) {
+//
+//     // Assert
+//     if ((val & 0x000000000000FF00) == 0x000000000000C500) {
+//         init_done = false;
+//         sipi_done = false;
+//     }
+//
+//     // Startup
+//     if ((val & 0x0000000000000F00) == 0x0000000000000600) {
+//         if (!sipi_done) {
+//             sipi_done = true;
+//             return advance(vmcs);
+//         }
+//     }
+// }
 
 // if (vmcs->save_state()->rcx >= 0x800 && vmcs->save_state()->rcx <= 0x900) {
 //     if (vmcs->save_state()->rcx != 0x0000000000000839 && vmcs->save_state()->rcx != 0x000000000000080b) {
@@ -538,18 +538,18 @@ if (vmcs->save_state()->rcx == 0x0000000000000830) {
         val
     );
 
-if (vmcs->save_state()->rcx == 0x0000000000000830) {
-
-    // Assert
-    if ((val & 0x000000000000FF00) == 0x000000000000C500) {
-        while(!init_done);
-    }
-
-    // // Startup
-    // if ((val & 0x0000000000000F00) == 0x0000000000000600) {
-    //     sipi_done = true;
-    // }
-}
+//if (vmcs->save_state()->rcx == 0x0000000000000830) {
+//
+//    // Assert
+//    if ((val & 0x000000000000FF00) == 0x000000000000C500) {
+//        while(!init_done);
+//    }
+//
+//    // // Startup
+//    // if ((val & 0x0000000000000F00) == 0x0000000000000600) {
+//    //     sipi_done = true;
+//    // }
+//}
 
     return advance(vmcs);
 }
@@ -856,6 +856,24 @@ exit_handler::handle(
     bfvmm::intel_x64::exit_handler *exit_handler) noexcept
 {
     using namespace ::intel_x64::vmcs;
+
+//    if (exit_handler->m_vmcs->save_state()->vcpuid != 0) {
+//        auto reason = exit_reason::basic_exit_reason::get();
+//        switch (reason) {
+//            case exit_reason::basic_exit_reason::cpuid:
+//                bfdebug_nhex(0, "cpuid leaf:", exit_handler->m_vmcs->save_state()->rax);
+//                break;
+//            case exit_reason::basic_exit_reason::rdmsr:
+//                bfdebug_nhex(0, "rdmsr:", exit_handler->m_vmcs->save_state()->rcx);
+//                break;
+//            case exit_reason::basic_exit_reason::wrmsr:
+//                bfdebug_nhex(0, "wrmsr:", exit_handler->m_vmcs->save_state()->rcx);
+//                bfdebug_subnhex(0, "val:", (exit_handler->m_vmcs->save_state()->rdx << 32) | exit_handler->m_vmcs->save_state()->rax);
+//                break;
+//            default:
+//                break;
+//        }
+//    }
 
     guard_exceptions([&]() {
         const auto &handlers =

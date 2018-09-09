@@ -116,6 +116,13 @@ default_esr(uint64_t vector, uint64_t ec, bool ec_valid, uint64_t *regs) noexcep
         bferror_subnhex(0, "cr2   ", ::intel_x64::cr2::get(), msg);
         bferror_subnhex(0, "cr3   ", ::intel_x64::cr3::get(), msg);
         bferror_subnhex(0, "cr4   ", ::intel_x64::cr4::get(), msg);
+
+        uint8_t *insn = (uint8_t *)regs[32];
+
+        for (auto i = 0; i < 16; i++) {
+            printf("%02x", insn[i]);
+        }
+        printf("\n");
     });
 
     ::x64::pm::halt();
