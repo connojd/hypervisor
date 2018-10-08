@@ -1325,6 +1325,11 @@ bfelf_file_init(const char *file, uint64_t filesz, struct bfelf_file_t *ef)
         return bfinvalid_argument("filesz invalid");
     }
 
+    /*
+     * Ensure Bareflank-specific fields are initialized properly
+     */
+    platform_memset(bfrcast(char *, ef), 0, sizeof(*ef));
+
     ef->file = file;
     ef->filesz = filesz;
 
