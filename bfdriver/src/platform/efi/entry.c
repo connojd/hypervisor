@@ -124,6 +124,23 @@ failure:
     return BF_IOCTL_FAILURE;
 }
 
+static long
+ioctl_load_vmlinux(EFI_HANDLE image, uint8_t **buf, size_t *len)
+{
+    int64_t ret;
+
+    *buf = NULL;
+    *len = 0;
+
+    ret = platform_load_vmlinux(image, buf, len);
+
+    if (ret != EFI_SUCCESS) {
+        BFDEBUG("IOCTL_LOAD_VMLINUX: failed\n");
+        return BF_IOCTL_FAILURE;
+    }
+}
+
+
 /* -------------------------------------------------------------------------- */
 /* Entry / Exit                                                               */
 /* -------------------------------------------------------------------------- */
@@ -131,7 +148,12 @@ failure:
 EFI_STATUS
 efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
 {
-	InitializeLib(image, systab);
+    int64_t ret;
+
+    uint8_t *vm = NULL;
+    uint64_t vm_len = 0;
+
+    InitializeLib(image, systab);
 
     Print(L"\n");
     Print(L"  ___                __ _           _   \n");
@@ -150,5 +172,10 @@ efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
     ioctl_load_vmm();
     ioctl_start_vmm();
 
-	return EFI_SUCCESS;
+    ret = ioctl_load_vmlinux(image, &vm, &vm_len);
+    if (ret != EFI_SUCCESS) {
+        return EFI_ABORTED;
+    }
+
+    return EFI_SUCCESS;
 }
