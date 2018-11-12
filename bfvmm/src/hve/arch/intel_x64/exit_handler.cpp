@@ -244,6 +244,7 @@ emulate_wrmsr(::x64::msrs::field_type msr, ::x64::msrs::value_type val)
             return;
 
         case ::intel_x64::msrs::ia32_perf_global_ctrl::addr:
+            guest_ia32_perf_global_ctrl::reserved::set_if_exists(val, 0);
             guest_ia32_perf_global_ctrl::set_if_exists(val);
             return;
 
