@@ -19,20 +19,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+if(BUILD_SHARED_LIBS)
+    invalid_config("Shared libraries not supported")
+endif()
+
 # ------------------------------------------------------------------------------
 # Unit Testing
 # ------------------------------------------------------------------------------
 
 if(ENABLE_BUILD_TEST AND NOT BUILD_SHARED_LIBS)
     invalid_config("BUILD_SHARED_LIBS must be enabled if ENABLE_BUILD_TEST is enabled")
-endif()
-
-# ------------------------------------------------------------------------------
-# VMM build type
-# ------------------------------------------------------------------------------
-
-if(NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
-    invalid_config("BUILD_SHARED_LIBS or BUILD_STATIC_LIBS must be enabled")
 endif()
 
 # ------------------------------------------------------------------------------
