@@ -24,9 +24,7 @@
 
 #include <cstdint>
 
-namespace bfvmm
-{
-namespace intel_x64
+namespace bfvmm::intel_x64
 {
 
 /// @cond
@@ -83,7 +81,6 @@ struct save_state_t {
 #pragma pack(pop)
 /// @endcond
 
-}
 }
 
 #endif
