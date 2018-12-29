@@ -19,30 +19,23 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.10)
 project(bfunwind C CXX)
 
-include(${SOURCE_CMAKE_DIR}/project.cmake)
-init_project(
-    INCLUDES ${CMAKE_CURRENT_LIST_DIR}/../include
-    TIDY_EXCLUSIONS -cppcoreguidelines-pro*
-)
-
-list(APPEND SOURCES
+init_project(bfunwind)
+target_sources(bfunwind PRIVATE
     dwarf4.cpp
     eh_frame.cpp
     ia64_cxx_abi.cpp
     registers_intel_x64.asm
 )
-
-add_static_library(
-    bfunwind
-    SOURCES ${SOURCES}
-    DEFINES STATIC_SYSCALL
+target_include_directories(bfunwind SYSTEM PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/../include>
 )
-
-#add_library(bfunwind_shared SHARED ${SOURCES})
-#target_compile_definitions(bfunwind_shared INTERFACE SHARED_SYSCALL)
-#
-#install(TARGETS bfunwind_shared DESTINATION lib)
+target_link_libraries(bfunwind PUBLIC
+    bfcrt
+    bfpthread
+    bfsyscall
+)
 install(FILES ../include/ia64_cxx_abi.h DESTINATION include RENAME unwind.h)
+fini_project(bfunwind)

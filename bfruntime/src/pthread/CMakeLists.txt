@@ -19,18 +19,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.10)
 project(bfpthread C CXX)
 
-include(${SOURCE_CMAKE_DIR}/project.cmake)
-init_project()
-
-add_static_library(
-    bfpthread
-    SOURCES pthread.cpp threadcontext.asm
-    DEFINES STATIC_PTHREAD
-)
-
-#add_library(bfpthread_shared SHARED pthread.cpp threadcontext.asm)
-#target_compile_definitions(bfpthread_shared INTERFACE SHARED_PTHREAD)
-#install(TARGETS bfpthread_shared DESTINATION lib)
+init_project(bfpthread)
+target_sources(bfpthread PRIVATE pthread.cpp threadcontext.asm)
+fini_project(bfpthread)
