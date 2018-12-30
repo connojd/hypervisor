@@ -19,7 +19,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-if(ENABLE_BUILD_TEST)
+if(BUILD_TEST)
     message(STATUS "Including dependency: catch")
 
     download_dependency(

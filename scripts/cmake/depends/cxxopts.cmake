@@ -19,7 +19,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-if(ENABLE_BUILD_USERSPACE)
+if(BUILD_USERSPACE)
     message(STATUS "Including dependency: cxxopts")
 
     download_dependency(
@@ -29,7 +29,7 @@ if(ENABLE_BUILD_USERSPACE)
     )
 endif()
 
-if(ENABLE_BUILD_USERSPACE)
+if(BUILD_USERSPACE)
     add_dependency(
         cxxopts userspace
     )

@@ -444,7 +444,7 @@ public:
         this->set_limit(index, limit);
     }
 
-#ifndef ENABLE_BUILD_TEST
+#ifndef BUILD_TEST
 private:
 #endif
 

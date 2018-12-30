@@ -29,7 +29,7 @@ endif()
 # Target Prototypes
 # ------------------------------------------------------------------------------
 
-if(ENABLE_BUILD_TEST)
+if(BUILD_TEST)
     add_custom_target(unittest)
 endif()
 
@@ -113,7 +113,7 @@ endif()
 # BFM
 # ------------------------------------------------------------------------------
 
-if(NOT WIN32 AND ENABLE_BUILD_VMM AND ENABLE_BUILD_USERSPACE)
+if(NOT WIN32 AND BUILD_VMM AND BUILD_USERSPACE)
     add_custom_target_category("Bareflank Manager")
 
     add_custom_target(
@@ -205,7 +205,7 @@ endif()
 # Unix
 # ------------------------------------------------------------------------------
 
-if(UNIX AND ENABLE_BUILD_VMM AND ENABLE_BUILD_USERSPACE)
+if(UNIX AND BUILD_VMM AND BUILD_USERSPACE)
     add_custom_target(
         oppss
         COMMAND sync
@@ -259,7 +259,7 @@ add_custom_target_info(
 # Test
 # ------------------------------------------------------------------------------
 
-if(ENABLE_BUILD_TEST)
+if(BUILD_TEST)
     add_custom_target_category("Unit Testing")
 
     add_custom_target_info(

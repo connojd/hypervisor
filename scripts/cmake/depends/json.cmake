@@ -19,7 +19,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-if(ENABLE_BUILD_VMM OR ENABLE_BUILD_USERSPACE OR ENABLE_BUILD_TEST)
+if(BUILD_VMM OR BUILD_USERSPACE OR BUILD_TEST)
     message(STATUS "Including dependency: json")
 
     download_dependency(
@@ -33,21 +33,21 @@ list(APPEND JSON_CONFIGURE_FLAGS
     -DJSON_BuildTests=OFF
 )
 
-if(ENABLE_BUILD_VMM)
+if(BUILD_VMM)
     add_dependency(
         json vmm
         CMAKE_ARGS  ${JSON_CONFIGURE_FLAGS}
     )
 endif()
 
-if(ENABLE_BUILD_USERSPACE)
+if(BUILD_USERSPACE)
     add_dependency(
         json userspace
         CMAKE_ARGS  ${JSON_CONFIGURE_FLAGS}
     )
 endif()
 
-if(ENABLE_BUILD_TEST)
+if(BUILD_TEST)
     add_dependency(
         json test
         CMAKE_ARGS  ${JSON_CONFIGURE_FLAGS}
