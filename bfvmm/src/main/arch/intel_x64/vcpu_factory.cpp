@@ -20,8 +20,8 @@
 // SOFTWARE.
 
 #include <bfexports.h>
-#include <bfvmm/vcpu/vcpu_factory.h>
-#include <bfvmm/hve/arch/intel_x64/vcpu.h>
+#include <vcpu/vcpu_factory.h>
+#include <hve/arch/intel_x64/vcpu.h>
 
 namespace bfvmm
 {

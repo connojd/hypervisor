@@ -23,13 +23,21 @@ cmake_minimum_required(VERSION 3.10)
 project(bfcrt C CXX)
 
 init_project(bfcrt)
-set(ARCH ${BUILD_TARGET_ARCH})
-set(NOT_WIN32 $<NOT:$<BOOL:${WIN32}>>)
-target_link_libraries(bfcrt PUBLIC bfutil)
+
+set(ARM $<STREQUAL:${BUILD_TARGET_ARCH},aarch64>)
+set(X64 $<STREQUAL:${BUILD_TARGET_ARCH},x86_64>)
+set(WIN $<BOOL:${WIN32}>)
+set(X64_AND_NOT_WIN $<AND:${X64},$<NOT:${WIN}>>)
+
 target_compile_options(bfcrt PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Wno-main>)
+target_link_libraries(bfcrt PUBLIC bfutil)
+target_link_options(bfcrt INTERFACE
+    "SHELL:--whole-archive ${VMM_PREFIX_PATH}/lib/libbfcrt.a --no-whole-archive"
+)
 target_sources(bfcrt PRIVATE
     crt.cpp
-    $<$<AND:$<STREQUAL:${ARCH},x86_64>,${NOT_WIN32}>:start_x64.asm>
-    $<$<STREQUAL:${BUILD_TARGET_ARCH},aarch64>:start_x64.S>
+    $<${X64_AND_NOT_WIN}:start_x64.asm>
+    $<${ARM}:start_x64.S>
 )
+
 fini_project()
