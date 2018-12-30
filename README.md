@@ -174,7 +174,7 @@ A UEFI application version of Bareflank may be compiled on either Linux or
 Cygwin (Visual Studio is currently not supported). To compile for UEFI, add the 
 following to CMake when configuring:
 ```
--DENABLE_BUILD_EFI=ON
+-DBUILD_EFI=ON
 ```
 It should be noted that unit tests must be disabled, and static builds are currently
 required (the example config provides an example of how to configure Bareflank as 
