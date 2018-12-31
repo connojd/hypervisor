@@ -46,6 +46,15 @@ if(BUILD_TEST)
 endif()
 
 # ------------------------------------------------------------------------------
+# BFM VMM
+# ------------------------------------------------------------------------------
+
+set_bfm_vmm(${DEFAULT_VMM} DEFAULT TARGET vmm::vmm)
+message(STATUS "Bareflank Manager VMM")
+message(STATUS "    vmm: ${BFM_VMM}")
+message(STATUS "    target: ${BFM_VMM_TARGET}")
+
+# ------------------------------------------------------------------------------
 # Superbuild include files
 # ------------------------------------------------------------------------------
 
@@ -57,15 +66,6 @@ include(${SOURCE_CMAKE_DIR}/targets.cmake)
 # ------------------------------------------------------------------------------
 
 add_project_include(${SOURCE_CMAKE_DIR}/macros.cmake)
-
-# ------------------------------------------------------------------------------
-# BFM VMM
-# ------------------------------------------------------------------------------
-
-set_bfm_vmm(${DEFAULT_VMM} DEFAULT)
-message(STATUS "Bareflank Manager VMM")
-message(STATUS "    vmm: ${BFM_VMM}")
-message(STATUS "    target: ${BFM_VMM_TARGET}")
 
 # ------------------------------------------------------------------------------
 # General Dependencies
@@ -108,12 +108,14 @@ if(NOT WIN32)
         add_subproject(
             bfdso vmm
             SOURCE_DIR ${SOURCE_BFRUNTIME_DIR}/src/dso
+            DEPENDS bfroot
         )
     else()
         add_subproject(
             bfdso vmm
             SOURCE_DIR ${SOURCE_BFRUNTIME_DIR}/src/dso
             DEPENDS binutils
+            DEPENDS bfroot
         )
     endif()
 endif()
@@ -159,20 +161,21 @@ if(BUILD_VMM)
     add_subproject(bfvmm vmm DEPENDS bfintrinsics)
 endif()
 
-## ------------------------------------------------------------------------------
-## Unit Tests
-## ------------------------------------------------------------------------------
-#
-##if(BUILD_TEST)
-##    add_subproject(
-##        bfutil test
-##        DEPENDS gsl
-##        DEPENDS json
-##        DEPENDS catch
-##        DEPENDS hippomocks
-##    )
-##endif()
-##
+# ------------------------------------------------------------------------------
+# Unit Tests
+# ------------------------------------------------------------------------------
+
+if(BUILD_TEST)
+    add_subproject(
+        bfutil test
+        DEPENDS gsl
+        DEPENDS json
+        DEPENDS catch
+        DEPENDS hippomocks
+        DEPENDS bfroot
+    )
+endif()
+
 ##if(BUILD_TEST AND NOT WIN32)
 ##    add_subproject(
 ##        bfdummy vmm
@@ -210,26 +213,32 @@ endif()
 ##        DEPENDS bfutil
 ##    )
 ##endif()
-##
-### ------------------------------------------------------------------------------
-### Userspace Components
-### ------------------------------------------------------------------------------
-##
-#if(BUILD_USERSPACE)
-#    #    add_subproject(
-#    #        bfintrinsics userspace
-#    #        DEPENDS gsl
-#    #        DEPENDS json
-#    #    )
-#
-##    add_subproject(
-##        bfm userspace
-##        DEPENDS gsl
-##        DEPENDS json
-##        DEPENDS cxxopts
-##    )
-#endif()
-##
+
+# ------------------------------------------------------------------------------
+# Userspace Components
+# ------------------------------------------------------------------------------
+
+if(BUILD_USERSPACE)
+    add_subproject(
+        bfutil userspace
+        DEPENDS bfroot
+        SOURCE_DIR ${SOURCE_BFUTIL_DIR}
+    )
+    add_subproject(
+        bfintrinsics userspace
+        DEPENDS gsl
+        DEPENDS json
+        DEPENDS bfutil
+    )
+    add_subproject(
+        bfm userspace
+        DEPENDS gsl
+        DEPENDS json
+        DEPENDS cxxopts
+        DEPENDS bfintrinsics
+    )
+endif()
+
 ### ------------------------------------------------------------------------------
 ### External Components
 ### ------------------------------------------------------------------------------

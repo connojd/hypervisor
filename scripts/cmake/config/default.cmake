@@ -141,7 +141,7 @@ macro(set_bfm_vmm NAME)
 
     if(NOT ARG_DEFAULT OR (ARG_DEFAULT AND NOT BFM_VMM_TARGET))
         if(ARG_TARGET)
-            set(BFM_VMM_TARGET "${ARG_TARGET}_${VMM_PREFIX}")
+            set(BFM_VMM_TARGET "${ARG_TARGET}")
         else()
             set(BFM_VMM_TARGET "${NAME}_main_${VMM_PREFIX}")
         endif()
@@ -409,6 +409,8 @@ set(EXPORT_DIR ${CMAKE_BINARY_DIR}/export
     CACHE INTERNAL
     "Target export directory"
 )
+
+set(PKG_FILE ${EXPORT_DIR}/pkg.list)
 
 # ------------------------------------------------------------------------------
 # Target Properties
@@ -875,7 +877,7 @@ set(GNUEFI_URL_MD5 "3cd10dc9c14f4a3891f8537fd78ed04f"
 add_config(
     CONFIG_NAME DEFAULT_VMM
     CONFIG_TYPE STRING
-    DEFAULT_VAL bfvmm
+    DEFAULT_VAL vmm
     DESCRIPTION "Default vmm"
 )
 

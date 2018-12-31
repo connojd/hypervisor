@@ -24,29 +24,26 @@ project(bfintrinsics C CXX)
 
 init_project(bfintrinsics)
 
-set(X64 $<STREQUAL:${BUILD_TARGET_ARCH},x86_64>)
-set(VMM $<AND:$<STREQUAL:${PREFIX},vmm>,$<BOOL:${BUILD_VMM}>>)
-set(VMM_X64 $<AND:${VMM},${X64}>)
-
 target_link_libraries(bfintrinsics PUBLIC ${PREFIX}::bfutil)
+
 target_sources(bfintrinsics PRIVATE
-    $<${VMM_X64}:arch/x64/cache.asm>
-    $<${VMM_X64}:arch/x64/cpuid.asm>
-    $<${VMM_X64}:arch/x64/gdt.asm>
-    $<${VMM_X64}:arch/x64/idt.asm>
-    $<${VMM_X64}:arch/x64/msrs.asm>
-    $<${VMM_X64}:arch/x64/pm.asm>
-    $<${VMM_X64}:arch/x64/portio.asm>
-    $<${VMM_X64}:arch/x64/rdtsc.asm>
-    $<${VMM_X64}:arch/x64/rflags.asm>
-    $<${VMM_X64}:arch/x64/srs.asm>
-    $<${VMM_X64}:arch/x64/tlb.asm>
-    $<${VMM_X64}:arch/intel_x64/barrier.asm>
-    $<${VMM_X64}:arch/intel_x64/bit.asm>
-    $<${VMM_X64}:arch/intel_x64/crs.asm>
-    $<${VMM_X64}:arch/intel_x64/drs.asm>
-    $<${VMM_X64}:arch/intel_x64/pause.asm>
-    $<${VMM_X64}:arch/intel_x64/vmx.asm>
+    arch/x64/cache.asm
+    arch/x64/cpuid.asm
+    arch/x64/gdt.asm
+    arch/x64/idt.asm
+    arch/x64/msrs.asm
+    arch/x64/pm.asm
+    arch/x64/portio.asm
+    arch/x64/rdtsc.asm
+    arch/x64/rflags.asm
+    arch/x64/srs.asm
+    arch/x64/tlb.asm
+    arch/intel_x64/barrier.asm
+    arch/intel_x64/bit.asm
+    arch/intel_x64/crs.asm
+    arch/intel_x64/drs.asm
+    arch/intel_x64/pause.asm
+    arch/intel_x64/vmx.asm
 )
 
 install(DIRECTORY ../include/ DESTINATION include)
