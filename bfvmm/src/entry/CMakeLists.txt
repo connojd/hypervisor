@@ -20,6 +20,11 @@
 # SOFTWARE.
 
 add_library(bfvmm_entry)
+
 target_sources(bfvmm_entry PRIVATE entry.cpp)
-target_link_libraries(bfvmm_entry PUBLIC ${PREFIX}::bfvmm)
-install(TARGETS bfvmm_entry DESTINATION lib EXPORT bfvmm-${PREFIX}-targets)
+target_link_libraries(bfvmm_entry PUBLIC vmm::bfvmm)
+target_include_directories(bfvmm_entry PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/../../include>
+)
+
+install(TARGETS bfvmm_entry DESTINATION lib EXPORT bfvmm-vmm-targets)

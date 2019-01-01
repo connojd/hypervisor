@@ -30,3 +30,5 @@ file(STRINGS "${PKG_FILE}" pkg_list)
 foreach(pkg IN LISTS pkg_list)
     find_package(${pkg} REQUIRED)
 endforeach(pkg)
+
+enable_testing()

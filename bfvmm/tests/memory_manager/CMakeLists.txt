@@ -19,40 +19,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-do_test(test_memory_manager
-    SOURCES test_memory_manager.cpp
-    DEPENDS bfvmm_memory_manager
-    DEFINES STATIC_MEMORY_MANAGER
-)
-
-do_test(test_buddy_allocator
-    SOURCES test_buddy_allocator.cpp
-    DEPENDS bfvmm_memory_manager
-    DEFINES STATIC_MEMORY_MANAGER
-)
+do_test(test_memory_manager SOURCES test_memory_manager.cpp)
+do_test(test_buddy_allocator SOURCES test_buddy_allocator.cpp)
 
 if(NOT WIN32)
-    do_test(test_object_allocator
-        SOURCES test_object_allocator.cpp
-        DEPENDS bfvmm_memory_manager
-        DEFINES STATIC_MEMORY_MANAGER
-    )
+    do_test(test_object_allocator SOURCES test_object_allocator.cpp)
 endif()
 
 if(${BUILD_TARGET_ARCH} STREQUAL "x86_64")
-    do_test(test_helpers
-        SOURCES arch/x64/cr3/test_helpers.cpp
-        DEPENDS bfvmm_memory_manager
-        DEFINES STATIC_MEMORY_MANAGER
-    )
-
-    do_test(test_mmap
-        SOURCES arch/x64/cr3/test_mmap.cpp
-        DEPENDS bfvmm_memory_manager
-        DEFINES STATIC_MEMORY_MANAGER
-    )
-elseif(${BUILD_TARGET_ARCH} STREQUAL "aarch64")
-    message(WARNING "Unimplemented")
-else()
-    message(FATAL_ERROR "Unsupported archiecture")
+    do_test(test_helpers SOURCES arch/x64/cr3/test_helpers.cpp)
+    do_test(test_mmap SOURCES arch/x64/cr3/test_mmap.cpp)
 endif()

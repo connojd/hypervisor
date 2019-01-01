@@ -19,12 +19,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-cmake_minimum_required(VERSION 3.6)
-project(bfvmm_test C CXX)
+cmake_minimum_required(VERSION 3.10)
+project(bfvmm C CXX)
 
-include(${SOURCE_CMAKE_DIR}/project.cmake)
-init_project(
-    INCLUDES ${CMAKE_CURRENT_LIST_DIR}/../include
+init_project(bfvmm INTERFACE)
+
+target_link_libraries(bfvmm INTERFACE test::bfutil)
+target_include_directories(bfvmm SYSTEM INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/../include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/../../bfutil/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/../../bfintrinsics/include>
 )
 
 add_subdirectory(../src/debug ${CMAKE_CURRENT_BINARY_DIR}/src/debug)
@@ -32,9 +36,18 @@ add_subdirectory(../src/hve ${CMAKE_CURRENT_BINARY_DIR}/src/hve)
 add_subdirectory(../src/memory_manager ${CMAKE_CURRENT_BINARY_DIR}/src/memory_manager)
 add_subdirectory(../src/vcpu ${CMAKE_CURRENT_BINARY_DIR}/src/vcpu)
 
+target_link_libraries(bfvmm INTERFACE
+    bfvmm_debug
+    bfvmm_hve
+    bfvmm_memory_manager
+    bfvmm_vcpu
+)
+
 add_subdirectory(debug)
 add_subdirectory(hve)
 add_subdirectory(memory_manager)
 add_subdirectory(vcpu)
 
 install(DIRECTORY ../include/test/ DESTINATION include/bfvmm/test)
+
+fini_project()

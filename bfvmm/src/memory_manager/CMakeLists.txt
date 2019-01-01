@@ -20,11 +20,13 @@
 # SOFTWARE.
 
 add_library(bfvmm_memory_manager)
+
 target_link_libraries(bfvmm_memory_manager PUBLIC ${PREFIX}::bfvmm)
 target_sources(bfvmm_memory_manager PRIVATE
     memory_manager.cpp
     $<$<STREQUAL:${BUILD_TARGET_ARCH},x86_64>:arch/x64/cr3/helpers.cpp>
 )
+
 install(
     TARGETS bfvmm_memory_manager
     DESTINATION lib

@@ -20,7 +20,9 @@
 # SOFTWARE.
 
 add_library(bfvmm_vcpu)
+
 target_sources(bfvmm_vcpu PRIVATE vcpu.cpp)
 target_link_libraries(bfvmm_vcpu PUBLIC ${PREFIX}::bfvmm)
+
 install(TARGETS bfvmm_vcpu DESTINATION lib EXPORT bfvmm-${PREFIX}-targets)
 install(DIRECTORY ../../include/vcpu/ DESTINATION include/bfvmm/vcpu)
