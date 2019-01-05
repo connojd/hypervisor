@@ -20,9 +20,9 @@
 # SOFTWARE.
 
 cmake_minimum_required(VERSION 3.10)
-project(bfpthread C CXX)
+project(bfdso C CXX)
 
-init_project(bfpthread)
-target_sources(bfpthread PRIVATE pthread.cpp threadcontext.asm)
-target_link_libraries(bfpthread PUBLIC ${PREFIX}::bfutil)
+init_project(bfdso)
+target_sources(bfdso PRIVATE dso.cpp)
+target_link_libraries(bfdso PUBLIC vmm::bfroot)
 fini_project()
