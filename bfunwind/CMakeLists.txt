@@ -19,30 +19,26 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-cmake_minimum_required(VERSION 3.6)
-project(bfm_test C CXX)
+cmake_minimum_required(VERSION 3.10)
+project(bfunwind C CXX)
 
-include(${SOURCE_CMAKE_DIR}/project.cmake)
-init_project(
-    INCLUDES ../include
+init_project(bfunwind)
+
+set(BUILD $<BOOL:$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>>)
+set(C_CXX $<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>)
+set(BUILD_INCLUDE $<AND:${C_CXX},${BUILD}>)
+
+target_link_libraries(bfunwind PUBLIC ${PREFIX}::bfutil)
+target_include_directories(bfunwind PUBLIC
+    $<${BUILD_INCLUDE}:${CMAKE_CURRENT_LIST_DIR}/include>
+)
+target_sources(bfunwind PRIVATE
+    src/dwarf4.cpp
+    src/eh_frame.cpp
+    src/ia64_cxx_abi.cpp
+    src/registers_intel_x64.asm
 )
 
-add_static_library(
-    test_support
-    SOURCES ../src/main.cpp
-    SOURCES ../src/command_line_parser.cpp
-    SOURCES ../src/ioctl_driver.cpp
-    ALWAYS
-)
+install(FILES include/ia64_cxx_abi.h DESTINATION include RENAME unwind.h)
 
-do_test(test_command_line_parser
-    DEPENDS test_support
-)
-
-do_test(test_ioctl_driver
-    DEPENDS test_support
-)
-
-do_test(test_main
-    DEPENDS test_support
-)
+fini_project()

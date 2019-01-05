@@ -31,7 +31,6 @@ target_link_directories(bfvmm INTERFACE
 )
 target_include_directories(bfvmm SYSTEM INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/../include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/../../bfintrinsics/include>
     $<INSTALL_INTERFACE:include/bfvmm>
 )
 
