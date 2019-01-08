@@ -96,9 +96,9 @@ add_subproject(bfroot efi)
 # VMM Components
 # ------------------------------------------------------------------------------
 
-include_dependency(SOURCE_DEPENDS_DIR binutils)
+if(BUILD_VMM AND NOT WIN32)
+    include_dependency(SOURCE_DEPENDS_DIR binutils)
 
-if(NOT WIN32)
     add_subproject(
         bfutil vmm
         DEPENDS bfroot
@@ -115,23 +115,18 @@ if(NOT WIN32)
             DEPENDS bfroot
         )
     endif()
-endif()
 
-include_dependency(SOURCE_DEPENDS_DIR newlib)
-include_dependency(SOURCE_DEPENDS_DIR llvm)
-include_dependency(SOURCE_DEPENDS_DIR libcxxabi)
-include_dependency(SOURCE_DEPENDS_DIR libcxx)
+    include_dependency(SOURCE_DEPENDS_DIR newlib)
+    include_dependency(SOURCE_DEPENDS_DIR llvm)
+    include_dependency(SOURCE_DEPENDS_DIR libcxxabi)
+    include_dependency(SOURCE_DEPENDS_DIR libcxx)
 
-if(BUILD_VMM OR (BUILD_TEST AND NOT WIN32))
     add_subproject(
         bfruntime vmm
         DEPENDS gsl
         DEPENDS libcxx
         DEPENDS bfroot
     )
-endif()
-
-if(BUILD_VMM)
     add_subproject(
         bfintrinsics vmm
         DEPENDS bfroot
