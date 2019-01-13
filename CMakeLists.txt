@@ -76,7 +76,7 @@ include_dependency(SOURCE_DEPENDS_DIR python)
 # ------------------------------------------------------------------------------
 
 if(BUILD_VMM)
-    add_targets(bfdriver none ${SOURCE_BFDRIVER_DIR}/src)
+    add_targets(bfdriver none ${SOURCE_BFDRIVER_DIR})
 endif()
 
 # ------------------------------------------------------------------------------
@@ -125,16 +125,13 @@ include_dependency(SOURCE_DEPENDS_DIR llvm)
 include_dependency(SOURCE_DEPENDS_DIR libcxxabi)
 include_dependency(SOURCE_DEPENDS_DIR libcxx)
 
-if(BUILD_VMM OR (BUILD_TEST AND NOT WIN32))
+if(BUILD_VMM)
     add_subproject(
         bfruntime vmm
         DEPENDS gsl
         DEPENDS libcxx
         DEPENDS bfroot
     )
-endif()
-
-if(BUILD_VMM)
     add_subproject(
         bfintrinsics vmm
         DEPENDS bfroot
@@ -159,28 +156,25 @@ if(BUILD_TEST)
         DEPENDS hippomocks
         DEPENDS bfroot
     )
-endif()
 
-#if(BUILD_TEST AND NOT WIN32)
-#    add_subproject(
-#        bfdummy vmm
-#        DEPENDS bfunwind
-#    )
-#
-#    add_subproject(
-#        bfdummy_main vmm
-#        SOURCE_DIR ${SOURCE_BFDUMMY_DIR}/src/main
-#        DEPENDS bfdummy
-#    )
-#
-#    add_subproject(
-#        bfdriver test
-#        DEPENDS bfutil
-#        NOINSTALL
-#    )
-#endif()
+    if(NOT WIN32)
+        #    add_subproject(
+        #        bfdummy vmm
+        #        DEPENDS bfunwind
+        #    )
+        #
+        #    add_subproject(
+        #        bfdummy_main vmm
+        #        SOURCE_DIR ${SOURCE_BFDUMMY_DIR}/src/main
+        #        DEPENDS bfdummy
+        #    )
+    endif()
 
-if(BUILD_TEST)
+    add_subproject(
+        bfdriver test
+        DEPENDS bfroot
+    )
+
     add_subproject(
         bfm test
         DEPENDS bfroot
@@ -235,9 +229,8 @@ if(BUILD_EFI AND NOT WIN32)
     include_dependency(SOURCE_DEPENDS_DIR gnuefi)
 
     add_subproject(
-        bfefi efi
+        bfdriver efi
         DEPENDS gnuefi ${BFM_VMM_TARGET}
-        SOURCE_DIR ${SOURCE_BFDRIVER_DIR}/src/platform/efi
     )
 endif()
 
