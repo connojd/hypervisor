@@ -67,14 +67,14 @@ set(ENABLE_DEVELOPER_MODE OFF)
 # This option enables the use of the extended APIs. It assumes the extended
 # APIs are located in the same directory as this configuration file.
 #
-set(ENABLE_EXTENDED_APIS ON)
+set(ENABLE_EXTENDED_APIS OFF)
 
 # Hyperkernel
 #
 # This option enables the use of the boxy. It assumes that
 # boxy is located in the same directory as this configuration file.
 #
-set(ENABLE_BOXY ON)
+set(ENABLE_BOXY OFF)
 
 # Enable EFI
 #
@@ -82,7 +82,7 @@ set(ENABLE_BOXY ON)
 # this forces static build, disables testing, ASAN, codecov and clang tidy,
 # and requries the VMM be compiled
 #
-set(BUILD_EFI ON)
+set(BUILD_EFI OFF)
 
 # Examples
 #
