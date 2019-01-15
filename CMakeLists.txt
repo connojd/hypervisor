@@ -134,7 +134,7 @@ if(BUILD_VMM)
     )
     add_subproject(
         bfintrinsics vmm
-        DEPENDS bfroot
+        DEPENDS bfutil
     )
     add_subproject(
         bfvmm vmm
@@ -204,7 +204,7 @@ if(BUILD_USERSPACE)
         bfintrinsics userspace
         DEPENDS gsl
         DEPENDS json
-        DEPENDS bfroot
+        DEPENDS bfutil
     )
     add_subproject(
         bfm userspace

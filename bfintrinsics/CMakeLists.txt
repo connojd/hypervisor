@@ -44,7 +44,7 @@ target_sources(bfintrinsics PRIVATE
     $<${X64}:src/arch/intel_x64/vmx.asm>
 )
 
-if(PREFIX STREQUAL vmm)
+if(PREFIX STREQUAL vmm OR PREFIX STREQUAL userspace)
     install(DIRECTORY include/ DESTINATION include)
 endif()
 

@@ -19,13 +19,10 @@
 cmake_minimum_required(VERSION 3.10)
 project(bfutil C CXX)
 
-# -----------------------------------------------------------------------------
-# Common
-# -----------------------------------------------------------------------------
-
 init_project(bfutil INTERFACE)
+
 target_link_libraries(bfutil INTERFACE ${PREFIX}::bfroot)
-if(NOT PREFIX STREQUAL test)
+if(PREFIX STREQUAL vmm OR PREFIX STREQUAL userspace)
     install(DIRECTORY include/ DESTINATION include)
     fini_project()
     return()
