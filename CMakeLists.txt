@@ -36,7 +36,11 @@ add_project_include(${SOURCE_CMAKE_DIR}/macros.cmake)
 # BFM VMM
 # ------------------------------------------------------------------------------
 
-set_bfm_vmm(${DEFAULT_VMM} DEFAULT)
+#set_bfm_vmm(${DEFAULT_VMM} DEFAULT)
+
+set(BFM_VMM hyperkernel_bfvmm_static)
+set(BFM_VMM_TARGET hyperkernel_bfvmm_main_x86_64-vmm-elf)
+
 message(STATUS "Bareflank Manager VMM")
 message(STATUS "    vmm: ${BFM_VMM}")
 message(STATUS "    target: ${BFM_VMM_TARGET}")
