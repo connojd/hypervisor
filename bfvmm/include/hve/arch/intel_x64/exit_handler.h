@@ -91,9 +91,7 @@ public:
     ///
     /// @param vcpu The vCPU associated with this exit handler
     ///
-    exit_handler(
-        gsl::not_null<vcpu *> vcpu
-    );
+    exit_handler(gsl::not_null<vcpu *> vcpu);
 
     /// Destructor
     ///
@@ -261,6 +259,7 @@ public:
 
     /// @endcond
 };
+
 }
 
 using exit_handler_t = bfvmm::intel_x64::exit_handler;
