@@ -142,11 +142,11 @@ if(BUILD_VMM)
         DEPENDS bfruntime
     )
 
-#    add_subproject(
-#        integration vmm
-#        DEPENDS bfvmm
-#        SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/bfvmm/integration/
-#    )
+    add_subproject(
+        integration vmm
+        DEPENDS bfvmm
+        SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/bfvmm/integration
+    )
 endif()
 
 # ------------------------------------------------------------------------------

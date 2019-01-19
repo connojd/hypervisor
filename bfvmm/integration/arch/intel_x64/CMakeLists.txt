@@ -19,20 +19,26 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-add_vmm_executable(
-    integration_intel_x64_test_all
-    SOURCES test_all.cpp
-)
+do_test(test_all.cpp INTEGRATION)
 
-add_subdirectory(efi)
-add_subdirectory(ept)
-add_subdirectory(vmexit/control_register)
-add_subdirectory(vmexit/cpuid)
-add_subdirectory(vmexit/ept_misconfiguration)
-add_subdirectory(vmexit/ept_violation)
-add_subdirectory(vmexit/external_interrupt)
-add_subdirectory(vmexit/io_instruction)
-add_subdirectory(vmexit/monitor_trap)
-add_subdirectory(vmexit/rdmsr)
-add_subdirectory(vmexit/wrmsr)
-add_subdirectory(vpid)
+do_test(efi/test_efi.cpp INTEGRATION)
+do_test(efi/test_efi_with_interrupts.cpp INTEGRATION)
+
+do_test(ept/enable_ept.cpp INTEGRATION)
+do_test(ept/remap_page.cpp INTEGRATION)
+
+do_test(vmexit/control_register/trap_cr0.cpp INTEGRATION)
+do_test(vmexit/control_register/trap_cr3.cpp INTEGRATION)
+do_test(vmexit/control_register/trap_cr4.cpp INTEGRATION)
+do_test(vmexit/cpuid/trap_cpuid.cpp INTEGRATION)
+do_test(vmexit/ept_misconfiguration/trap_ept_misconfiguration.cpp INTEGRATION)
+do_test(vmexit/ept_violation/trap_ept_read_violation.cpp INTEGRATION)
+do_test(vmexit/ept_violation/trap_ept_write_violation.cpp INTEGRATION)
+do_test(vmexit/ept_violation/trap_ept_execute_violation.cpp INTEGRATION)
+do_test(vmexit/external_interrupt/trap_all_interrupts.cpp INTEGRATION)
+do_test(vmexit/io_instruction/trap_in_out.cpp INTEGRATION)
+do_test(vmexit/monitor_trap/single_step_cpuid.cpp INTEGRATION)
+do_test(vmexit/rdmsr/trap_rdmsr.cpp INTEGRATION)
+do_test(vmexit/wrmsr/trap_wrmsr.cpp INTEGRATION)
+
+do_test(vpid/enable_vpid.cpp INTEGRATION)

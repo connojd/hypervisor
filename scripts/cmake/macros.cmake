@@ -1166,8 +1166,9 @@ endfunction(add_vmm_executable)
 #     used.
 #
 function(do_test FILEPATH)
+    set(options INTEGRATION)
     set(multiVal DEFINES DEPENDS SOURCES CMD_LINE_ARGS)
-    cmake_parse_arguments(ARG "" "" "${multiVal}" ${ARGN})
+    cmake_parse_arguments(ARG "${options}" "" "${multiVal}" ${ARGN})
 
     if(NOT ARG_SOURCES)
         set(ARG_SOURCES "${FILEPATH}")
@@ -1180,7 +1181,16 @@ function(do_test FILEPATH)
     target_sources(test_${NAME} PRIVATE ${ARG_SOURCES})
     target_link_libraries(test_${NAME} PRIVATE ${ARG_DEPENDS} ${CMAKE_PROJECT_NAME})
     target_compile_definitions(test_${NAME} PRIVATE ${ARG_DEFINES})
-    add_test(NAME test_${NAME} COMMAND test_${NAME} ${ARG_CMD_LINE_ARGS})
+
+    if(NOT ARG_INTEGRATION)
+        add_test(NAME test_${NAME} COMMAND test_${NAME} ${ARG_CMD_LINE_ARGS})
+    else()
+        install(
+            TARGETS test_${NAME}
+            DESTINATION bin/integration
+            EXPORT ${CMAKE_PROJECT_NAME}-vmm-targets
+        )
+    endif()
 endfunction(do_test)
 
 # ------------------------------------------------------------------------------

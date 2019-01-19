@@ -20,15 +20,11 @@
 # SOFTWARE.
 
 cmake_minimum_required(VERSION 3.6)
-#project(integration C CXX)
-#
-#include(${SOURCE_CMAKE_DIR}/project.cmake)
-#init_project()
-#
-#if(${BUILD_TARGET_ARCH} STREQUAL "x86_64")
-#    add_subdirectory(arch/intel_x64)
-#elseif(${BUILD_TARGET_ARCH} STREQUAL "aarch64")
-#    message(WARNING "Unimplemented")
-#else()
-#    message(FATAL_ERROR "Unsupported architecture")
-#endif()
+project(integration C CXX)
+
+init_project(integration INTERFACE)
+
+target_link_libraries(integration INTERFACE vmm::bfvmm)
+add_subdirectory(arch/intel_x64)
+
+fini_project()
