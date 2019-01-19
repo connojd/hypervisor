@@ -252,7 +252,7 @@ set(OVERRIDE_VMM_TARGET <name>)
 If for example you are using the integration test listed above, these setting would
 be as follows:
 ```
-set(OVERRIDE_VMM integration_intel_x64_efi_test_efi)
+set(OVERRIDE_VMM test_efi)
 set(OVERRIDE_VMM_TARGET integration)
 ```
 The first variable defines the VMM's name and the second variable defines the target
