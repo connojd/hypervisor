@@ -68,15 +68,20 @@ for:
     CYG_ROOT: C:\cygwin_bareflank
     CYG_BASH: C:\cygwin_bareflank\bin\bash
     CYG_MIRROR: http://mirrors.kernel.org/sourceware/cygwin/
-    CYG_PACKAGES: make,gcc-core,gcc-g++,nasm,clang,clang++,cmake,python,gettext
+    CYG_PACKAGES: make,gcc-core,gcc-g++,nasm,clang,clang++,wget,libncurses-devel,python,gettext
 
   install:
     - ps: Start-FileDownload "https://cygwin.com/setup-x86_64.exe" -FileName "setup-x86_64.exe"
     - setup-x86_64.exe --quiet-mode --no-shortcuts --only-site --root "%CYG_ROOT%" --site "%CYG_MIRROR%" --local-package-dir "%CYG_ROOT%\var\cache\setup" --packages "%CYG_PACKAGES%"
 
   build_script:
+    - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER; wget https://github.com/Kitware/CMake/releases/download/v3.13.3/cmake-3.13.3.tar.gz"'
+    - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER; tar xf cmake-3.13.3.tar.gz"'
+    - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/cmake-3.13.3; ./configure --prefix=/opt/cmake"'
+    - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/cmake-3.13.3; make -j3"'
+    - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/cmake-3.13.3; make install"'
     - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER; mkdir build_cygwin"'
-    - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build_cygwin; cmake .."'
+    - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build_cygwin; /opt/cmake/bin/cmake.exe .."'
     - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build_cygwin; make -j3"'
 
   test: off
