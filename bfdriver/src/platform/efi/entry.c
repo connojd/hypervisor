@@ -141,7 +141,47 @@ failure:
  */
 
 static long
-load_start_vm(EFI_HANDLE ParentImage)
+load_file(
+    EFI_HANDLE ParentImage,
+    EFI_HANDLE FsHandle,
+    const CHAR16 *FileName,
+    EFI_HANDLE *ImageHandle)
+{
+    EFI_BLOCK_IO *BlkIo = NULL;
+    EFI_DEVICE_PATH_PROTOCOL *FilePath = NULL;
+
+    EFI_STATUS status = gBS->HandleProtocol(
+        FsHandle,
+        &gEfiBlockIoProtocolGuid,
+        (VOID**) &BlkIo
+    );
+
+    if (EFI_ERROR(status)) {
+        return status;
+    }
+
+    FilePath = FileDevicePath(FsHandle, (CHAR16 *)FileName);
+
+    status = gBS->LoadImage(
+        FALSE,
+        ParentImage,
+        FilePath,
+        NULL,
+        0,
+        ImageHandle
+    );
+
+    gBS->FreePool(FilePath);
+
+    if (EFI_ERROR(status)) {
+        return status;
+    }
+
+    return EFI_SUCCESS;
+}
+
+static long
+load_start_vm(EFI_HANDLE ParentImage, const CHAR16 *FileName)
 {
     /**
      * TODO
@@ -172,35 +212,15 @@ load_start_vm(EFI_HANDLE ParentImage)
 
     for(i = 0; i < NumberFileSystemHandles; ++i) {
 
-        EFI_DEVICE_PATH_PROTOCOL *FilePath = NULL;
-        EFI_BLOCK_IO *BlkIo = NULL;
         EFI_HANDLE ImageHandle = NULL;
         EFI_LOADED_IMAGE_PROTOCOL *ImageInfo = NULL;
 
-        status =
-            gBS->HandleProtocol(
-                FileSystemHandles[i],
-                &gEfiBlockIoProtocolGuid,
-                (VOID**) &BlkIo
-            );
-
-        if (EFI_ERROR(status)) {
-            continue;
-        }
-
-        FilePath = FileDevicePath(FileSystemHandles[i], L"\\EFI\\BOOT\\bootx64.efi");
-
-        status =
-            gBS->LoadImage(
-                FALSE,
-                ParentImage,
-                FilePath,
-                NULL,
-                0,
-                &ImageHandle
-            );
-
-        gBS->FreePool(FilePath);
+        status = load_file(
+            ParentImage,
+            FileSystemHandles[i],
+            FileName,
+            &ImageHandle
+        );
 
         if (EFI_ERROR(status)) {
             continue;
@@ -234,6 +254,43 @@ load_start_vm(EFI_HANDLE ParentImage)
 /* Entry / Exit                                                               */
 /* -------------------------------------------------------------------------- */
 
+#define MAX_OPTIONS_SIZE 1024U
+
+static const CHAR16 *
+next_efi_image(EFI_HANDLE image)
+{
+    EFI_LOADED_IMAGE_PROTOCOL *lip = NULL;
+    gBS->HandleProtocol(image, &gEfiLoadedImageProtocolGuid, (VOID **)&lip);
+
+    /**
+     * LoadOptionsSize is total # bytes = # characters * 2, including the
+     * two null bytes at the end.
+     *
+     * Space is used as the delimiter for each argument
+     *
+     * For now we only support one argument, and it is treated
+     * as the path to the next EFI image to run
+     */
+
+    const UINTN len = lip->LoadOptionsSize >> 1;
+    const CHAR16 *str = (UINT16 *)lip->LoadOptions;
+    const CHAR16 *next = L"\\EFI\\BOOT\\bootx64.efi";
+
+    if (len <= MAX_OPTIONS_SIZE && len >= 4) {
+        const UINT16 delim = ' ';
+
+        for (UINTN i = 0; i < len - 1; i++) {
+            if (str[i] != delim) {
+                continue;
+            }
+
+            next = &str[i + 1];
+        }
+    }
+
+    return next;
+}
+
 EFI_STATUS
 efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
 {
@@ -256,7 +313,7 @@ efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
     ioctl_load_vmm();
     ioctl_start_vmm();
 
-    load_start_vm(image);
+    load_start_vm(image, next_efi_image(image));
 
     return EFI_SUCCESS;
 }
