@@ -6398,6 +6398,45 @@ namespace invariant_tsc
     }
 }
 
+/// display_family
+///
+/// @param feat_eax the value returned from cpuid at leaf
+///        feature_information.
+/// @return the value of the display family
+///
+inline uint32_t display_family(uint32_t feat_eax)
+{
+    namespace version = ::intel_x64::cpuid::feature_information::eax;
+
+    uint32_t family_id = version::family_id::get(feat_eax);
+    if (family_id != 0x0F) {
+        return family_id;
+    }
+
+    return version::extended_family_id::get(feat_eax) + family_id;
+}
+
+/// display_model
+///
+/// @param feat_eax the value returned from cpuid at leaf
+///        feature_information.
+/// @return the value of the display model
+///
+inline uint32_t display_model(uint32_t feat_eax)
+{
+    namespace version = ::intel_x64::cpuid::feature_information::eax;
+
+    const auto family_id = version::family_id::get(feat_eax);
+    if (family_id == 0x06 || family_id == 0x0F) {
+        const auto model = version::model::get(feat_eax);
+        const auto ext_model = version::extended_model_id::get(feat_eax);
+
+        return (ext_model << 4) | model;
+    }
+
+    return version::model::get(feat_eax);
+}
+
 }
 }
 
