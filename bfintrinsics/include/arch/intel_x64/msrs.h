@@ -16958,7 +16958,7 @@ namespace ia32_gs_base
     { bfdebug_nhex(level, name, get(), msg); }
 }
 
-namespace ia32_platform_info
+namespace platform_info
 {
     constexpr const auto addr = 0x000000CEU;
     constexpr const auto name = "platform_info";
