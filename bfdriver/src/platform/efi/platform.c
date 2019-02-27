@@ -215,4 +215,12 @@ platform_call_vmm_on_core(
 
 void *
 platform_get_rsdp(void)
-{ return 0; }
+{
+    VOID *rsdp = NULL;
+    EFI_GUID guid = ACPI_20_TABLE_GUID;
+
+    LibGetSystemConfigurationTable(&guid, &rsdp);
+    BFDEBUG("Found ACPI 2.0 RSDP: 0x%llx\n", rsdp);
+
+    return rsdp;
+}
