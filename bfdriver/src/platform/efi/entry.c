@@ -124,6 +124,71 @@ failure:
     return BF_IOCTL_FAILURE;
 }
 
+static long
+load_start_vm(EFI_HANDLE ParentImage)
+{
+    UINTN                       i;
+    EFI_STATUS                  ret;
+    UINTN                       NumberFileSystemHandles;
+    EFI_HANDLE *                FileSystemHandles = NULL;
+    EFI_BLOCK_IO *              BlkIo = NULL;
+    EFI_DEVICE_PATH_PROTOCOL *  FilePath = NULL;
+    EFI_HANDLE                  ImageHandle = NULL;
+    EFI_LOADED_IMAGE_PROTOCOL * ImageInfo = NULL;
+
+    /* Go through all of the available filesystems, until one that
+     * contains a path matching the Windows boot manager is found */
+    ret = gBS->LocateHandleBuffer(ByProtocol, &gEfiBlockIoProtocolGuid,
+                                  NULL, &NumberFileSystemHandles,
+                                  &FileSystemHandles);
+    if (EFI_ERROR(ret)) {
+        BFDEBUG(L"Failed to locate handle buffer\n");
+        goto failure;
+    }
+
+    for(i = 0; i < NumberFileSystemHandles; ++i) {
+        ret = gBS->HandleProtocol(FileSystemHandles[i],
+                                  &gEfiBlockIoProtocolGuid,
+                                  (VOID**) &BlkIo);
+//        BFDEBUG(L"HandleProtocol - Filesystem Handle: %x, Return: %r\n",
+//                FileSystemHandles[i], ret);
+        if(!EFI_ERROR(ret)) {
+            FilePath = FileDevicePath(FileSystemHandles[i],
+                                      L"\\EFI\\Microsoft\\Boot\\bootmgfw.efi");
+//            BFDEBUG(L"FileDevicePath - Type: %x, SubType: %x\n",
+//                    FilePath->Type, FilePath->SubType);
+            ret = gBS->LoadImage(FALSE, ParentImage, FilePath, NULL, 0,
+                                 &ImageHandle);
+//            BFDEBUG(L"LoadImage - Handle: %d, Error Code: %d, Return: %r\n", ImageHandle, EFI_ERROR(ret), ret);
+            if(!EFI_ERROR(ret)) {
+                ret = gBS->HandleProtocol(ImageHandle,
+                                          &gEfiLoadedImageProtocolGuid,
+                                          (VOID **) &ImageInfo);
+                if(!EFI_ERROR(ret)) {
+                    if(ImageInfo->ImageCodeType == EfiLoaderCode) {
+                        gBS->FreePool(FilePath);
+                    }
+                } else {
+                    BFDEBUG(L"Failed to query image handle\n");
+                    goto failure;
+                }
+            }
+            ret = gBS->StartImage(ImageHandle, NULL, NULL);
+//            BFDEBUG(L"StartImage - Error Code: %d\n", EFI_ERROR(ret));
+        } else {
+            BFDEBUG(L"Failed to query filesystem handle\n");
+            goto failure;
+        }
+    }
+
+    return BF_IOCTL_SUCCESS;
+
+failure:
+
+    BFDEBUG("IOCTL_START_VMM: failed\n");
+    return BF_IOCTL_FAILURE;
+}
+
 /* -------------------------------------------------------------------------- */
 /* Entry / Exit                                                               */
 /* -------------------------------------------------------------------------- */
@@ -131,7 +196,7 @@ failure:
 EFI_STATUS
 efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
 {
-	InitializeLib(image, systab);
+    InitializeLib(image, systab);
 
     Print(L"\n");
     Print(L"  ___                __ _           _   \n");
@@ -149,6 +214,9 @@ efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
     ioctl_add_module((char *)vmm, vmm_len);
     ioctl_load_vmm();
     ioctl_start_vmm();
+   // Print(L"Finished ioctl_start_vmm, call load_start_vm\n");
+    load_start_vm(image);
+   // Print(L"Finished load_start_vm\n");
 
 	return EFI_SUCCESS;
 }
