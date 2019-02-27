@@ -27,6 +27,7 @@
 #include <common.h>
 
 #include <linux/mm.h>
+#include <linux/efi.h>
 #include <linux/slab.h>
 #include <linux/string.h>
 #include <linux/module.h>
@@ -195,4 +196,12 @@ platform_call_vmm_on_core(
 
 void *
 platform_get_rsdp(void)
-{ return 0; }
+{
+    if (efi_enabled(EFI_CONFIG_TABLES)) {
+        if (efi.acpi20 != EFI_INVALID_TABLE_ADDR) {
+            return (void *)efi.acpi20;
+        }
+    }
+
+    return 0;
+}
