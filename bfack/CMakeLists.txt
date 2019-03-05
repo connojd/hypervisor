@@ -19,13 +19,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.10)
 project(bfack C CXX)
 
-include(${SOURCE_CMAKE_DIR}/project.cmake)
-init_project()
+init_project(bfack BINARY)
 
-add_executable(bfack ack.cpp)
-target_link_static_libraries(bfack bfintrinsics)
+target_sources(bfack PRIVATE src/ack.cpp)
+target_link_libraries(bfack PRIVATE userspace::bfintrinsics)
+target_include_directories(bfack PRIVATE ../bfsdk/include)
 
-install(TARGETS bfack DESTINATION bin)
+fini_project()
