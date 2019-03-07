@@ -37,7 +37,8 @@ extern "C" void _handle_nmi(void) noexcept;
 ///
 void set_nmi_handler(
     bfvmm::x64::idt *idt,
-    bfvmm::x64::idt::selector_type selector
+    bfvmm::x64::idt::selector_type selector,
+    void (*handler)(void)
 ) noexcept;
 
 /// inject_nmi

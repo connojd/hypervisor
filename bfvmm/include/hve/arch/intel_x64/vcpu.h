@@ -22,6 +22,7 @@
 #include "exit_handler.h"
 #include "vmx.h"
 #include "vmcs.h"
+#include "nmi.h"
 
 #include "../../../vcpu/vcpu.h"
 #include "../../../memory_manager/arch/x64/cr3.h"
@@ -153,6 +154,11 @@ public:
     ///
     VIRTUAL void add_exit_handler(
         const handler_delegate_t &d);
+
+    /// Set NMI Handler
+    ///
+    VIRTUAL void set_nmi_handler(void (*handler)(void))
+    { ::set_nmi_handler(m_exit_handler->host_idt(), 8, handler); }
 
     /// Dump State
     ///

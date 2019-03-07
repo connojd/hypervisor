@@ -23,8 +23,9 @@
 
 void set_nmi_handler(
     bfvmm::x64::idt *idt,
-    bfvmm::x64::idt::selector_type selector) noexcept
-{ idt->set(2, _handle_nmi, selector); }
+    bfvmm::x64::idt::selector_type selector,
+    void (*handler)(void)) noexcept
+{ idt->set(2, handler, selector); }
 
 void inject_nmi() noexcept
 {

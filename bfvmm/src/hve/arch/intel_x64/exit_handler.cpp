@@ -364,6 +364,8 @@ handle_nmi(gsl::not_null<bfvmm::intel_x64::vcpu *> vcpu)
     using namespace ::intel_x64::vmcs;
     using namespace primary_processor_based_vm_execution_controls;
 
+    bfdebug_info(0, "Handling NMI!");
+
     nmi_window_exiting::enable();
     return true;
 }
@@ -561,7 +563,7 @@ exit_handler::write_host_state()
 
     m_host_tss.ist1 = setup_stack(m_ist1.get(), m_vcpu->id());
     set_default_esrs(&m_host_idt, 8);
-    set_nmi_handler(&m_host_idt, 8);
+    set_nmi_handler(&m_host_idt, 8, _handle_nmi);
 
     host_rip::set(exit_handler_entry);
     host_rsp::set(setup_stack(m_stack.get(), m_vcpu->id()));
