@@ -62,6 +62,9 @@ set(TST_C_CXX_ASAN $<AND:${TST_C_CXX_CLANG_GNU},$<BOOL:${ENABLE_ASAN}>>)
 set(TST_C_CXX_USAN $<AND:${TST_C_CXX_CLANG_GNU},$<BOOL:${ENABLE_USAN}>>)
 set(TST_C_CXX_CODECOV $<AND:${TST_C_CXX_CLANG_GNU},$<BOOL:${ENABLE_CODECOV}>>)
 
+set(TST_C_CXX_ASAN_GNU $<AND:${TST_C_CXX_ASAN},${GNU}>)
+set(TST_C_CXX_USAN_GNU $<AND:${TST_C_CXX_USAN},${GNU}>)
+
 # Userspace
 set(USR_CXX_CLANG_GNU $<AND:${USR},${CXX},$<OR:${CLANG},${GNU}>>)
 set(USR_C_CXX $<AND:${USR},${C_CXX}>)
@@ -161,6 +164,8 @@ target_compile_options(bfroot INTERFACE
     $<${TST_C_CXX_ASAN}:-O1 -g -fno-omit-frame-pointer>
     $<${TST_C_CXX_ASAN}:-fsanitize=address>
     $<${TST_C_CXX_USAN}:-fsanitize=undefined>
+    $<${TST_C_CXX_ASAN_GNU}:-fuse-ld=gold>
+    $<${TST_C_CXX_USAN_GNU}:-fuse-ld=gold>
     $<${TST_C_CXX_CODECOV}:-g -O0 -fprofile-arcs -ftest-coverage>
     $<${TST_C_CXX_MSVC}:/EHsc>
     $<${TST_C_CXX_MSVC}:/bigobj>
