@@ -31,7 +31,6 @@
 #include <array>
 #include <vector>
 #include <string>
-#include <string_view>
 #include <sstream>
 
 /// std::string literal
@@ -121,7 +120,7 @@ to_string(std::string &str, std::size_t val, const int base = 10, bool pad = tru
         }
     }
 
-    str += std::string_view(buf.data(), len);
+    str.append(buf.data(), len);
     return digits;
 }
 
