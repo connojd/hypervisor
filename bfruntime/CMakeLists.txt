@@ -51,7 +51,7 @@ target_link_libraries(bfcrt PUBLIC bfruntime)
 target_compile_options(bfcrt PRIVATE $<${C_CXX}:-Wno-main>)
 target_sources(bfcrt PRIVATE
     src/crt/crt.cpp
-    $<${X64}:src/crt/start_x64.asm>
+    $<${ASM}:src/crt/start_x64.asm>
     $<${ARM}:src/crt/start_x64.S>
 )
 
