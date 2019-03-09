@@ -43,7 +43,6 @@ set(USR $<AND:$<STREQUAL:${PREFIX},userspace>,$<BOOL:${ENABLE_BUILD_USERSPACE}>>
 set(VMM_CXX $<AND:${VMM},${CXX}>)
 set(VMM_C_CXX $<AND:${VMM},${C_CXX}>)
 set(VMM_C_CXX_CLANG $<AND:${VMM_C_CXX},${CLANG}>)
-set(VMM_C_CXX_MSVC $<AND:${VMM_C_CXX},${MSVC}>)
 
 set(EFI_C $<AND:${EFI},${C}>)
 set(EFI_C_CXX $<AND:${EFI},${C_CXX}>)
@@ -76,6 +75,8 @@ set(USR_C_CXX_CLANG_GNU $<AND:${USR_C_CXX},$<OR:${CLANG},${GNU}>>)
 # Root interface for all prefixes
 # ------------------------------------------------------------------------------
 
+target_compile_features(bfroot INTERFACE c_std_11 cxx_std_17)
+
 target_compile_definitions(bfroot INTERFACE
     $<${C_CXX}:GSL_THROW_ON_CONTRACT_VIOLATION>
     $<${C_CXX}:${OSTYPE}>
@@ -85,8 +86,6 @@ target_compile_options(bfroot INTERFACE
     $<${C_CXX_X64}:-msse>
     $<${C_CXX_X64}:-msse2>
     $<${C_CXX_X64}:-msse3>
-    $<${CXX}:-std=c++17>
-    $<${C}:-std=c11>
 )
 
 # ------------------------------------------------------------------------------
