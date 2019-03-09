@@ -226,7 +226,7 @@ matrix:
     env:
       - TEST="Google Address Sanitizer"
     script:
-      - cmake -DCONFIG=travis_asan ..
+      - cmake -DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=gold -DCONFIG=travis_asan ..
       - make -j3
       - make unittest
 
