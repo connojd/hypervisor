@@ -43,10 +43,9 @@ set(USR $<STREQUAL:${PREFIX},userspace>)
 
 set(VMM_CXX $<AND:${VMM},${CXX}>)
 set(VMM_C_CXX $<AND:${VMM},${C_CXX}>)
-set(VMM_C_CXX_CLANG $<AND:${VMM_C_CXX},${CLANG}>)
+set(VMM_C_CXX_X64 $<AND:${VMM},${C_CXX_X64}>)
 
 set(EFI_C $<AND:${EFI},${C}>)
-set(EFI_C_CXX $<AND:${EFI},${C_CXX}>)
 
 set(TST_C_CXX $<AND:${TST},${C_CXX}>)
 set(TST_CXX $<AND:${TST},${CXX}>)
@@ -62,8 +61,6 @@ set(TST_C_CXX_CLANG_GNU $<AND:${TST_C_CXX},$<OR:${CLANG},${GNU}>>)
 set(TST_C_CXX_ASAN $<AND:${TST_C_CXX_CLANG_GNU},$<BOOL:${ENABLE_ASAN}>>)
 set(TST_C_CXX_USAN $<AND:${TST_C_CXX_CLANG_GNU},$<BOOL:${ENABLE_USAN}>>)
 set(TST_C_CXX_CODECOV $<AND:${TST_C_CXX_CLANG_GNU},$<BOOL:${ENABLE_CODECOV}>>)
-set(TST_C_CXX_GNU_ASAN $<AND:${TST_C_CXX_GNU},$<BOOL:${ENABLE_ASAN}>>)
-set(TST_C_CXX_GNU_CODECOV $<AND:${TST_C_CXX_GNU},$<BOOL:${ENABLE_CODECOV}>>)
 
 # Userspace
 set(USR_CXX_CLANG_GNU $<AND:${USR},${CXX},$<OR:${CLANG},${GNU}>>)
@@ -83,11 +80,6 @@ target_compile_definitions(bfroot INTERFACE
     $<${C_CXX}:${OSTYPE}>
     $<${C_CXX}:${ABITYPE}>
 )
-target_compile_options(bfroot INTERFACE
-    $<${C_CXX_X64}:-msse>
-    $<${C_CXX_X64}:-msse2>
-    $<${C_CXX_X64}:-msse3>
-)
 
 # ------------------------------------------------------------------------------
 # Root interface for vmm prefix
@@ -95,12 +87,15 @@ target_compile_options(bfroot INTERFACE
 
 if(PREFIX STREQUAL vmm)
     execute_process(
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${VMM_PREFIX_PATH}/include/c++/v1
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${VMM_PREFIX_PATH}/lib
+        COMMAND
+        ${CMAKE_COMMAND} -E make_directory ${VMM_PREFIX_PATH}/lib
+        COMMAND
+        ${CMAKE_COMMAND} -E make_directory ${VMM_PREFIX_PATH}/include/c++/v1
     )
 endif()
 
 target_compile_options(bfroot INTERFACE
+    $<${VMM_C_CXX_X64}:-msse -msse2 -msse3>
     $<${VMM_C_CXX}:--sysroot=${VMM_PREFIX_PATH}>
     $<${VMM_C_CXX}:-fpic>
     $<${VMM_C_CXX}:-mno-red-zone>
@@ -163,12 +158,10 @@ target_compile_options(bfroot INTERFACE
 
     $<${TST_C_CXX_CLANG_GNU}:-fpic -fno-stack-protector>
     $<${TST_C_CXX_CLANG_GNU}:-fvisibility=hidden -Wno-deprecated-declarations>
-
     $<${TST_C_CXX_ASAN}:-O1 -g -fno-omit-frame-pointer>
-    $<${TST_C_CXX_ASAN}:-fsanitize=address -fsanitize=leak>
+    $<${TST_C_CXX_ASAN}:-fsanitize=address>
     $<${TST_C_CXX_USAN}:-fsanitize=undefined>
     $<${TST_C_CXX_CODECOV}:-g -O0 -fprofile-arcs -ftest-coverage>
-
     $<${TST_C_CXX_MSVC}:/EHsc>
     $<${TST_C_CXX_MSVC}:/bigobj>
     $<${TST_C_CXX_MSVC}:/WX>
@@ -182,8 +175,7 @@ target_compile_definitions(bfroot INTERFACE
     $<${TST_C_CXX_MSVC}:NOMINMAX>
 )
 target_link_options(bfroot INTERFACE
-    # ASAN isn't working with clang atm
-    $<${TST_C_CXX_GNU_ASAN}:-fsanitize=address>
+    $<${TST_C_CXX_ASAN}:-fsanitize=address>
     $<${TST_C_CXX_USAN}:-fsanitize=undefined>
     $<${TST_C_CXX_CODECOV}:--coverage>
 )
@@ -199,8 +191,8 @@ target_include_directories(bfroot SYSTEM INTERFACE
 # ------------------------------------------------------------------------------
 
 if(PREFIX STREQUAL userspace)
-    execute_process(
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${USERSPACE_PREFIX_PATH}/include
+    execute_process(COMMAND
+        ${CMAKE_COMMAND} -E make_directory ${USERSPACE_PREFIX_PATH}/include
     )
 endif()
 
@@ -229,8 +221,8 @@ target_include_directories(bfroot SYSTEM INTERFACE
 # ------------------------------------------------------------------------------
 
 if(PREFIX STREQUAL efi)
-    execute_process(
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${EFI_PREFIX_PATH}/include/efi/x86_64
+    execute_process(COMMAND
+        ${CMAKE_COMMAND} -E make_directory ${EFI_PREFIX_PATH}/include/efi/x86_64
     )
 endif()
 
@@ -248,7 +240,6 @@ target_compile_options(bfroot INTERFACE
     $<${EFI_C}:-fno-stack-protector>
     $<${EFI_C}:-fno-stack-check>
     $<${EFI_C}:-fno-merge-all-constants>
-    $<${EFI_C}:-std=c11>
     $<${EFI_C}:-U__linux__>
 )
 target_compile_definitions(bfroot INTERFACE

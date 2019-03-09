@@ -47,8 +47,11 @@ target_include_directories(bfsdk INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
 )
 
+if(NOT ${ENABLE_ASAN} OR NOT ${CMAKE_C_COMPILER_ID} STREQUAL Clang)
+    do_test(tests/test_benchmark.cpp)
+endif()
+
 do_test(tests/test_affinity.cpp)
-do_test(tests/test_benchmark.cpp)
 do_test(tests/test_bitmanip.cpp)
 do_test(tests/test_buffer.cpp)
 do_test(tests/test_callonce.cpp)
