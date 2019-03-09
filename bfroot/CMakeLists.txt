@@ -167,8 +167,7 @@ target_compile_options(bfroot INTERFACE
     $<${TST_C_CXX_ASAN}:-O1 -g -fno-omit-frame-pointer>
     $<${TST_C_CXX_ASAN}:-fsanitize=address -fsanitize=leak>
     $<${TST_C_CXX_USAN}:-fsanitize=undefined>
-    $<${TST_C_CXX_CODECOV}:-g -O0 -fprofile-arcs>
-    $<${TST_C_CXX_CODECOV}:-ftest-coverage -DDEBUG_LEVEL=5>
+    $<${TST_C_CXX_CODECOV}:-g -O0 -fprofile-arcs -ftest-coverage>
 
     $<${TST_C_CXX_MSVC}:/EHsc>
     $<${TST_C_CXX_MSVC}:/bigobj>
@@ -177,6 +176,7 @@ target_compile_options(bfroot INTERFACE
 target_compile_definitions(bfroot INTERFACE
     $<${TST_C_CXX}:NATIVE>
     $<${TST_C_CXX}:ENABLE_BUILD_TEST>
+    $<${TST_C_CXX_CODECOV}:DEBUG_LEVEL=5>
     $<${TST_C_CXX_MSVC}:_SCL_SECURE_NO_WARNINGS>
     $<${TST_C_CXX_MSVC}:_CRT_SECURE_NO_WARNINGS>
     $<${TST_C_CXX_MSVC}:NOMINMAX>
@@ -185,7 +185,7 @@ target_link_options(bfroot INTERFACE
     # ASAN isn't working with clang atm
     $<${TST_C_CXX_GNU_ASAN}:-fsanitize=address>
     $<${TST_C_CXX_USAN}:-fsanitize=undefined>
-    $<${TST_C_CXX_GNU_CODECOV}:--coverage>
+    $<${TST_C_CXX_CODECOV}:--coverage>
 )
 target_link_directories(bfroot INTERFACE
     $<INSTALL_INTERFACE:$<${TST_C_CXX}:${TEST_PREFIX_PATH}/lib>>
