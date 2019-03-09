@@ -178,6 +178,7 @@ target_compile_definitions(bfroot INTERFACE
     $<${TST_C_CXX_MSVC}:_SCL_SECURE_NO_WARNINGS>
     $<${TST_C_CXX_MSVC}:_CRT_SECURE_NO_WARNINGS>
     $<${TST_C_CXX_MSVC}:NOMINMAX>
+    $<${TST_C_CXX_MSVC}:_SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING>
 )
 target_link_options(bfroot INTERFACE
     $<${TST_C_CXX_ASAN}:-fsanitize=address>
