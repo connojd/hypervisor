@@ -182,7 +182,9 @@ target_compile_definitions(bfroot INTERFACE
     $<${TST_C_CXX_MSVC}:NOMINMAX>
 )
 target_link_options(bfroot INTERFACE
+    # ASAN isn't working with clang atm
     $<${TST_C_CXX_GNU_ASAN}:-fsanitize=address>
+    $<${TST_C_CXX_USAN}:-fsanitize=undefined>
     $<${TST_C_CXX_GNU_CODECOV}:--coverage>
 )
 target_link_directories(bfroot INTERFACE
