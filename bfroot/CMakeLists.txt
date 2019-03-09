@@ -25,20 +25,21 @@ init_project(bfroot INTERFACE)
 # Generator expressions
 # ------------------------------------------------------------------------------
 
+set(X64 $<STREQUAL:${BUILD_TARGET_ARCH},x86_64>)
+
 set(C $<COMPILE_LANGUAGE:C>)
 set(CXX $<COMPILE_LANGUAGE:CXX>)
 set(C_CXX $<OR:${C},${CXX}>)
-set(X64 $<STREQUAL:${BUILD_TARGET_ARCH},x86_64>)
 set(C_CXX_X64 $<AND:${C_CXX},${X64}>)
 
 set(GNU $<CXX_COMPILER_ID:GNU>)
 set(MSVC $<CXX_COMPILER_ID:MSVC>)
 set(CLANG $<CXX_COMPILER_ID:Clang>)
 
-set(VMM $<AND:$<STREQUAL:${PREFIX},vmm>,$<BOOL:${ENABLE_BUILD_VMM}>>)
-set(EFI $<AND:$<STREQUAL:${PREFIX},efi>,$<BOOL:${ENABLE_BUILD_EFI}>>)
-set(TST $<AND:$<STREQUAL:${PREFIX},test>,$<BOOL:${ENABLE_BUILD_TEST}>>)
-set(USR $<AND:$<STREQUAL:${PREFIX},userspace>,$<BOOL:${ENABLE_BUILD_USERSPACE}>>)
+set(VMM $<STREQUAL:${PREFIX},vmm>)
+set(EFI $<STREQUAL:${PREFIX},efi>)
+set(TST $<STREQUAL:${PREFIX},test>)
+set(USR $<STREQUAL:${PREFIX},userspace>)
 
 set(VMM_CXX $<AND:${VMM},${CXX}>)
 set(VMM_C_CXX $<AND:${VMM},${C_CXX}>)
@@ -122,7 +123,6 @@ target_compile_definitions(bfroot INTERFACE
     $<${VMM_C_CXX}:_UNIX98_THREAD_MUTEX_ATTRIBUTES>
     $<${VMM_C_CXX}:__SINGLE_THREAD__>
     $<${VMM_C_CXX}:__ELF__>
-    $<${EFI_C_CXX}:BUILD_EFI>
 )
 target_include_directories(bfroot SYSTEM INTERFACE
     $<INSTALL_INTERFACE:$<${VMM_C_CXX}:${VMM_PREFIX_PATH}/include/c++/v1>>
