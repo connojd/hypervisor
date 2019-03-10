@@ -50,10 +50,10 @@ target_include_directories(bfruntime INTERFACE
 add_library(bfcrt)
 target_sources(bfcrt PRIVATE
     src/crt/crt.cpp
-    $<AND:${NOT_TEST},${X64_ASM}:src/crt/start_x64.asm>
-    $<AND:${NOT_TEST},${ARM_ASM}:src/crt/start_x64.S>
+    $<$<AND:${NOT_TEST},${X64_ASM}>:src/crt/start_x64.asm>
+    $<$<AND:${NOT_TEST},${ARM_ASM}>:src/crt/start_x64.S>
 )
-target_compile_options(bfcrt PRIVATE $<$AND:${NOT_TEST},${C_CXX}>:-Wno-main>)
+target_compile_options(bfcrt PRIVATE $<$<AND:${NOT_TEST},${C_CXX}>:-Wno-main>)
 target_link_libraries(bfcrt PUBLIC bfruntime)
 
 if(PREFIX STREQUAL test)
@@ -71,7 +71,7 @@ add_library(bfpthread)
 target_link_libraries(bfpthread PUBLIC bfruntime)
 target_sources(bfpthread PRIVATE
     src/pthread/pthread.cpp
-    $<AND:${NOT_TEST},${X64_ASM}:src/pthread/threadcontext.asm>
+    $<$<AND:${NOT_TEST},${X64_ASM}>:src/pthread/threadcontext.asm>
 )
 
 # -----------------------------------------------------------------------------
