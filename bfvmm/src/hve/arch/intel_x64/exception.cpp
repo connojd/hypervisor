@@ -149,7 +149,7 @@ default_esr(
 // Populate the exception handlers
 // -----------------------------------------------------------------------------
 
-void set_default_esrs(
+extern "C" void set_default_esrs(
     bfvmm::x64::idt *idt,
     bfvmm::x64::idt::selector_type selector)
 {

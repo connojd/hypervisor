@@ -100,13 +100,15 @@ endif()
 target_compile_options(bfroot INTERFACE
     $<${VMM_C_CXX_X64}:-msse -msse2 -msse3>
     $<${VMM_C_CXX}:--sysroot=${VMM_PREFIX_PATH}>
-    $<${VMM_C_CXX}:-fpic>
+    #    $<${VMM_C_CXX}:-fpic>
     $<${VMM_C_CXX}:-mno-red-zone>
     $<${VMM_C_CXX}:-mstackrealign>
     $<${VMM_C_CXX}:-fstack-protector-strong>
     $<${VMM_C_CXX}:-U__STRICT_ANSI__>
     $<${VMM_C_CXX}:-U__USER_LABEL_PREFIX__>
     $<${VMM_C_CXX}:-D__USER_LABEL_PREFIX__=>
+    $<${VMM_C_CXX}:-fno-common>
+    $<${VMM_C_CXX}:-mcmodel=large>
     $<${VMM_CXX}:-x c++>
 )
 target_compile_definitions(bfroot INTERFACE
@@ -133,7 +135,7 @@ target_link_options(bfroot INTERFACE
     $<${VMM}:--sysroot=${VMM_PREFIX_PATH}>
     $<${VMM}:-z max-page-size=4096 "SHELL:-z common-page-size=4096" "SHELL:-z relro" "SHELL:-z now" >
     $<${VMM}:-nostdlib>
-    $<${VMM}:-pie>
+    #    $<${VMM}:-pie>
 )
 
 # ------------------------------------------------------------------------------

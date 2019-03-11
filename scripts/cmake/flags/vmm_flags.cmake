@@ -33,7 +33,7 @@ list(APPEND BFFLAGS_VMM
 list(APPEND BFFLAGS_VMM
     --target=${BUILD_TARGET_ARCH}-vmm-elf
     --sysroot=${VMM_PREFIX_PATH}
-    -fpic
+    #    -fpic
     -mno-red-zone
     -mstackrealign
     -fstack-protector-strong
@@ -54,6 +54,8 @@ list(APPEND BFFLAGS_VMM
     -U__USER_LABEL_PREFIX__
     -D__USER_LABEL_PREFIX__=
     -D__ELF__
+    -fno-common
+    -mcmodel=large
 )
 
 list(APPEND BFFLAGS_VMM_C

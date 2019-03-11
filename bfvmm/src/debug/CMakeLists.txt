@@ -29,7 +29,7 @@ target_include_directories(bfvmm_debug PUBLIC
 )
 target_sources(bfvmm_debug PRIVATE
     debug_ring/debug_ring.cpp
-    serial/serial_ns16550a.cpp
+    serial/ns16550a.cpp
     $<$<STREQUAL:${BUILD_TARGET_ARCH},x86_64>:arch/x64/serial_ns16550a.cpp>
     $<$<STREQUAL:${BUILD_TARGET_ARCH},aarch64>:arch/aarch64/serial_ns16550a.cpp>
     $<$<NOT:$<BOOL:${ENABLE_MOCKING}>>:unistd.cpp>

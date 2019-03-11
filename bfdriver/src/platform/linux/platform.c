@@ -44,6 +44,11 @@ typedef long (*set_affinity_fn)(pid_t, const struct cpumask *);
 set_affinity_fn set_cpu_affinity = nullptr;
 
 int64_t
+bfmain(uintptr_t request, uintptr_t arg1, uintptr_t arg2, uintptr_t arg3);
+
+void _ZN5bfvmm9intel_x645check34guest_gs_must_be_present_if_usableEv(void);
+
+int64_t
 platform_init(void)
 {
     set_cpu_affinity = (set_affinity_fn)kallsyms_lookup_name("sched_setaffinity");
@@ -51,6 +56,9 @@ platform_init(void)
         BFALERT("Failed to locate sched_setaffinity\n");
         return -1;
     }
+
+//    bfmain(0, 0, 0, 0);
+//    _ZN5bfvmm9intel_x645check34guest_gs_must_be_present_if_usableEv();
 
     return BF_SUCCESS;
 }
