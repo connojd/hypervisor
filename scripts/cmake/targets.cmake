@@ -321,3 +321,20 @@ if(ENABLE_FORMAT)
         COMMENT "Format all files"
     )
 endif()
+
+# ------------------------------------------------------------------------------
+# Compile database
+# ------------------------------------------------------------------------------
+
+add_custom_target_category("Compilation database")
+
+add_custom_target(
+    compdb-merge
+    COMMAND ${SOURCE_UTIL_DIR}/compdb_merge.sh ${BUILD_ROOT_DIR}
+    USES_TERMINAL
+)
+
+add_custom_target_info(
+    TARGET compdb-merge
+    COMMENT "Merge subprojects compile_commands.json files"
+)
