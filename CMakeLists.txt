@@ -34,13 +34,8 @@ include(ExternalProject)
 # ------------------------------------------------------------------------------
 
 include(${CMAKE_CURRENT_LIST_DIR}/scripts/cmake/config/default.cmake)
-include_external_config()
-
-# ------------------------------------------------------------------------------
-# Macros
-# ------------------------------------------------------------------------------
-
 include(${SOURCE_CMAKE_DIR}/macros.cmake)
+include_external_config()
 
 # ------------------------------------------------------------------------------
 # Testing
@@ -186,6 +181,12 @@ endif()
 # ------------------------------------------------------------------------------
 
 if(ENABLE_BUILD_USERSPACE)
+    add_subproject(bfsdk userspace
+        DEPENDS gsl
+        DEPENDS json
+        DEPENDS bfroot
+    )
+
     add_subproject(
         bfintrinsics userspace
         DEPENDS gsl
