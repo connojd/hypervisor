@@ -22,7 +22,13 @@
 #ifndef PCI_X64_H
 #define PCI_X64_H
 
-#include "../../bfintrinsics/include/arch/x64/portio.h"
+#include <list>
+#include <array>
+
+#include <bfgsl.h>
+#include <bfdebug.h>
+
+#include <arch/x64/portio.h>
 
 namespace x64::pci {
 
@@ -104,9 +110,13 @@ struct bar {
         }
     }
 
-    bool empty() const { return m_data == 0; }
     bool is_mm() const { return m_type == mm_t; }
+    bool is_empty() const { return m_data == 0; }
     bool is_64bit() const { return m_bits == 64; }
+    uint32_t size() const { return m_size; }
+    uint32_t data() const { return m_data; }
+
+private:
 
     bool m_prefetch{};
     uint8_t m_type{};
@@ -115,7 +125,7 @@ struct bar {
     uint32_t m_size{};
     uint32_t m_mask{};
     uint32_t m_data{};
-}
+};
 
 using bar_list_t = std::list<const struct bar>;
 
@@ -199,7 +209,7 @@ inline bool is_host_bridge(uint32_t cf8)
 inline uint32_t secondary_bus(uint32_t bus, uint32_t dev, uint32_t fun)
 {
     const auto cf8 = bdf_to_cf8(bus, dev, fun);
-    expects(is_pci_bridge(cf8);
+    expects(is_pci_bridge(cf8));
 
     const auto reg = cf8_read_reg(cf8, 6);
     return (reg & 0xFF00UL) >> 8;
@@ -247,17 +257,17 @@ inline void parse_bars_normal(uint32_t cf8, bar_list_t &bars)
     const std::array<uint8_t, 6> bar_regs = {0x4, 0x5, 0x6, 0x7, 0x8, 0x9};
 
     for (auto i = 0; i < bar_regs.size(); i++) {
-        const auto bar = bar(cf8, bar_regs[i]);
+        const auto b = bar(cf8, bar_regs[i]);
 
-        if (bar.empty()) {
+        if (b.is_empty()) {
             continue;
         }
 
-        if (bar.is_mm() && bar.is_64bit()) {
+        if (b.is_mm() && b.is_64bit()) {
             ++i;
         }
 
-        bars.push_back(bar);
+        bars.push_back(b);
     }
 }
 
@@ -266,17 +276,17 @@ inline void parse_bars_pci_bridge(uint32_t cf8, bar_list_t &bars)
     const std::array<uint8_t, 2> bar_regs = {0x4, 0x5};
 
     for (auto i = 0; i < bar_regs.size(); i++) {
-        const auto bar = bar(cf8, bar_regs[i]);
+        const auto b = bar(cf8, bar_regs[i]);
 
-        if (bar.empty()) {
+        if (b.is_empty()) {
             continue;
         }
 
-        if (bar.is_mm() && bar.is_64bit()) {
+        if (b.is_mm() && b.is_64bit()) {
             ++i;
         }
 
-        bars.push_back(bar);
+        bars.push_back(b);
     }
 }
 
