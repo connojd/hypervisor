@@ -42,6 +42,13 @@ interrupt_window_handler::interrupt_window_handler(
 // -----------------------------------------------------------------------------
 
 void
+interrupt_window_handler::post_external_interrupt(uint64_t vector)
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    m_interrupt_queue.push(vector);
+}
+
+void
 interrupt_window_handler::queue_external_interrupt(uint64_t vector)
 {
     // Note:
@@ -76,6 +83,7 @@ interrupt_window_handler::queue_external_interrupt(uint64_t vector)
     //
 
     this->enable_exiting();
+    std::lock_guard<std::mutex> lock(m_mutex);
     m_interrupt_queue.push(vector);
 }
 
@@ -133,6 +141,8 @@ bool
 interrupt_window_handler::handle(vcpu *vcpu)
 {
     bfignored(vcpu);
+
+    std::lock_guard<std::mutex> lock(m_mutex);
     this->inject_external_interrupt(m_interrupt_queue.pop());
 
     if (m_interrupt_queue.empty()) {

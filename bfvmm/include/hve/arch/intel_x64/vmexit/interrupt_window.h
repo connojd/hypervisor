@@ -22,6 +22,8 @@
 #ifndef VMEXIT_INTERRUPT_WINDOW_INTEL_X64_H
 #define VMEXIT_INTERRUPT_WINDOW_INTEL_X64_H
 
+#include <mutex>
+
 #include <bfgsl.h>
 #include <bfdelegate.h>
 
@@ -60,6 +62,21 @@ public:
     ~interrupt_window_handler() = default;
 
 public:
+
+    /// Post External Interrupt
+    ///
+    /// Post an external interrupt at the given vector. This
+    /// pushes the vector into the queue, but does not enable
+    /// exiting. This means that no vmcs access occurs, which
+    /// is useful if an interrupt that is bound to this vcpu
+    /// arrives on a different vcpu since no vmcs load is required.
+    ///
+    /// @expects
+    /// @ensures
+    ///
+    /// @param vector the vector to inject into the guest
+    ///
+    void post_external_interrupt(uint64_t vector);
 
     /// Queue External Interrupt
     ///
@@ -119,6 +136,7 @@ private:
 
     bool m_enabled{false};
     interrupt_queue m_interrupt_queue;
+    std::mutex m_mutex;
 
 public:
 

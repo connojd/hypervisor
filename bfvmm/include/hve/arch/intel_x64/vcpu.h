@@ -473,6 +473,21 @@ public:
     // Interrupt Window
     //--------------------------------------------------------------------------
 
+    /// Post External Interrupt
+    ///
+    /// Post an external interrupt for eventual injection. The difference
+    /// between this and queue_external_interrupt is that this does not
+    /// require this vcpu's vmcs to be loaded, because external interrupt
+    /// exiting is not enabled. Use this if you need to queue an interrupt
+    /// from any code where this vmcs isn't loaded.
+    ///
+    /// @expects
+    /// @ensures
+    ///
+    /// @param vector the vector to queue for injection
+    ///
+    VIRTUAL void post_external_interrupt(uint64_t vector);
+
     /// Queue External Interrupt
     ///
     /// Queues an external interrupt for injection.
