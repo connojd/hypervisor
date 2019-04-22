@@ -90,8 +90,8 @@ if(PREFIX STREQUAL vmm)
         ${CMAKE_INSTALL_PREFIX}/lib/libc++abi.a
         vmm::bfpthread
         vmm::bfunwind
-        ${CMAKE_INSTALL_PREFIX}/lib/libm.a
         ${CMAKE_INSTALL_PREFIX}/lib/libc.a
+        ${CMAKE_INSTALL_PREFIX}/lib/libm.a
         vmm::bfsyscall
     )
 
