@@ -21,6 +21,7 @@
 
 do_test(arch/x64/test_gdt.cpp ${ARGN})
 do_test(arch/x64/test_idt.cpp ${ARGN})
+do_test(arch/intel_x64/test_acpi.cpp ${ARGN})
 do_test(arch/intel_x64/test_check_vmcs_controls_fields.cpp ${ARGN})
 do_test(arch/intel_x64/test_check_vmcs_guest_fields.cpp ${ARGN})
 do_test(arch/intel_x64/test_check_vmcs_host_fields.cpp ${ARGN})

@@ -30,6 +30,7 @@
 #include <bfcallonce.h>
 #include <bfthreadcontext.h>
 
+#include <hve/arch/intel_x64/acpi.h>
 #include <hve/arch/intel_x64/vcpu.h>
 #include <hve/arch/intel_x64/exception.h>
 
@@ -106,6 +107,8 @@ setup()
     if (extended_feature_flags::subleaf0::ebx::smap::is_enabled()) {
         g_cr4_reg |= ::intel_x64::cr4::smap_enable_bit::mask;
     }
+
+    using namespace bfvmm::intel_x64;
 }
 
 //==============================================================================
@@ -191,6 +194,13 @@ vcpu::vcpu(
     m_nmi_handler.enable_exiting();
     m_control_register_handler.enable_wrcr0_exiting(0);
     m_control_register_handler.enable_wrcr4_exiting(0);
+
+    map_xsdt(this, g_rsdp);
+    expects(g_rsdp_tbl);
+    expects(g_xsdt_tbl);
+
+    bfdebug_nhex(0, "RSDP:", g_rsdp);
+    bfdebug_nhex(0, "XSDT:", g_mm->virtptr_to_physint(g_xsdt_tbl.get()));
 }
 
 //==============================================================================
