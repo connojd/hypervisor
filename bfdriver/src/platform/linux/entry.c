@@ -28,6 +28,8 @@
 #include <linux/notifier.h>
 #include <linux/reboot.h>
 #include <linux/suspend.h>
+#include <linux/slab.h>
+#include <asm/io.h>
 
 #include <common.h>
 
@@ -38,13 +40,50 @@
 
 #include <xue/xue.h>
 
-//static void *xue_memcpy(void *dest, const void *src, size_t count)
-//{ return platform_memcpy(dest, src, count); }
-//
-//struct xue_ops xue_ops = {
-//    .memset = platform_memset,
-//    .memcpy = xue_memcpy,
-//};
+static void *xue_memset(void *dest, int c, uint64_t count)
+{ return platform_memset(dest, (char)c, count); }
+
+static void *xue_memcpy(void *dest, const void *src, uint64_t count)
+{
+    platform_memcpy(dest, count, src, count, count);
+    return dest;
+}
+
+static void *xue_alloc(uint64_t align, uint64_t count)
+{
+    if (count < align) {
+        count += (align - count);
+    }
+
+    return kmalloc(count, GFP_KERNEL);
+}
+
+static void *xue_map_mmio(uint64_t phys, uint64_t count)
+{ return ioremap(phys, (long unsigned int)count); }
+
+static void xue_unmap_mmio(const void *virt)
+{ iounmap((volatile void *)virt); }
+
+static void xue_outd(uint32_t port, uint32_t data)
+{ outl(data, port); }
+
+static uint32_t xue_ind(uint32_t port)
+{ return inl((int32_t)port); }
+
+static uint64_t xue_virt_to_phys(const void *virt)
+{ return virt_to_phys((volatile void *)virt); }
+
+struct xue_ops xue_ops = {
+    .memset = xue_memset,
+    .memcpy = xue_memcpy,
+    .alloc = xue_alloc,
+    .map_mmio = xue_map_mmio,
+    .unmap_mmio = xue_unmap_mmio,
+    .free = kfree,
+    .outd = xue_outd,
+    .ind = xue_ind,
+    .virt_to_phys = xue_virt_to_phys
+};
 
 struct xue g_xue;
 
@@ -521,6 +560,8 @@ dev_init(void)
     g_status = STATUS_STOPPED;
     mutex_init(&g_status_mutex);
 
+    xue_open(&g_xue, &xue_ops);
+
     return 0;
 
 INIT_FAILURE:
@@ -535,6 +576,9 @@ dev_exit(void)
 
     common_fini();
     g_status = STATUS_STOPPED;
+
+    xue_write(&g_xue, "Im sry Jon\n", 11);
+//    xue_close(&g_xue);
 
     misc_deregister(&bareflank_dev);
     unregister_pm_notifier(&pm_notifier_block);
