@@ -36,6 +36,18 @@
 #include <bfconstants.h>
 #include <bfdriverinterface.h>
 
+#include <xue/xue.h>
+
+//static void *xue_memcpy(void *dest, const void *src, size_t count)
+//{ return platform_memcpy(dest, src, count); }
+//
+//struct xue_ops xue_ops = {
+//    .memset = platform_memset,
+//    .memcpy = xue_memcpy,
+//};
+
+struct xue g_xue;
+
 uint64_t _vmcall(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4);
 
 /* -------------------------------------------------------------------------- */
