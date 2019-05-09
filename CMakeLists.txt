@@ -77,6 +77,7 @@ include(${SOURCE_CMAKE_DIR}/targets.cmake)
 # ------------------------------------------------------------------------------
 
 include_dependency(SOURCE_DEPENDS_DIR gsl)
+include_dependency(SOURCE_DEPENDS_DIR xue)
 include_dependency(SOURCE_DEPENDS_DIR cxxopts)
 include_dependency(SOURCE_DEPENDS_DIR json)
 include_dependency(SOURCE_DEPENDS_DIR astyle)
@@ -120,7 +121,7 @@ endif()
 
 if(ENABLE_BUILD_VMM)
     add_subproject(bfintrinsics vmm DEPENDS bfruntime)
-    add_subproject(bfvmm vmm DEPENDS bfunwind bfintrinsics bfsdk)
+    add_subproject(bfvmm vmm DEPENDS bfunwind bfintrinsics bfsdk xue)
 endif()
 
 # ------------------------------------------------------------------------------

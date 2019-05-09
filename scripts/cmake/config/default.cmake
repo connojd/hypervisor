@@ -744,6 +744,16 @@ set(GSL_URL_MD5 "0cc95192658d10e43162ef7b2892e37a"
     "GSL URL MD5 hash"
 )
 
+set(XUE_URL "https://gitlab.com/connojd/xue/-/archive/master/xue-master.zip"
+    CACHE INTERNAL FORCE
+    "xue URL"
+)
+
+set(XUE_URL_MD5 "d277136ea9843ee7456375846c541674"
+    CACHE INTERNAL FORCE
+    "xue URL MD5 hash"
+)
+
 set(CXXOPTS_URL "https://github.com/jarro2783/cxxopts/archive/v2.1.1.zip"
     CACHE INTERNAL FORCE
     "cxxopts URL"
