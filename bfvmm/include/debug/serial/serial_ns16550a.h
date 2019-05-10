@@ -24,9 +24,6 @@
 
 #include <intrinsics.h>
 #include <bfconstants.h>
-#include <xue.h>
-
-inline struct xue g_xue;
 
 // -----------------------------------------------------------------------------
 // Definition

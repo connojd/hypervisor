@@ -38,7 +38,7 @@
 #include <bfconstants.h>
 #include <bfdriverinterface.h>
 
-#include <xue/xue.h>
+#include <xue.h>
 
 static void *xue_memset(void *dest, int c, uint64_t count)
 { return platform_memset(dest, (char)c, count); }
@@ -49,19 +49,16 @@ static void *xue_memcpy(void *dest, const void *src, uint64_t count)
     return dest;
 }
 
-static void *xue_alloc(uint64_t align, uint64_t count)
-{
-    if (count < align) {
-        count += (align - count);
-    }
+static void *xue_alloc_pages(uint64_t order)
+{ return (void *)__get_free_pages(GFP_KERNEL, order); }
 
-    return kmalloc(count, GFP_KERNEL);
-}
+static void xue_free_pages(void *addr, uint64_t order)
+{ free_pages((unsigned long)addr, order); }
 
 static void *xue_map_mmio(uint64_t phys, uint64_t count)
 { return ioremap(phys, (long unsigned int)count); }
 
-static void xue_unmap_mmio(const void *virt)
+static void xue_unmap_mmio(void *virt)
 { iounmap((volatile void *)virt); }
 
 static void xue_outd(uint32_t port, uint32_t data)
@@ -76,16 +73,16 @@ static uint64_t xue_virt_to_phys(const void *virt)
 struct xue_ops xue_ops = {
     .memset = xue_memset,
     .memcpy = xue_memcpy,
-    .alloc = xue_alloc,
+    .alloc_pages = xue_alloc_pages,
     .map_mmio = xue_map_mmio,
     .unmap_mmio = xue_unmap_mmio,
-    .free = kfree,
+    .free_pages = xue_free_pages,
     .outd = xue_outd,
     .ind = xue_ind,
     .virt_to_phys = xue_virt_to_phys
 };
 
-struct xue g_xue;
+extern struct xue g_xue;
 
 uint64_t _vmcall(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4);
 
@@ -577,8 +574,8 @@ dev_exit(void)
     common_fini();
     g_status = STATUS_STOPPED;
 
-    xue_write(&g_xue, "Im sry Jon\n", 11);
-//    xue_close(&g_xue);
+//    xue_write(&g_xue, "Im sry Jon\n", 11);
+    xue_close(&g_xue);
 
     misc_deregister(&bareflank_dev);
     unregister_pm_notifier(&pm_notifier_block);

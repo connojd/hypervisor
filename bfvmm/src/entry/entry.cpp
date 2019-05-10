@@ -39,6 +39,11 @@
 #include <vcpu/vcpu_manager.h>
 #include <debug/debug_ring/debug_ring.h>
 #include <memory_manager/memory_manager.h>
+#include <memory_manager/arch/x64/cr3/mmap.h>
+
+#include <cstring>
+#include <memory>
+#include <xue.h>
 
 static bfn::once_flag g_init_flag;
 
@@ -56,7 +61,88 @@ WEAK_SYM vcpu_init_nonroot(vcpu_t *vcpu)
 void
 WEAK_SYM vcpu_fini_nonroot(vcpu_t *vcpu)
 { bfignored(vcpu); }
+
 #endif
+
+struct xue g_xue{};
+std::unique_ptr<uint8_t[]> g_xue_data;
+
+uint64_t xue_virt_to_phys(const void *virt)
+{ return g_mm->virtptr_to_physint((void *)virt); }
+
+/* Only memcpy and virt_to_phys are needed for xue_write */
+struct xue_ops g_xue_ops = {
+    .memcpy = memcpy,
+    .virt_to_phys = xue_virt_to_phys
+};
+
+extern "C" int64_t
+private_init_xue(struct xue *xue) noexcept
+{
+    using attr_t = bfvmm::x64::cr3::mmap::attr_type;
+    using mem_t = bfvmm::x64::cr3::mmap::memory_type;
+
+    /*
+     * Copy the kernel's xue instance by value. This invalidates
+     * every pointer field, so we have to remap them into our
+     * address space below.
+     */
+    memcpy(&g_xue, xue, sizeof(*xue));
+
+    g_xue.ops = &g_xue_ops;
+
+    auto mmio_hva = g_mm->alloc_map(xue->xhc_mmio_size);
+    for (auto i = 0; i < xue->xhc_mmio_size; i += 4096) {
+        g_cr3->map_4k(reinterpret_cast<uint64_t>(mmio_hva) + i,
+                      xue->xhc_mmio_phys + i,
+                      attr_t::read_write,
+                      mem_t::uncacheable);
+    }
+
+    g_xue.xhc_mmio = reinterpret_cast<uint8_t *>(mmio_hva);
+
+    const struct xue_dbc_reg *kreg = xue->dbc_reg;
+    const struct xue_dbc_ctx *kctx = xue->dbc_ctx;
+
+    uint64_t ctx_hpa = kreg->cp;
+    uint64_t erst_hpa = kreg->erstba;
+    uint64_t ering_trb_hpa = kreg->erdp;
+    uint64_t oring_trb_hpa = ((uint64_t)kctx->ep_out[3] << 32) | kctx->ep_out[2];
+    uint64_t iring_trb_hpa = ((uint64_t)kctx->ep_in[3] << 32) | kctx->ep_in[2];
+
+    ering_trb_hpa &= ~0xFFFULL;
+    oring_trb_hpa &= ~0xFFFULL;
+    iring_trb_hpa &= ~0xFFFULL;
+
+    static_assert(XUE_PAGE_SIZE == BAREFLANK_PAGE_SIZE);
+
+    auto ctx = g_mm->alloc_map(XUE_PAGE_SIZE);
+    auto erst = g_mm->alloc_map(XUE_PAGE_SIZE);
+    auto ering_trb = g_mm->alloc_map(XUE_PAGE_SIZE);
+    auto oring_trb = g_mm->alloc_map(XUE_PAGE_SIZE);
+    auto iring_trb = g_mm->alloc_map(XUE_PAGE_SIZE);
+
+    g_cr3->map_4k(ctx, ctx_hpa);
+    g_cr3->map_4k(erst, erst_hpa);
+    g_cr3->map_4k(ering_trb, ering_trb_hpa);
+    g_cr3->map_4k(oring_trb, oring_trb_hpa);
+    g_cr3->map_4k(iring_trb, iring_trb_hpa);
+
+    g_xue.dbc_ctx = (struct xue_dbc_ctx *)ctx;
+    g_xue.dbc_erst = (struct xue_erst_segment *)erst;
+    g_xue.dbc_ering.trb = (struct xue_trb *)ering_trb;
+    g_xue.dbc_oring.trb = (struct xue_trb *)oring_trb;
+    g_xue.dbc_iring.trb = (struct xue_trb *)iring_trb;
+
+    /* Not used in the VMM */
+    g_xue.dbc_strings.buf = (char *)0x0000BFCAFEBABE;
+
+    g_xue_data = std::make_unique<uint8_t[]>(xue->dbc_datasz);
+    g_xue.dbc_data = g_xue_data.get();
+    g_xue.dbc_reg = (struct xue_dbc_reg *)((uint64_t)mmio_hva +
+                                           xue->xhc_dbc_offset);
+    return ENTRY_SUCCESS;
+}
 
 extern "C" int64_t
 private_add_md(struct memory_descriptor *md) noexcept
@@ -147,6 +233,9 @@ bfmain(uintptr_t request, uintptr_t arg1, uintptr_t arg2, uintptr_t arg3)
 
         case BF_REQUEST_VMM_FINI:
             return private_fini_vmm(arg1);
+
+        case BF_REQUEST_INIT_XUE:
+            return private_init_xue((struct xue *)arg1);
 
         default:
             break;
