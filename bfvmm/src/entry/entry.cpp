@@ -73,7 +73,8 @@ uint64_t xue_virt_to_phys(const void *virt)
 /* Only memcpy and virt_to_phys are needed for xue_write */
 struct xue_ops g_xue_ops = {
     .memcpy = memcpy,
-    .virt_to_phys = xue_virt_to_phys
+    .virt_to_phys = xue_virt_to_phys,
+    .sfence = _wmb
 };
 
 extern "C" int64_t
@@ -137,8 +138,9 @@ private_init_xue(struct xue *xue) noexcept
     /* Not used in the VMM */
     g_xue.dbc_strings.buf = (char *)0x0000BFCAFEBABE;
 
-    g_xue_data = std::make_unique<uint8_t[]>(xue->dbc_datasz);
-    g_xue.dbc_data = g_xue_data.get();
+    g_xue_data = std::make_unique<uint8_t[]>(XUE_PAGE_SIZE << xue->out_work.order);
+    g_xue.out_work.buf = g_xue_data.get();
+    g_xue.out_work.phys = g_mm->virtptr_to_physint(g_xue.out_work.buf);
     g_xue.dbc_reg = (struct xue_dbc_reg *)((uint64_t)mmio_hva +
                                            xue->xhc_dbc_offset);
     return ENTRY_SUCCESS;
