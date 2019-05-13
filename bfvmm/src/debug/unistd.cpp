@@ -50,9 +50,57 @@ write_str(const std::string &str)
         std::lock_guard<std::mutex> guard(g_write_mutex);
 
         g_debug_ring()->write(str);
-        xue_write(&g_xue, str.data(), str.size());
+        xue_write(&g_xue, (const uint8_t *)str.data(), str.size());
 
-        for (const auto &c : str) {
+        //char regs[4096];
+        //memset(regs, 0, 4096);
+        //snprintf(regs, 4096, "xue: ctrl: 0x%x, psc: 0x%x, sts: 0x%x\n",
+        //    g_xue.dbc_reg->ctrl,
+        //    g_xue.dbc_reg->portsc,
+        //    g_xue.dbc_reg->st
+        //);
+        //int i = 0;
+        //while (regs[i]) {
+        //    bfvmm::DEFAULT_COM_DRIVER::instance()->write(regs[i++]);
+        //}
+
+        //char evts[4096];
+        //struct xue *xue = &g_xue;
+        //size_t deq = xue->dbc_ering.deq;
+        //size_t cyc = xue->dbc_ering.cyc;
+        //struct xue_trb *event = &xue->dbc_ering.trb[deq];
+
+        //while (xue_trb_cyc(event) == cyc) {
+        //    memset(evts, 0, 4096);
+        //    switch (xue_trb_type(event)) {
+        //    case xue_trb_tfre:
+        //        {
+        //            uint64_t off = (xue_trb_tfre_ptr(event) & 0xFFFUL) >> 4;
+        //            struct xue_trb *trb = &xue->dbc_oring.trb[off];
+        //            snprintf(evts, 4096, "      evt: tfre cc: %d ptr: 0x%lx - trb params: 0x%lx status: 0x%x ctrl: 0x%x\n", xue_trb_tfre_cc(event), xue_trb_tfre_ptr(event), trb->params, trb->status, trb->ctrl);
+        //            i = 0;
+        //            while (evts[i]) {
+        //                bfvmm::DEFAULT_COM_DRIVER::instance()->write(evts[i++]);
+        //            }
+        //        }
+        //        break;
+        //    case xue_trb_psce:
+        //        snprintf(evts, 4096, "  - evt: psce\n");
+        //        i = 0;
+        //        while (evts[i]) {
+        //            bfvmm::DEFAULT_COM_DRIVER::instance()->write(evts[i++]);
+        //        }
+        //        break;
+        //    default:
+        //        break;
+        //    }
+
+        //    cyc = (deq == XUE_TRB_RING_SIZE - 1) ? cyc ^ 1 : cyc;
+        //    deq = (deq + 1) & (XUE_TRB_RING_SIZE - 1);
+        //    event = &xue->dbc_ering.trb[deq];
+        //}
+
+        for (const auto c : str) {
             bfvmm::DEFAULT_COM_DRIVER::instance()->write(c);
         }
     }

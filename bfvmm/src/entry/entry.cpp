@@ -107,40 +107,43 @@ private_init_xue(struct xue *xue) noexcept
 
     uint64_t ctx_hpa = kreg->cp;
     uint64_t erst_hpa = kreg->erstba;
-    uint64_t ering_trb_hpa = kreg->erdp;
-    uint64_t oring_trb_hpa = ((uint64_t)kctx->ep_out[3] << 32) | kctx->ep_out[2];
-    uint64_t iring_trb_hpa = ((uint64_t)kctx->ep_in[3] << 32) | kctx->ep_in[2];
+    uint64_t etrb_hpa = kreg->erdp;
+    uint64_t otrb_hpa = ((uint64_t)kctx->ep_out[3] << 32) | kctx->ep_out[2];
+    uint64_t itrb_hpa = ((uint64_t)kctx->ep_in[3] << 32) | kctx->ep_in[2];
 
-    ering_trb_hpa &= ~0xFFFULL;
-    oring_trb_hpa &= ~0xFFFULL;
-    iring_trb_hpa &= ~0xFFFULL;
+    etrb_hpa &= ~0xFFFULL;
+    otrb_hpa &= ~0xFFFULL;
+    itrb_hpa &= ~0xFFFULL;
 
     static_assert(XUE_PAGE_SIZE == BAREFLANK_PAGE_SIZE);
 
     auto ctx = g_mm->alloc_map(XUE_PAGE_SIZE);
     auto erst = g_mm->alloc_map(XUE_PAGE_SIZE);
-    auto ering_trb = g_mm->alloc_map(XUE_PAGE_SIZE);
-    auto oring_trb = g_mm->alloc_map(XUE_PAGE_SIZE);
-    auto iring_trb = g_mm->alloc_map(XUE_PAGE_SIZE);
+    auto etrb = g_mm->alloc_map(XUE_TRB_RING_SIZE * sizeof(struct xue_trb));
+    auto otrb = g_mm->alloc_map(XUE_TRB_RING_SIZE * sizeof(struct xue_trb));
+    auto itrb = g_mm->alloc_map(XUE_TRB_RING_SIZE * sizeof(struct xue_trb));
 
     g_cr3->map_4k(ctx, ctx_hpa);
     g_cr3->map_4k(erst, erst_hpa);
-    g_cr3->map_4k(ering_trb, ering_trb_hpa);
-    g_cr3->map_4k(oring_trb, oring_trb_hpa);
-    g_cr3->map_4k(iring_trb, iring_trb_hpa);
+
+    for (auto i = 0; i < XUE_TRB_RING_SIZE * sizeof(struct xue_trb); i += 4096) {
+        g_cr3->map_4k((uint64_t)etrb + i, etrb_hpa + i);
+        g_cr3->map_4k((uint64_t)otrb + i, otrb_hpa + i);
+        g_cr3->map_4k((uint64_t)itrb + i, itrb_hpa + i);
+    }
 
     g_xue.dbc_ctx = (struct xue_dbc_ctx *)ctx;
     g_xue.dbc_erst = (struct xue_erst_segment *)erst;
-    g_xue.dbc_ering.trb = (struct xue_trb *)ering_trb;
-    g_xue.dbc_oring.trb = (struct xue_trb *)oring_trb;
-    g_xue.dbc_iring.trb = (struct xue_trb *)iring_trb;
+    g_xue.dbc_ering.trb = (struct xue_trb *)etrb;
+    g_xue.dbc_oring.trb = (struct xue_trb *)otrb;
+    g_xue.dbc_iring.trb = (struct xue_trb *)itrb;
 
     /* Not used in the VMM */
     g_xue.dbc_strings.buf = (char *)0x0000BFCAFEBABE;
 
-    g_xue_data = std::make_unique<uint8_t[]>(XUE_PAGE_SIZE << xue->out_work.order);
-    g_xue.out_work.buf = g_xue_data.get();
-    g_xue.out_work.phys = g_mm->virtptr_to_physint(g_xue.out_work.buf);
+    g_xue_data = std::make_unique<uint8_t[]>(XUE_WORK_RING_SIZE);
+    g_xue.dbc_owork.buf = g_xue_data.get();
+    g_xue.dbc_owork.phys = g_mm->virtptr_to_physint(g_xue.dbc_owork.buf);
     g_xue.dbc_reg = (struct xue_dbc_reg *)((uint64_t)mmio_hva +
                                            xue->xhc_dbc_offset);
     return ENTRY_SUCCESS;

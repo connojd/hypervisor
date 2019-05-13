@@ -749,7 +749,7 @@ set(XUE_URL "https://gitlab.com/connojd/xue/-/archive/master/xue-master.zip"
     "xue URL"
 )
 
-set(XUE_URL_MD5 "212e0c02a4f96498274ecfd092b1f6d4"
+set(XUE_URL_MD5 "b665065936084474a1647e7076c86ad2"
     CACHE INTERNAL FORCE
     "xue URL MD5 hash"
 )
