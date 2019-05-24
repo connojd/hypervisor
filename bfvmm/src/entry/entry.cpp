@@ -72,7 +72,6 @@ uint64_t xue_virt_to_phys(const void *virt)
 
 /* Only memcpy and virt_to_phys are needed for xue_write */
 struct xue_ops g_xue_ops = {
-    .memcpy = memcpy,
     .virt_to_phys = xue_virt_to_phys,
     .sfence = _wmb
 };
@@ -119,14 +118,14 @@ private_init_xue(struct xue *xue) noexcept
 
     auto ctx = g_mm->alloc_map(XUE_PAGE_SIZE);
     auto erst = g_mm->alloc_map(XUE_PAGE_SIZE);
-    auto etrb = g_mm->alloc_map(XUE_TRB_RING_SIZE * sizeof(struct xue_trb));
-    auto otrb = g_mm->alloc_map(XUE_TRB_RING_SIZE * sizeof(struct xue_trb));
-    auto itrb = g_mm->alloc_map(XUE_TRB_RING_SIZE * sizeof(struct xue_trb));
+    auto etrb = g_mm->alloc_map(XUE_TRB_RING_CAP * sizeof(struct xue_trb));
+    auto otrb = g_mm->alloc_map(XUE_TRB_RING_CAP * sizeof(struct xue_trb));
+    auto itrb = g_mm->alloc_map(XUE_TRB_RING_CAP * sizeof(struct xue_trb));
 
     g_cr3->map_4k(ctx, ctx_hpa);
     g_cr3->map_4k(erst, erst_hpa);
 
-    for (auto i = 0; i < XUE_TRB_RING_SIZE * sizeof(struct xue_trb); i += 4096) {
+    for (auto i = 0; i < XUE_TRB_RING_CAP * sizeof(struct xue_trb); i += 4096) {
         g_cr3->map_4k((uint64_t)etrb + i, etrb_hpa + i);
         g_cr3->map_4k((uint64_t)otrb + i, otrb_hpa + i);
         g_cr3->map_4k((uint64_t)itrb + i, itrb_hpa + i);
@@ -139,9 +138,9 @@ private_init_xue(struct xue *xue) noexcept
     g_xue.dbc_iring.trb = (struct xue_trb *)itrb;
 
     /* Not used in the VMM */
-    g_xue.dbc_strings.buf = (char *)0x0000BFCAFEBABE;
+    //g_xue.dbc_strings.buf = (char *)0x0000BFCAFEBABE;
 
-    g_xue_data = std::make_unique<uint8_t[]>(XUE_WORK_RING_SIZE);
+    g_xue_data = std::make_unique<uint8_t[]>(XUE_WORK_RING_CAP);
     g_xue.dbc_owork.buf = g_xue_data.get();
     g_xue.dbc_owork.phys = g_mm->virtptr_to_physint(g_xue.dbc_owork.buf);
     g_xue.dbc_reg = (struct xue_dbc_reg *)((uint64_t)mmio_hva +

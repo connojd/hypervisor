@@ -50,7 +50,7 @@ write_str(const std::string &str)
         std::lock_guard<std::mutex> guard(g_write_mutex);
 
         g_debug_ring()->write(str);
-        xue_write(&g_xue, (const uint8_t *)str.data(), str.size());
+        xue_write(&g_xue, (const char *)str.data(), str.size());
 
         //char regs[4096];
         //memset(regs, 0, 4096);

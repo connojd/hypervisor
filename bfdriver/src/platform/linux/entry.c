@@ -40,25 +40,16 @@
 
 #include <xue.h>
 
-static void *xue_memset(void *dest, int c, uint64_t count)
-{ return platform_memset(dest, (char)c, count); }
-
-static void *xue_memcpy(void *dest, const void *src, uint64_t count)
-{
-    platform_memcpy(dest, count, src, count, count);
-    return dest;
-}
-
 static void *xue_alloc_pages(uint64_t order)
 { return (void *)__get_free_pages(GFP_KERNEL, order); }
 
 static void xue_free_pages(void *addr, uint64_t order)
 { free_pages((unsigned long)addr, order); }
 
-static void *xue_map_mmio(uint64_t phys, uint64_t count)
+static void *xue_map_xhc(uint64_t phys, uint64_t count)
 { return ioremap(phys, (long unsigned int)count); }
 
-static void xue_unmap_mmio(void *virt)
+static void xue_unmap_xhc(void *virt)
 { iounmap((volatile void *)virt); }
 
 static void xue_outd(uint32_t port, uint32_t data)
@@ -70,16 +61,18 @@ static uint32_t xue_ind(uint32_t port)
 static uint64_t xue_virt_to_phys(const void *virt)
 { return virt_to_phys((volatile void *)virt); }
 
+static void xue_sfence(void)
+{ wmb(); }
+
 struct xue_ops xue_ops = {
-    .memset = xue_memset,
-    .memcpy = xue_memcpy,
     .alloc_pages = xue_alloc_pages,
-    .map_mmio = xue_map_mmio,
-    .unmap_mmio = xue_unmap_mmio,
+    .map_xhc = xue_map_xhc,
+    .unmap_xhc = xue_unmap_xhc,
     .free_pages = xue_free_pages,
     .outd = xue_outd,
     .ind = xue_ind,
-    .virt_to_phys = xue_virt_to_phys
+    .virt_to_phys = xue_virt_to_phys,
+    .sfence = xue_sfence
 };
 
 extern struct xue g_xue;
