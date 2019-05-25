@@ -31,6 +31,53 @@
 #include <bfconstants.h>
 #include <bfdriverinterface.h>
 
+#include <xue.h>
+
+uint32_t _ind(uint16_t port);
+void _outd(uint16_t port, uint32_t val);
+void _sfence(void);
+
+static uint64_t order_to_size(uint64_t order)
+{ return XUE_PAGE_SIZE << order; }
+
+/* This memory is assumed to be DMA'able */
+static void *xue_alloc_pages(uint64_t order)
+{ return platform_alloc_rw(order_to_size(order)); }
+
+static void xue_free_pages(void *addr, uint64_t order)
+{ platform_free_rw(addr, order_to_size(order)); }
+
+static void *xue_map_xhc(uint64_t phys, uint64_t count)
+{
+    (void)count;
+    return (void *)phys;
+}
+
+static void xue_unmap_xhc(void *virt)
+{ (void)virt; }
+
+static uint32_t xue_ind(uint32_t port)
+{ return _ind((uint16_t)port); }
+
+static void xue_outd(uint32_t port, uint32_t val)
+{ _outd((uint16_t)port, val); }
+
+static uint64_t xue_virt_to_phys(const void *virt)
+{ return (uint64_t)platform_virt_to_phys((void *)virt); }
+
+struct xue_ops g_xue_ops = {
+    .alloc_pages = xue_alloc_pages,
+    .free_pages = xue_free_pages,
+    .map_xhc = xue_map_xhc,
+    .unmap_xhc = xue_unmap_xhc,
+    .outd = xue_outd,
+    .ind = xue_ind,
+    .virt_to_phys = xue_virt_to_phys,
+    .sfence = _sfence
+};
+
+extern struct xue g_xue;
+
 /* -------------------------------------------------------------------------- */
 /* Global                                                                     */
 /* -------------------------------------------------------------------------- */

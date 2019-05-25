@@ -68,8 +68,6 @@ handle_exit(
             d(vcpu);
         }
 
-        bfdebug_nhex(0, "exit:", vmcs_n::exit_reason::basic_exit_reason::get());
-
         const auto &handlers =
             exit_handler->m_exit_handlers_array.at(
                 vmcs_n::exit_reason::basic_exit_reason::get()

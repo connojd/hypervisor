@@ -567,7 +567,6 @@ dev_exit(void)
     common_fini();
     g_status = STATUS_STOPPED;
 
-//    xue_write(&g_xue, "Im sry Jon\n", 11);
     xue_close(&g_xue);
 
     misc_deregister(&bareflank_dev);
