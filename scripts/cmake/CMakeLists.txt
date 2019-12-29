@@ -223,6 +223,7 @@ target_compile_definitions(bfroot INTERFACE
     $<${USR_C_CXX_MSVC}:_CRT_SECURE_NO_WARNINGS>
     $<${USR_C_CXX_MSVC}:NOMINMAX>
     $<${USR_C_CXX_MSVC}:_SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING>
+    $<$<BOOL:${USE_XUE}>:USE_XUE>
 )
 target_include_directories(bfroot SYSTEM INTERFACE
     $<INSTALL_INTERFACE:$<${USR_C_CXX}:${USERSPACE_PREFIX_PATH}/include>>

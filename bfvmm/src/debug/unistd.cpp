@@ -44,6 +44,15 @@ g_debug_ring() noexcept
     return &dr;
 }
 
+#ifdef USE_XUE
+extern "C" void
+debug_ring_write(const std::string &str)
+{
+    std::lock_guard<std::mutex> guard(g_write_mutex);
+    g_debug_ring()->write(str);
+}
+#endif
+
 extern "C" uint64_t
 write_str(const std::string &str)
 {
