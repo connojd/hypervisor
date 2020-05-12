@@ -34,6 +34,8 @@
 // Handlers
 // -----------------------------------------------------------------------------
 
+bool trace_vmexits{false};
+
 namespace bfvmm::intel_x64
 {
 
@@ -64,14 +66,46 @@ handle_exit(
 {
     guard_exceptions([&]() {
 
+        uint32_t reason = vmcs_n::exit_reason::basic_exit_reason::get();
+
+        // Only trace exits on cpu 0 when trace_vmexits is true
+        if (trace_vmexits && ((vcpu->id() == 0) || vcpu->is_guest_vcpu())) {
+            using namespace vmcs_n::exit_reason;
+
+            const char *vstr = (vcpu->id() == 0) ? "p" : "c";
+
+            switch (reason) {
+            case basic_exit_reason::cpuid:
+                printf("[%s] cpuid: eax=0x%lx ecx=0x%lx\n",
+                       vstr,
+                       vcpu->rax(),
+                       vcpu->rcx());
+                break;
+            case basic_exit_reason::external_interrupt:
+                printf("[%s] external_interrupt: exitinfo=0x%lx\n",
+                       vstr,
+                       vmcs_n::vm_exit_interruption_information::get());
+                break;
+            case basic_exit_reason::wrmsr:
+                printf("[%s] wrmsr: msr=0x%lx val=0x%lx\n",
+                       vstr,
+                       vcpu->rcx(),
+                       ((vcpu->rdx() & 0xFFFFFFFF) << 32) | (vcpu->rax() & 0xFFFFFFFF));
+                break;
+            case basic_exit_reason::vmcall:
+                printf("[%s] vmcall: rax=0x%lx\n", vstr, vcpu->rax());
+                break;
+            default:
+                printf("[%s] %s\n", vstr, basic_exit_reason::basic_exit_reason_description(reason));
+                break;
+            }
+        }
+
         for (const auto &d : exit_handler->m_exit_handlers) {
             d(vcpu);
         }
 
-        const auto &handlers =
-            exit_handler->m_exit_handlers_array.at(
-                vmcs_n::exit_reason::basic_exit_reason::get()
-            );
+        const auto &handlers = exit_handler->m_exit_handlers_array.at(reason);
 
         for (const auto &d : handlers) {
             if (d(vcpu)) {
