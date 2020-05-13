@@ -29,6 +29,8 @@
 
 #include <loader_types.h>
 
+struct loader_arch_context;
+
 /**
  * <!-- description -->
  *   @brief This function contains all of the code that is arch specific
@@ -82,5 +84,18 @@ int64_t arch_stop_vmm(void);
  *   @return Returns 0 on success
  */
 int64_t arch_check_hvm_support(void);
+
+/**
+ * <!-- description -->
+ *   @brief This function prepares the context structure. The context
+ *     structure stores all of the pre-vcpu state that the loader is
+ *     responsible for setting up. This context structure will be shared
+ *     with the kernel which will use it to virtualize the root vCPUs.
+ *
+ * <!-- inputs/outputs -->
+ *   @return Returns a pointer to a loader_arch_content structure on
+ *     success. Returns NULL on failure.
+ */
+int64_t arch_prepare_context(struct loader_arch_context *context);
 
 #endif
