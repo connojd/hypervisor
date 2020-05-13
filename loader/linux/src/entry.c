@@ -88,10 +88,10 @@ static struct file_operations fops = { // --
 	.unlocked_ioctl = dev_unlocked_ioctl
 };
 
-static struct miscdevice bareflank_dev = { // --
-	.minor = MISC_DYNAMIC_MINOR,	   // --
-	.name = BAREFLANK_LOADER_NAME,	   // --
-	.fops = &fops,			   // --
+static struct miscdevice loader_dev = { // --
+	.minor = MISC_DYNAMIC_MINOR,	// --
+	.name = BAREFLANK_LOADER_NAME,	// --
+	.fops = &fops,			// --
 	.mode = 0666
 };
 
@@ -153,7 +153,7 @@ int dev_init(void)
 	register_reboot_notifier(&reboot_notifier_block);
 	register_pm_notifier(&pm_notifier_block);
 
-	if (misc_register(&bareflank_dev) != 0) {
+	if (misc_register(&loader_dev) != 0) {
 		unregister_pm_notifier(&pm_notifier_block);
 		unregister_reboot_notifier(&reboot_notifier_block);
 
@@ -162,7 +162,7 @@ int dev_init(void)
 
 	ret = loader_init();
 	if (0 != ret) {
-		misc_deregister(&bareflank_dev);
+		misc_deregister(&loader_dev);
 		unregister_pm_notifier(&pm_notifier_block);
 		unregister_reboot_notifier(&reboot_notifier_block);
 
@@ -177,7 +177,7 @@ void dev_exit(void)
 	BFDEBUG("dev_exit\n");
 
 	loader_fini();
-	misc_deregister(&bareflank_dev);
+	misc_deregister(&loader_dev);
 	unregister_pm_notifier(&pm_notifier_block);
 	unregister_reboot_notifier(&reboot_notifier_block);
 
