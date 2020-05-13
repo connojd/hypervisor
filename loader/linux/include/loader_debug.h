@@ -29,11 +29,13 @@
 #ifndef LOADER_DEBUG_H
 #define LOADER_DEBUG_H
 
+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+
 #include <linux/printk.h>
 
-#define BFINFO(...) printk(KERN_INFO __VA_ARGS__)
-#define BFDEBUG(...) printk(KERN_INFO "[BAREFLANK DEBUG]: " __VA_ARGS__)
-#define BFALERT(...) printk(KERN_INFO "[BAREFLANK ALERT]: " __VA_ARGS__)
-#define BFERROR(...) printk(KERN_ALERT "[BAREFLANK ERROR]: " __VA_ARGS__)
+#define BFINFO(...) pr_info(__VA_ARGS__)
+#define BFDEBUG(...) pr_info(__VA_ARGS__)
+#define BFALERT(...) pr_warn(__VA_ARGS__)
+#define BFERROR(...) pr_err(__VA_ARGS__)
 
 #endif
