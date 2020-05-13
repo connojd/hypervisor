@@ -36,6 +36,15 @@
 
 bool trace_vmexits{false};
 
+struct vmexit_desc {
+    uint32_t reason;
+    uint64_t guest_cr3;
+    uint64_t data[2];
+} __attribute__((packed));
+
+struct vmexit_desc exit_reason_list[64]{0};
+uint32_t exit_reason_head{0};
+
 namespace bfvmm::intel_x64
 {
 
@@ -68,37 +77,36 @@ handle_exit(
 
         uint32_t reason = vmcs_n::exit_reason::basic_exit_reason::get();
 
-        // Only trace exits on cpu 0 when trace_vmexits is true
-        if (trace_vmexits && ((vcpu->id() == 0) || vcpu->is_guest_vcpu())) {
+        if ((vcpu->id() == 0) || vcpu->is_guest_vcpu()) {
             using namespace vmcs_n::exit_reason;
 
-            const char *vstr = (vcpu->id() == 0) ? "p" : "c";
+            struct vmexit_desc *desc = &exit_reason_list[exit_reason_head];
 
             switch (reason) {
-            case basic_exit_reason::cpuid:
-                printf("[%s] cpuid: eax=0x%lx ecx=0x%lx\n",
-                       vstr,
-                       vcpu->rax(),
-                       vcpu->rcx());
+            case vmcs_n::exit_reason::basic_exit_reason::cpuid:
+                desc->data[0] = vcpu->rax();
+                desc->data[1] = vcpu->rcx();
                 break;
-            case basic_exit_reason::external_interrupt:
-                printf("[%s] external_interrupt: exitinfo=0x%lx\n",
-                       vstr,
-                       vmcs_n::vm_exit_interruption_information::get());
+            case vmcs_n::exit_reason::basic_exit_reason::external_interrupt:
+                desc->data[0] = vmcs_n::vm_exit_interruption_information::get();
                 break;
-            case basic_exit_reason::wrmsr:
-                printf("[%s] wrmsr: msr=0x%lx val=0x%lx\n",
-                       vstr,
-                       vcpu->rcx(),
-                       ((vcpu->rdx() & 0xFFFFFFFF) << 32) | (vcpu->rax() & 0xFFFFFFFF));
+            case vmcs_n::exit_reason::basic_exit_reason::wrmsr:
+                desc->data[0] = ((vcpu->rdx() & 0xFFFFFFFFU) << 32) | (vcpu->rax() & 0xFFFFFFFFU);
+                desc->data[1] = vcpu->rcx();
                 break;
-            case basic_exit_reason::vmcall:
-                printf("[%s] vmcall: rax=0x%lx\n", vstr, vcpu->rax());
+            case vmcs_n::exit_reason::basic_exit_reason::vmcall:
+                desc->data[0] = vcpu->rax();
                 break;
             default:
-                printf("[%s] %s\n", vstr, basic_exit_reason::basic_exit_reason_description(reason));
                 break;
             }
+
+            bool parent = (vcpu->id() == 0);
+
+            desc->reason = reason | (parent ? (1U << 31) : 0);
+            desc->guest_cr3 = vmcs_n::guest_cr3::get();
+
+            exit_reason_head = (exit_reason_head + 1U) & 0x3FU;
         }
 
         for (const auto &d : exit_handler->m_exit_handlers) {
