@@ -57,6 +57,7 @@ arch_cpuid:
 
     pop rbx
     ret
+.size arch_cpuid, .-arch_cpuid
 
 
 
@@ -78,6 +79,7 @@ arch_rdmsr:
     or rax, rdx
 
     ret
+.size arch_rdmsr, .-arch_rdmsr
 
 
 
@@ -100,3 +102,4 @@ arch_wrmsr:
     wrmsr
 
     ret
+.size arch_wrmsr, .-arch_wrmsr
