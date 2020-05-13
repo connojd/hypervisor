@@ -39,3 +39,6 @@
 #define BFERROR(...) pr_err(__VA_ARGS__)
 
 #endif
+
+/* vim: set noexpandtab shiftwidth=8 tabstop=8: */
+/* code: insertSpaces=false tabSize=8 */

@@ -25,3 +25,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+/* vim: set noexpandtab shiftwidth=8 tabstop=8: */
+/* code: insertSpaces=false tabSize=8 */

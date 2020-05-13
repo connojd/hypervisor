@@ -54,7 +54,8 @@
 ///   @param edx returns resulting edx
 ///     to.
 ///
-void arch_cpuid(uint32_t *const eax, uint32_t *const ebx, uint32_t *const ecx, uint32_t *const edx);
+void arch_cpuid(uint32_t *const eax, uint32_t *const ebx, uint32_t *const ecx,
+		uint32_t *const edx);
 
 /* -------------------------------------------------------------------------- */
 /* - MSRS                                                                   - */
@@ -88,3 +89,6 @@ uint64_t arch_rdmsr(uint32_t const ecx);
 void arch_wrmsr(uint32_t const ecx, uint64_t val);
 
 #endif
+
+/* vim: set noexpandtab shiftwidth=8 tabstop=8: */
+/* code: insertSpaces=false tabSize=8 */

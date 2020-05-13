@@ -31,6 +31,8 @@
 
 #include <linux/ioctl.h>
 
+/* clang-format off */
+
 #define BAREFLANK_LOADER_NAME "bareflank_loader"
 #define BAREFLANK_LOADER_DEVICE_NAME "/dev/" BAREFLANK_LOADER_NAME
 
@@ -41,10 +43,12 @@
 #define BAREFLANK_LOADER_IOCTL_DUMP_VMM_CMD 0xBF03U
 
 #define BAREFLANK_LOADER_START_VMM                                                                 \
-    _IO(BAREFLANK_LOADER_MAGIC_NUMBER, BAREFLANK_LOADER_IOCTL_START_VMM_CMD)    // NOLINT
+    _IO(BAREFLANK_LOADER_MAGIC_NUMBER, BAREFLANK_LOADER_IOCTL_START_VMM_CMD)   // NOLINT
 #define BAREFLANK_LOADER_STOP_VMM                                                                  \
     _IO(BAREFLANK_LOADER_MAGIC_NUMBER, BAREFLANK_LOADER_IOCTL_STOP_VMM_CMD)    // NOLINT
 #define BAREFLANK_LOADER_DUMP_VMM                                                                  \
     _IO(BAREFLANK_LOADER_MAGIC_NUMBER, BAREFLANK_LOADER_IOCTL_DUMP_VMM_CMD)    // NOLINT
+
+/* clang-format on */
 
 #endif

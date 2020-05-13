@@ -33,163 +33,161 @@
 #include <loader.h>
 
 #include <linux/kernel.h>
-#include <linux/module.h>
 #include <linux/miscdevice.h>
+#include <linux/module.h>
 #include <linux/notifier.h>
 #include <linux/reboot.h>
 #include <linux/suspend.h>
 
-static int
-dev_open(struct inode *inode, struct file *file)
+static int dev_open(struct inode *inode, struct file *file)
 {
-    return 0;
+	return 0;
 }
 
-static int
-dev_release(struct inode *inode, struct file *file)
+static int dev_release(struct inode *inode, struct file *file)
 {
-    return 0;
+	return 0;
 }
 
-static long
-dev_unlocked_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+static long dev_unlocked_ioctl(struct file *file, unsigned int cmd,
+			       unsigned long arg)
 {
-    switch (cmd) {
-        case BAREFLANK_LOADER_START_VMM: {
-            int64_t ret = start_vmm();
-            if (0 != ret) {
-                return -EPERM;
-            }
-            break;
-        }
+	switch (cmd) {
+	case BAREFLANK_LOADER_START_VMM: {
+		int64_t ret = start_vmm();
+		if (0 != ret) {
+			return -EPERM;
+		}
+		break;
+	}
+	case BAREFLANK_LOADER_STOP_VMM: {
+		int64_t ret = stop_vmm();
+		if (0 != ret) {
+			return -EPERM;
+		}
+		break;
+	}
+	case BAREFLANK_LOADER_DUMP_VMM: {
+		int64_t ret = dump_vmm();
+		if (0 != ret) {
+			return -EPERM;
+		}
+		break;
+	}
+	default:
+		BFERROR("invalid ioctl cmd: 0x%x\n", cmd);
+		return -EINVAL;
+	}
 
-        case BAREFLANK_LOADER_STOP_VMM: {
-            int64_t ret = stop_vmm();
-            if (0 != ret) {
-                return -EPERM;
-            }
-            break;
-        }
-
-        case BAREFLANK_LOADER_DUMP_VMM: {
-            int64_t ret = dump_vmm();
-            if (0 != ret) {
-                return -EPERM;
-            }
-            break;
-        }
-
-        default: {
-            BFERROR("invalid ioctl cmd: 0x%x\n", cmd);
-            return -EINVAL;
-        }
-    };
-
-    return 0;
+	return 0;
 }
 
-static struct file_operations fops = {    // --
-    .open = dev_open,                     // --
-    .release = dev_release,               // --
-    .unlocked_ioctl = dev_unlocked_ioctl};
+static struct file_operations fops = { // --
+	.open = dev_open,	       // --
+	.release = dev_release,	       // --
+	.unlocked_ioctl = dev_unlocked_ioctl
+};
 
-static struct miscdevice bareflank_dev = {    // --
-    .minor = MISC_DYNAMIC_MINOR,              // --
-    .name = BAREFLANK_LOADER_NAME,            // --
-    .fops = &fops,                            // --
-    .mode = 0666};
+static struct miscdevice bareflank_dev = { // --
+	.minor = MISC_DYNAMIC_MINOR,	   // --
+	.name = BAREFLANK_LOADER_NAME,	   // --
+	.fops = &fops,			   // --
+	.mode = 0666
+};
 
 /* -------------------------------------------------------------------------- */
 /* Entry / Exit                                                               */
 /* -------------------------------------------------------------------------- */
 
-int
-dev_reboot(struct notifier_block *nb, unsigned long code, void *unused)
+int dev_reboot(struct notifier_block *nb, unsigned long code, void *unused)
 {
-    BFDEBUG("dev_reboot\n");
-    return NOTIFY_DONE;
+	BFDEBUG("dev_reboot\n");
+	return NOTIFY_DONE;
 }
 
-static int
-resume(void)
+static int resume(void)
 {
-    BFDEBUG("resume\n");
-    return NOTIFY_DONE;
+	BFDEBUG("resume\n");
+	return NOTIFY_DONE;
 }
 
-static int
-suspend(void)
+static int suspend(void)
 {
-    BFDEBUG("suspend\n");
-    return NOTIFY_DONE;
+	BFDEBUG("suspend\n");
+	return NOTIFY_DONE;
 }
 
-int
-dev_pm(struct notifier_block *nb, unsigned long code, void *unused)
+int dev_pm(struct notifier_block *nb, unsigned long code, void *unused)
 {
-    switch (code) {
-        case PM_SUSPEND_PREPARE:
-        case PM_HIBERNATION_PREPARE:
-        case PM_RESTORE_PREPARE:
-            return suspend();
+	switch (code) {
+	case PM_SUSPEND_PREPARE:
+	case PM_HIBERNATION_PREPARE:
+	case PM_RESTORE_PREPARE:
+		return suspend();
 
-        case PM_POST_SUSPEND:
-        case PM_POST_HIBERNATION:
-        case PM_POST_RESTORE:
-            return resume();
+	case PM_POST_SUSPEND:
+	case PM_POST_HIBERNATION:
+	case PM_POST_RESTORE:
+		return resume();
 
-        default:
-            break;
-    }
+	default:
+		break;
+	}
 
-    return NOTIFY_DONE;
+	return NOTIFY_DONE;
 }
 
-static struct notifier_block reboot_notifier_block = {.notifier_call = dev_reboot};
-static struct notifier_block pm_notifier_block = {.notifier_call = dev_pm};
+static struct notifier_block reboot_notifier_block = { // --
+	.notifier_call = dev_reboot
+};
 
-int
-dev_init(void)
+static struct notifier_block pm_notifier_block = { // --
+	.notifier_call = dev_pm
+};
+
+int dev_init(void)
 {
-    int64_t ret = 0;
-    BFDEBUG("dev_init\n");
+	int64_t ret = 0;
+	BFDEBUG("dev_init\n");
 
-    register_reboot_notifier(&reboot_notifier_block);
-    register_pm_notifier(&pm_notifier_block);
+	register_reboot_notifier(&reboot_notifier_block);
+	register_pm_notifier(&pm_notifier_block);
 
-    if (misc_register(&bareflank_dev) != 0) {
-        unregister_pm_notifier(&pm_notifier_block);
-        unregister_reboot_notifier(&reboot_notifier_block);
+	if (misc_register(&bareflank_dev) != 0) {
+		unregister_pm_notifier(&pm_notifier_block);
+		unregister_reboot_notifier(&reboot_notifier_block);
 
-        return -EPERM;
-    }
+		return -EPERM;
+	}
 
-    ret = loader_init();
-    if (0 != ret) {
-        misc_deregister(&bareflank_dev);
-        unregister_pm_notifier(&pm_notifier_block);
-        unregister_reboot_notifier(&reboot_notifier_block);
+	ret = loader_init();
+	if (0 != ret) {
+		misc_deregister(&bareflank_dev);
+		unregister_pm_notifier(&pm_notifier_block);
+		unregister_reboot_notifier(&reboot_notifier_block);
 
-        return -EPERM;
-    }
+		return -EPERM;
+	}
 
-    return 0;
+	return 0;
 }
 
-void
-dev_exit(void)
+void dev_exit(void)
 {
-    BFDEBUG("dev_exit\n");
+	BFDEBUG("dev_exit\n");
 
-    loader_fini();
-    misc_deregister(&bareflank_dev);
-    unregister_pm_notifier(&pm_notifier_block);
-    unregister_reboot_notifier(&reboot_notifier_block);
+	loader_fini();
+	misc_deregister(&bareflank_dev);
+	unregister_pm_notifier(&pm_notifier_block);
+	unregister_reboot_notifier(&reboot_notifier_block);
 
-    return;
+	return;
 }
 
 module_init(dev_init);
 module_exit(dev_exit);
 
 MODULE_LICENSE("Dual MIT/GPL");
+
+/* vim: set noexpandtab shiftwidth=8 tabstop=8: */
+/* code: insertSpaces=false tabSize=8 */

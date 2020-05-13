@@ -35,3 +35,6 @@
 #define FAILURE ((int64_t)-1)
 
 #endif
+
+/* vim: set noexpandtab shiftwidth=8 tabstop=8: */
+/* code: insertSpaces=false tabSize=8 */

@@ -44,22 +44,22 @@
  *   @return Returns a pointer to the newly allocated memory on success.
  *     Returns a nullptr on failure.
  */
-void *
-platform_alloc(uint64_t size)
+void *platform_alloc(uint64_t size)
 {
-    void *ptr = NULL;
+	void *ptr = NULL;
 
-    if (0 == size) {
-        BFALERT("platform_alloc: invalid number of bytes (i.e., size)\n");
-        return ptr;
-    }
+	if (0 == size) {
+		BFALERT(
+		    "platform_alloc: invalid number of bytes (i.e., size)\n");
+		return ptr;
+	}
 
-    ptr = vmalloc(size);
-    if (NULL == ptr) {
-        BFALERT("platform_alloc: vmalloc failed\n");
-    }
+	ptr = vmalloc(size);
+	if (NULL == ptr) {
+		BFALERT("platform_alloc: vmalloc failed\n");
+	}
 
-    return ptr;
+	return ptr;
 }
 
 /**
@@ -74,14 +74,13 @@ platform_alloc(uint64_t size)
  *   @param size the number of bytes that were allocated. Note that this
  *     may or may not be ignored depending on the platform.
  */
-void
-platform_free(void *ptr, uint64_t size)
+void platform_free(void *ptr, uint64_t size)
 {
-    if (NULL == ptr) {
-        return;
-    }
+	if (NULL == ptr) {
+		return;
+	}
 
-    vfree(ptr);
+	vfree(ptr);
 }
 
 /**
@@ -93,10 +92,9 @@ platform_free(void *ptr, uint64_t size)
  *     function that converts the callback function signature that we want
  *     to the Linux callback signature.
  */
-struct on_cpu_info
-{
-    platform_per_cpu_func func;
-    int64_t ret;
+struct on_cpu_info {
+	platform_per_cpu_func func;
+	int64_t ret;
 };
 
 /**
@@ -109,14 +107,13 @@ struct on_cpu_info
  * <!-- inputs/outputs -->
  *   @param info a pointer to a on_cpu_info structure
  */
-static void
-platform_on_each_cpu_callback(void *info)
+static void platform_on_each_cpu_callback(void *info)
 {
-    struct on_cpu_info *_info = (struct on_cpu_info *)info;
+	struct on_cpu_info *_info = (struct on_cpu_info *)info;
 
-    if (_info->func((uint64_t)smp_processor_id()) != 0) {
-        _info->ret = FAILURE;
-    }
+	if (_info->func((uint64_t)smp_processor_id()) != 0) {
+		_info->ret = FAILURE;
+	}
 }
 
 /**
@@ -133,11 +130,13 @@ platform_on_each_cpu_callback(void *info)
  *   @return If each callback returns 0, this function returns 0, otherwise
  *     this function returns a non-0 value
  */
-int64_t
-platform_on_each_cpu(platform_per_cpu_func func)
+int64_t platform_on_each_cpu(platform_per_cpu_func func)
 {
-    struct on_cpu_info info = {func, 0};
-    on_each_cpu(&platform_on_each_cpu_callback, &info, 1);
+	struct on_cpu_info info = { func, 0 };
+	on_each_cpu(&platform_on_each_cpu_callback, &info, 1);
 
-    return info.ret;
+	return info.ret;
 }
+
+/* vim: set noexpandtab shiftwidth=8 tabstop=8: */
+/* code: insertSpaces=false tabSize=8 */

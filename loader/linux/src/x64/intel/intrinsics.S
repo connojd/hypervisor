@@ -103,3 +103,6 @@ arch_wrmsr:
 
     ret
 .size arch_wrmsr, .-arch_wrmsr
+
+/* vim: set noexpandtab shiftwidth=8 tabstop=8: */
+/* code: insertSpaces=false tabSize=8 */
