@@ -32,6 +32,8 @@
 #include <loader_platform.h>
 #include <loader_types.h>
 
+#include "vmx_util.h"
+
 #define CPUID_LEAF_VENDOR 0x0U
 #define CPUID_VENDOR_EBX 0x756e6547U /* "Genu" */
 #define CPUID_VENDOR_ECX 0x6C65746EU /* "ntel" */
@@ -45,11 +47,6 @@
 #define CPUID_XSAVE0_EDX_UPPER_XCR0 0U
 #define CPUID_XSAVE1_EAX_XSAVES (1ULL << 3U)
 #define CPUID_XSAVE1_EDX_UPPER_IA32_XSS 0U
-
-#define MSR_IA32_FEATURE_CTRL 0x3AU
-#define FEATURE_CTRL_LOCKED (1ULL << 0U)
-#define FEATURE_CTRL_VMX_ENABLED_INSIDE_SMX (1ULL << 1U)
-#define FEATURE_CTRL_VMX_ENABLED_OUTSIDE_SMX (1ULL << 2U)
 
 #define MSR_IA32_VMX_BASIC 0x480U
 #define VMX_BASIC_TRUE_CTRLS (1ULL << 55)
