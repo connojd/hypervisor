@@ -31,6 +31,8 @@
 #include <loader_platform.h>
 #include <loader_types.h>
 
+#include "vmx_util.h"
+
 /**
  * <!-- description -->
  *   @brief This function contains all of the code that is arch specific
@@ -60,6 +62,23 @@ arch_stop_vmm_per_cpu(                   // --
         BFERROR("invalid argument\n");
         return FAILURE;
     }
+
+    if (arch_vmxoff()) {
+        BFERROR("VMXOFF failed\n");
+        return FAILURE;
+    }
+
+    BFDEBUG("Left VMX root operation\n");
+
+    restore_cr4(arch_context);
+    restore_cr0(arch_context);
+
+    fini_state_save(arch_context);
+    fini_exit_handler_stack(arch_context);
+    fini_msr_bitmap_region(arch_context);
+    fini_io_bitmap_region(arch_context);
+    fini_vmcs_region(arch_context);
+    fini_vmxon_region(arch_context);
 
     return 0;
 }
