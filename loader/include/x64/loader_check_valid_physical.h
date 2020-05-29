@@ -42,7 +42,7 @@
  *   @return returns 0 if the address is valid, FAILURE otherwise
  */
 static inline int
-check_valid_physical(uintptr_t phys, struct loader_arch_context_t *context)
+check_valid_physical(uintptr_t phys, const struct loader_arch_context_t *context)
 {
     uintptr_t max = 1U;
 
@@ -51,12 +51,12 @@ check_valid_physical(uintptr_t phys, struct loader_arch_context_t *context)
         return FAILURE;
     }
 
-    if (0U == context->physical_address_bits) {
+    if (0U == context->phys_address_bits) {
         BFERROR("invalid physical address bits\n");
         return FAILURE;
     }
 
-    max <<= context->physical_address_bits;
+    max <<= context->phys_address_bits;
     if (phys >= max) {
         BFERROR("phys address not valid: 0x%" PRIxPTR "\n", phys);
         return FAILURE;

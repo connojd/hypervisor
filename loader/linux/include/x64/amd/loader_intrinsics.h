@@ -43,6 +43,8 @@
 #define CPUID_FN8000_0001 0x80000001U
 #define CPUID_FN8000_0001_ECX_SVM (1U << 2U)
 
+#define CPUID_FN8000_0008 0x80000008U
+
 /**
  * <!-- description -->
  *   @brief Executes the CPUID instruction given the provided EAX and ECX

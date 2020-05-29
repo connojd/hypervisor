@@ -42,7 +42,9 @@ struct loader_arch_context_t
     /** @brief store the architecture's page size */
     uint64_t page_size;
     /** @brief stores number of physical address bits supported */
-    uint32_t physical_address_bits;
+    uint32_t phys_address_bits;
+    /** @brief stores number of virtual address bits supported */
+    uint32_t virt_address_bits;
 
     /** @brief stores the virtual address of the host vmcb */
     struct vmcb_t *host_vmcb_virt;

@@ -29,6 +29,8 @@
 
 #include <loader_types.h>
 
+struct state_save_t;
+
 /**
  * @class loader_arch_context
  *
@@ -44,8 +46,41 @@ struct loader_arch_context_t
 {
     /** @brief store the architecture's page size */
     uint64_t page_size;
+
     /** @brief stores number of physical address bits supported */
-    uint32_t physical_address_bits;
+    uint32_t phys_address_bits;
+
+    /** @brief stores number of virtual address bits supported */
+    uint32_t virt_address_bits;
+
+    uint64_t old_cr4;
+    uint64_t old_cr0;
+    uint64_t new_cr4;
+    uint64_t new_cr0;
+
+    uint64_t ia32_vmx_basic;
+    uint64_t ia32_vmx_cr0_fixed0;
+    uint64_t ia32_vmx_cr0_fixed1;
+    uint64_t ia32_vmx_cr4_fixed0;
+    uint64_t ia32_vmx_cr4_fixed1;
+
+    uintptr_t vmxon_phys;
+    uint32_t *vmxon_virt;
+
+    uintptr_t vmcs_phys;
+    uint32_t *vmcs_virt;
+
+    uintptr_t io_bitmap_a_phys;
+    uint8_t  *io_bitmap_a_virt;
+
+    uintptr_t io_bitmap_b_phys;
+    uint8_t  *io_bitmap_b_virt;
+
+    uintptr_t msr_bitmap_phys;
+    uint8_t  *msr_bitmap_virt;
+
+    uint8_t *exit_handler_stack;
+    struct state_save_t *state_save;
 };
 
 #endif

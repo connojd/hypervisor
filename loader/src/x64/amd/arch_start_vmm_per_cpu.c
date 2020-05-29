@@ -38,6 +38,28 @@
 
 /**
  * <!-- description -->
+ *   @brief Get the virtual and physical address widths supported by the
+ *     processor.
+ *
+ * <!-- inputs/outputs -->
+ *   @param arch_context the architecture specific context for this cpu
+ */
+static inline void
+get_address_bits(struct loader_arch_context_t *arch_context)
+{
+    uint32_t eax = CPUID_FN8000_0008;
+    uint32_t ebx = 0U;
+    uint32_t ecx = 0U;
+    uint32_t edx = 0U;
+
+    arch_cpuid(&eax, &ebx, &ecx, &edx);
+
+    arch_context->phys_address_bits = eax & 0xFFU;
+    arch_context->virt_address_bits = (eax & 0xFF00U) >> 8U;
+}
+
+/**
+ * <!-- description -->
  *   @brief Enable Secure Virtual Machine support. This turns on the
  *     ability to use the VMRUN, VMLOAD and VMSAVE instructions, as well
  *     as some other support instructions like stgi and clgi.
@@ -683,13 +705,9 @@ arch_start_vmm_per_cpu(                  // --
         return FAILURE;
     }
 
-    /**
-     * TODO:
-     * - We need to get the physical address bit limit value from CPUID
-     *   instead of hardcoding it.
-     */
     arch_context->page_size = 0x1000U;
-    arch_context->physical_address_bits = 48U;
+
+    get_address_bits(arch_context);
 
     if (arch_check_hve_support()) {
         BFERROR("arch_check_hve_support failed\n");

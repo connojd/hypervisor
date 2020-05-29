@@ -42,7 +42,7 @@
  *   @return returns 0 if the address is canonical, FAILURE otherwise
  */
 static inline int
-check_canonical(uintptr_t virt, struct loader_arch_context_t *arch_context)
+check_canonical(uintptr_t virt, const struct loader_arch_context_t *arch_context)
 {
     uintptr_t upper = ~((uintptr_t)0U);
     uintptr_t lower = 1U;
@@ -52,16 +52,18 @@ check_canonical(uintptr_t virt, struct loader_arch_context_t *arch_context)
         return FAILURE;
     }
 
-    if (0U == arch_context->physical_address_bits) {
-        BFERROR("invalid physical address bits\n");
+    if (0U == arch_context->virt_address_bits) {
+        BFERROR("invalid virtual address bits\n");
         return FAILURE;
     }
 
-    upper = (upper << (arch_context->physical_address_bits - 1U));
-    lower = (lower << (arch_context->physical_address_bits - 1U)) - 1U;
+    upper = (upper << (arch_context->virt_address_bits - 1U));
+    lower = (lower << (arch_context->virt_address_bits - 1U)) - 1U;
 
     if (((virt < upper) && (virt > lower))) {
         BFERROR("virt address not canonical: 0x%" PRIxPTR "\n", virt);
+        BFERROR("  - upper: 0x%" PRIxPTR "\n", upper);
+        BFERROR("  - lower: 0x%" PRIxPTR "\n", lower);
         return FAILURE;
     }
 

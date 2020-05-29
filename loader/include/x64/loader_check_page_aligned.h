@@ -42,7 +42,7 @@
  *   @return returns 0 if the address is page aligned, FAILURE otherwise
  */
 static inline int
-check_page_aligned(uintptr_t addr, struct loader_arch_context_t *context)
+check_page_aligned(uintptr_t addr, const struct loader_arch_context_t *context)
 {
     if (NULL == context) {
         BFERROR("invalid argument\n");
