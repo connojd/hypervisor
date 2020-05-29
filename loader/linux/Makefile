@@ -61,10 +61,15 @@ ifneq ($(KERNELRELEASE),)
 		$(TARGET_MODULE)-objs += src/x64/arch_reades.o
 		$(TARGET_MODULE)-objs += src/x64/arch_readfs.o
 		$(TARGET_MODULE)-objs += src/x64/arch_readgs.o
+		$(TARGET_MODULE)-objs += src/x64/arch_readldtr.o
 		$(TARGET_MODULE)-objs += src/x64/arch_readss.o
+		$(TARGET_MODULE)-objs += src/x64/arch_readtr.o
+		$(TARGET_MODULE)-objs += src/x64/arch_rflags.o
 		$(TARGET_MODULE)-objs += src/x64/arch_sgdt.o
 		$(TARGET_MODULE)-objs += src/x64/arch_sidt.o
 		$(TARGET_MODULE)-objs += src/x64/arch_wrmsr.o
+		$(TARGET_MODULE)-objs += src/x64/arch_writecr0.o
+		$(TARGET_MODULE)-objs += src/x64/arch_writecr4.o
 		$(TARGET_MODULE)-objs += src/x64/amd/arch_vmload.o
 		$(TARGET_MODULE)-objs += src/x64/amd/arch_vmrun.o
 		$(TARGET_MODULE)-objs += src/x64/amd/arch_vmsave.o
@@ -101,15 +106,33 @@ ifneq ($(KERNELRELEASE),)
 		$(TARGET_MODULE)-objs += src/x64/arch_reades.o
 		$(TARGET_MODULE)-objs += src/x64/arch_readfs.o
 		$(TARGET_MODULE)-objs += src/x64/arch_readgs.o
+		$(TARGET_MODULE)-objs += src/x64/arch_readldtr.o
 		$(TARGET_MODULE)-objs += src/x64/arch_readss.o
+		$(TARGET_MODULE)-objs += src/x64/arch_readtr.o
+		$(TARGET_MODULE)-objs += src/x64/arch_rflags.o
 		$(TARGET_MODULE)-objs += src/x64/arch_sgdt.o
 		$(TARGET_MODULE)-objs += src/x64/arch_sidt.o
+		$(TARGET_MODULE)-objs += src/x64/arch_writecr0.o
+		$(TARGET_MODULE)-objs += src/x64/arch_writecr4.o
 		$(TARGET_MODULE)-objs += src/x64/arch_wrmsr.o
+
+		$(TARGET_MODULE)-objs += src/x64/intel/arch_vmclear.o
+		$(TARGET_MODULE)-objs += src/x64/intel/arch_vmptrld.o
+		$(TARGET_MODULE)-objs += src/x64/intel/arch_vmread.o
+		$(TARGET_MODULE)-objs += src/x64/intel/arch_vmwrite.o
+		$(TARGET_MODULE)-objs += src/x64/intel/arch_vmxon.o
+		$(TARGET_MODULE)-objs += src/x64/intel/arch_vmxoff.o
+		$(TARGET_MODULE)-objs += src/x64/intel/exit_handler_entry.o
+		$(TARGET_MODULE)-objs += src/x64/intel/vmcs_launch.o
+		$(TARGET_MODULE)-objs += src/x64/intel/vmcs_promote.o
+		$(TARGET_MODULE)-objs += src/x64/intel/vmcs_resume.o
+
 		$(TARGET_MODULE)-objs += ../src/x64/intel/arch_check_hve_support.o
 		$(TARGET_MODULE)-objs += ../src/x64/intel/arch_loader_fini.o
 		$(TARGET_MODULE)-objs += ../src/x64/intel/arch_loader_init.o
 		$(TARGET_MODULE)-objs += ../src/x64/intel/arch_start_vmm_per_cpu.o
 		$(TARGET_MODULE)-objs += ../src/x64/intel/arch_stop_vmm_per_cpu.o
+		$(TARGET_MODULE)-objs += ../src/x64/intel/vmexit.o
 
 		EXTRA_CFLAGS += -I$(src)/include/x64/
 		EXTRA_CFLAGS += -I$(src)/../include/x64/
