@@ -154,6 +154,19 @@ exit_handler_entry:
 
     mov rdi, [gs:0x0098]
     mov rsi, [gs:0x00A0]
+
+    ; Set nmi_flag. This tells the NMI handler that it isn't allowed to
+    ; set NMI-window exiting in the primary processor control field.
+    ;
+    ; NOTE: The problem with this apporach (in combo with the NMI
+    ; handler enabling the window exit if [gs:0x110] is 0) is that if
+    ; an NMI fires before this instruction *and* the exit results in a
+    ; world-switch, then the handler will have enabled the window
+    ; exit on the vmcs that is not being resumed, which means the NMI
+    ; sits in the VMM for an indeterminate amount of time.
+
+    ;;;REMOVE ME mov [gs:0x110], 1
+
     call handle_exit wrt ..plt
 
 ; The code should never get this far as the exit handler should resume back
